@@ -80,7 +80,7 @@ After compiling, and every time you want to run your code :
 **Very Important**: Note that submitDir is the directory where the output of your job is stored. If you want to run again, you either have to remove that directory or pass a different name into ATestRun.cxx.
 
 
-the main function in the testRun.cxx script is the following
+the main function in the smZinvAnalysis/smZInvSkim/util/testRun.cxx script is the following
     	
     // Rel. 21
     // MC16c (EXOT5)
