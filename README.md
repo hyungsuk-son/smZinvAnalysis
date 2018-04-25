@@ -42,7 +42,7 @@ Look for user.name and user.email. If it is not yet set, please run the followin
     git config --global user.email "your.name@cern.ch"
 
 
-#### 3. Clone main analysis package
+#### 3. clone main analysis package
 
 	git clone https://gitlab.cern.ch/tufts-atlas/smZinvAnalysis.git
 
