@@ -23,23 +23,40 @@ Instruction for running in AnalysisBase 21.2 with cmake
 	cd WorkDir
 	mkdir build run
 
-#### 2. Clone main analysis package
+#### 2. Setup shell environment for git
+
+**Git tutorial**: https://atlassoftwaredocs.web.cern.ch/gittutorial
+
+    setupATLAS
+    lsetup git
+
+**Configure git**: If you are using git for the first time, it is important to set your git name and email address which will be used by git as author for your commits (if you do not specify someone else explicitly).
+
+You can check that your name and email address are properly set by running:
+
+    git config --list
+    
+Look for user.name and user.email. If it is not yet set, please run the following commands
+
+    git config --global user.name "Your Name"
+    git config --global user.email "your.name@cern.ch"
+
+
+#### 3. Clone main analysis package
 
 	git clone https://gitlab.cern.ch/tufts-atlas/smZinvAnalysis.git
-	cd smZinvAnalysis/
 
-#### 3. setup the Analysis Release
+#### 4. setup the Analysis Release
 
     cd build/
-    setupATLAS
     asetup 21.2.24,AnalysisBase
 	
-#### 4.  compile it
+#### 5. compile it
 
     cmake ../smZinvAnalysis/
     make
 
-#### 5. setup environment
+#### 6. setup environment
 
 **Very Important**: Since you created a new package you also must call
 
