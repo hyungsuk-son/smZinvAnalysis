@@ -43,7 +43,6 @@ atlas_depends_on_subdirs(
 )
 
 # External dependencies:
-find_package( Boost COMPONENTS program_options )
 find_package( ROOT COMPONENTS Core Tree MathCore Hist RIO Physics REQUIRED )
 
 # Generate a dictionary for the library:
@@ -80,7 +79,7 @@ atlas_add_dictionary (smZInvSkimDict
 # Executable(s) in the package:
 atlas_add_executable( testRun util/testRun.cxx
    INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
-   LINK_LIBRARIES ${ROOT_LIBRARIES} ${Boost_LIBRARIES}
+   LINK_LIBRARIES ${ROOT_LIBRARIES}
    smZInvSkimLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
 )
 

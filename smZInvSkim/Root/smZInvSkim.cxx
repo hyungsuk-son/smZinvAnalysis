@@ -156,6 +156,7 @@ EL::StatusCode smZInvSkim :: fileExecute ()
   // To get Derivation info //
   ////////////////////////////
 
+  // FileMetaData no loger exists in Rel.21
 /*
   //----------------------------
   // MetaData information
@@ -749,12 +750,14 @@ EL::StatusCode smZInvSkim :: execute ()
 
   ANA_CHECK(m_event->copy("EventInfo"));
   ANA_CHECK(m_event->copy("PrimaryVertices"));
-  //ANA_CHECK(m_event->copy("Kt4EMTopoEventShape"));
+  //ANA_CHECK(m_event->copy("Kt4EMTopoEventShape")); // Rel20.7
+  ANA_CHECK(m_event->copy("Kt4EMTopoOriginEventShape")); // Rel21 for Jet Calibration
   ANA_CHECK(m_event->copy("AntiKt4EMTopoJets"));
   ANA_CHECK(m_event->copy("Muons"));
   ANA_CHECK(m_event->copy("Electrons"));
   ANA_CHECK(m_event->copy("Photons"));
   ANA_CHECK(m_event->copy("TauJets"));
+  ANA_CHECK(m_event->copy("TauTracks"));
   ANA_CHECK(m_event->copy("METAssoc_AntiKt4EMTopo"));
   ANA_CHECK(m_event->copy("MET_Core_AntiKt4EMTopo"));
   ANA_CHECK(m_event->copy("MET_Reference_AntiKt4EMTopo"));
