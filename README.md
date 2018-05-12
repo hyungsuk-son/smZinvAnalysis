@@ -126,4 +126,16 @@ For a test run, comment out the last line in order to limit to run over the firs
     job.options()->setDouble (EL::Job::optMaxEvents, 500);
 
 
+## Submit to the grid
+
+#### 1. setup
+    lsetup rucio
+    voms-proxy-init -voms atlas
+    lsetup panda
+
+#### 2. run
+    cd ../run/
+	# load submission script gridSkimRun.cxx
+	gridSkimRun submitDir
+
 
