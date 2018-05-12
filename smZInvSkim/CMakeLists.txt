@@ -29,6 +29,7 @@ atlas_depends_on_subdirs(
    Event/xAOD/xAODTriggerCnv
    Event/xAOD/xAODCutFlow
    Event/xAOD/xAODMetaDataCnv
+   Event/EventPrimitives
    PhysicsAnalysis/ElectronPhotonID/ElectronPhotonSelectorTools
    PhysicsAnalysis/TauID/TauAnalysisTools
    PhysicsAnalysis/ElectronPhotonID/ElectronEfficiencyCorrection
@@ -64,7 +65,7 @@ atlas_add_library( smZInvSkimLib
    GoodRunsListsLib PileupReweightingLib PathResolver TrigConfxAODLib TrigDecisionToolLib TriggerMatchingToolLib
    MuonMomentumCorrectionsLib FourMomUtils IsolationSelectionLib IsolationCorrectionsLib
    ElectronPhotonSelectorToolsLib TauAnalysisToolsLib ElectronEfficiencyCorrectionLib
-   JetCalibToolsLib xAODTriggerCnvLib xAODMetaDataCnv xAODMetaData
+   JetCalibToolsLib xAODTriggerCnvLib xAODMetaDataCnv xAODMetaData EventPrimitives
 )
 
 
@@ -77,11 +78,17 @@ atlas_add_dictionary (smZInvSkimDict
 
 
 # Executable(s) in the package:
-atlas_add_executable( testRun util/testRun.cxx
+atlas_add_executable( testSkimRun util/testSkimRun.cxx
    INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
    LINK_LIBRARIES ${ROOT_LIBRARIES}
    smZInvSkimLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
 )
+atlas_add_executable( gridSkimRun util/gridSkimRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES} smZInvSkimLib PATInterfaces xAODRootAccess
+   RootCoreUtils SampleHandler EventLoop EventLoopGrid EventLoopAlgs
+)
+
 
 
 # Install files from the package:
