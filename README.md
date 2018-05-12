@@ -49,7 +49,7 @@ Look for user.name and user.email. If it is not yet set, please run the followin
 #### 4. setup the Analysis Release
 
     cd build/
-    asetup 21.2.24,AnalysisBase
+    asetup 21.2,AnalysisBase,latest
 	
 #### 5. compile it
 
@@ -73,13 +73,13 @@ before trying to run the code (assuming you have already compiled it before and 
 
 
 
-## run
+## run skim package
 
 ### make sure you are in run/ directory
 
     cd ../run/
-	# load submission script testRun.cxx
-	testRun submitDir
+	# load submission script testSkimRun.cxx
+	testSkimRun submitDir
 
 Each time you edit the RunZllg.cxx code, don't forget to do once again
 
@@ -97,7 +97,7 @@ After compiling, and every time you want to run your code :
 **Very Important**: Note that submitDir is the directory where the output of your job is stored. If you want to run again, you either have to remove that directory or pass a different name into ATestRun.cxx.
 
 
-the main function in the smZinvAnalysis/smZInvSkim/util/testRun.cxx script is the following
+the main function in the smZinvAnalysis/smZInvSkim/util/testSkimRun.cxx script is the following
     	
     // Rel. 21
     // MC16c (EXOT5)
