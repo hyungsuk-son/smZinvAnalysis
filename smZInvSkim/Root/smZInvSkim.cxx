@@ -73,7 +73,7 @@ EL::StatusCode smZInvSkim :: setupJob (EL::Job& job)
 
   // Output
   EL::OutputStream out_xAOD ("mini-xAOD", "xAOD");
-  out_xAOD.options()->setString(EL::OutputStream::optMergeCmd, "xAODMerge -b -m xAODMaker::FileMetaDataTool -m xAODMaker::TriggerMenuMetaDataTool");
+  out_xAOD.options()->setString(EL::OutputStream::optMergeCmd, "xAODMerge -m xAODMaker::FileMetaDataTool -m xAODMaker::TriggerMenuMetaDataTool");
   job.outputAdd (out_xAOD);
 
   //EL::OutputStream out_tree ("output_tree");

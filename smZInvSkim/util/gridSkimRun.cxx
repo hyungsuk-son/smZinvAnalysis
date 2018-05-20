@@ -99,7 +99,7 @@ int main( int argc, char* argv[] ) {
 //  EL::GridDriver driver; //grid in the background
 
 //  driver.options()->setString("nc_outputSampleName", "user.hson.mc15c.13TeV.Sherpa.EXOT5.ttbar.02122018.%in:name[2]%.%in:name[6]%"); //For PrunDriver
-  driver.options()->setString("nc_outputSampleName", "user.hson.mc16a.13TeV.deriv_skim_test.05192018.%in:name[2]%.%in:name[6]%"); //For PrunDriver
+  driver.options()->setString("nc_outputSampleName", "user.hson.mc16a.13TeV.deriv_skim_test2.05192018.%in:name[2]%.%in:name[6]%"); //For PrunDriver
 //  driver.outputSampleName = "user.hson.gridtest1.11142015.%in:name[2]%.%in:name[6]%"; //For GridDriver
   driver.options()->setDouble("nc_nFiles", 10); // FOR TESTING!
 //  driver.options()->setDouble("nc_nFilesPerJob", 1);
