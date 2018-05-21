@@ -5582,8 +5582,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::pair< xAOD::MuonContainer*, xAOD::ShallowAuxContainer* > muons_shallowCopy = xAOD::shallowCopyContainer( *m_muons );
     xAOD::MuonContainer* m_muonSC = muons_shallowCopy.first;
 
-    ANA_CHECK(m_store->record( muons_shallowCopy.first, "CalibMuons" ));
-    ANA_CHECK(m_store->record( muons_shallowCopy.second, "CalibMuonsAux."));
+    ANA_CHECK(m_store->record( muons_shallowCopy.first, "CalibMuons"+m_sysName ));
+    ANA_CHECK(m_store->record( muons_shallowCopy.second, "CalibMuons"+m_sysName+"Aux."));
 
     // Decorate objects with ElementLink to their originals -- this is needed to retrieve the contribution of each object to the MET terms.
     // You should make sure that you use the tag xAODBase-00-00-22, which is available from AnalysisBase-2.0.11.
@@ -5692,8 +5692,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::pair< xAOD::ElectronContainer*, xAOD::ShallowAuxContainer* > electrons_shallowCopy = xAOD::shallowCopyContainer( *m_electrons );
     xAOD::ElectronContainer* m_elecSC = electrons_shallowCopy.first;
 
-    ANA_CHECK(m_store->record( electrons_shallowCopy.first, "CalibElectrons" ));
-    ANA_CHECK(m_store->record( electrons_shallowCopy.second, "CalibElectronsAux."));
+    ANA_CHECK(m_store->record( electrons_shallowCopy.first, "CalibElectrons"+m_sysName ));
+    ANA_CHECK(m_store->record( electrons_shallowCopy.second, "CalibElectrons"+m_sysName+"Aux."));
 
     // Decorate objects with ElementLink to their originals -- this is needed to retrieve the contribution of each object to the MET terms.
     // You should make sure that you use the tag xAODBase-00-00-22, which is available from AnalysisBase-2.0.11.
@@ -5795,8 +5795,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::pair< xAOD::PhotonContainer*, xAOD::ShallowAuxContainer* > photons_shallowCopy = xAOD::shallowCopyContainer( *m_photons );
     xAOD::PhotonContainer* m_photSC = photons_shallowCopy.first;
 
-    ANA_CHECK(m_store->record( photons_shallowCopy.first, "CalibPhotons" ));
-    ANA_CHECK(m_store->record( photons_shallowCopy.second, "CalibPhotonsAux."));
+    ANA_CHECK(m_store->record( photons_shallowCopy.first, "CalibPhotons"+m_sysName ));
+    ANA_CHECK(m_store->record( photons_shallowCopy.second, "CalibPhotons"+m_sysName+"Aux."));
 
     // Decorate objects with ElementLink to their originals -- this is needed to retrieve the contribution of each object to the MET terms.
     // You should make sure that you use the tag xAODBase-00-00-22, which is available from AnalysisBase-2.0.11.
@@ -5885,8 +5885,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::pair< xAOD::TauJetContainer*, xAOD::ShallowAuxContainer* > tau_shallowCopy = xAOD::shallowCopyContainer( *m_taus );
     xAOD::TauJetContainer* m_tauSC = tau_shallowCopy.first;
 
-    ANA_CHECK(m_store->record( tau_shallowCopy.first, "CalibTaus" ));
-    ANA_CHECK(m_store->record( tau_shallowCopy.second, "CalibTausAux."));
+    ANA_CHECK(m_store->record( tau_shallowCopy.first, "CalibTaus"+m_sysName ));
+    ANA_CHECK(m_store->record( tau_shallowCopy.second, "CalibTaus"+m_sysName+"+Aux."));
 
     // Decorate objects with ElementLink to their originals -- this is needed to retrieve the contribution of each object to the MET terms.
     // You should make sure that you use the tag xAODBase-00-00-22, which is available from AnalysisBase-2.0.11.
@@ -5990,8 +5990,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::pair< xAOD::JetContainer*, xAOD::ShallowAuxContainer* > jets_shallowCopy = xAOD::shallowCopyContainer( *m_jets );
     xAOD::JetContainer* m_jetSC = jets_shallowCopy.first;
 
-    ANA_CHECK(m_store->record( jets_shallowCopy.first, "CalibJets" ));
-    ANA_CHECK(m_store->record( jets_shallowCopy.second, "CalibJetsAux."));
+    ANA_CHECK(m_store->record( jets_shallowCopy.first, "CalibJets"+m_sysName ));
+    ANA_CHECK(m_store->record( jets_shallowCopy.second, "CalibJets"+m_sysName+"Aux."));
 
     // Decorate objects with ElementLink to their originals -- this is needed to retrieve the contribution of each object to the MET terms.
     // You should make sure that you use the tag xAODBase-00-00-22, which is available from AnalysisBase-2.0.11.
@@ -6396,7 +6396,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
 
 
-
     // This real MET will be used for mT calculation in the function for Wmunu MET efficiency (void smZInvAnalysis::doWmunuSMReco)
     //==============//
     // MET building //
@@ -6593,7 +6592,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
 
 
-
     /////////////////////////////////////////
     // Do Analysis with differenct Channel //
     /////////////////////////////////////////
@@ -6645,7 +6643,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     //---------------
     // Zmumu Channel
     //---------------
-    if ( m_useArrayCutflow && m_isZmumu ) {
+    if ( m_sysName=="" && m_useArrayCutflow && m_isZmumu ) {
 
 
       //==============//
@@ -7545,7 +7543,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     //---------------
     // Zee Channel
     //---------------
-    if ( m_useArrayCutflow && m_isZee ) {
+    if ( m_sysName=="" && m_useArrayCutflow && m_isZee ) {
 
 
       //==============//
@@ -8013,38 +8011,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
     } // End of Cutflow (Zee channel)
 
 
-    // Below containers can be used for Reco level in the exotic analysis to calculate the unfolding.
-    // If truth analysis is not implemented, "m_store->record" is not implemented.
-    // That means these containers are not automatically dealt in the code. I should manually delete these container.
-    if (!m_doTruth || m_isData) {
-      delete m_bornTruthMuon;
-      delete m_bornTruthMuonAux;
-      delete m_bornTruthElectron;
-      delete m_bornTruthElectronAux;
-      delete m_bareTruthMuon;
-      delete m_bareTruthMuonAux;
-      delete m_bareTruthElectron;
-      delete m_bareTruthElectronAux;
-      delete m_selectedTruthNeutrino;
-      delete m_selectedTruthNeutrinoAux;
-      delete m_dressedTruthMuon;
-      delete m_dressedTruthMuonAux;
-      delete m_dressedTruthElectron;
-      delete m_dressedTruthElectronAux;
-      delete m_selectedTruthTau;
-      delete m_selectedTruthTauAux;
-      delete m_selectedTruthJet;
-      delete m_selectedTruthJetAux;
-      if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
-        delete m_selectedTruthWZJet;
-        delete m_selectedTruthWZJetAux;
-      }
-      delete m_truthJet;
-      delete m_truthJetAux;
-    }
-
-
-
 
 
 
@@ -8064,22 +8030,38 @@ EL::StatusCode smZInvAnalysis :: execute ()
   ////////////////////////////
   // Delete copy containers //
   ////////////////////////////
-  //delete m_allJet;
-  //delete m_allJetAux;
-  //delete m_goodJet;
-  //delete m_goodJetAux;
-  //delete m_goodMuon;
-  //delete m_goodMuonAux;
-  //delete m_goodMuonForZ;
-  //delete m_goodMuonForZAux;
-  //delete m_goodElectron;
-  //delete m_goodElectronAux;
-  //delete m_goodPhoton;
-  //delete m_goodPhotonAux;
-  //delete m_goodTau;
-  //delete m_goodTauAux;
   delete m_met;
   delete m_metAux;
+
+  // Below containers can be used for Reco level in the exotic analysis to calculate the unfolding.
+  // If truth analysis is not implemented, "m_store->record" is not implemented.
+  // That means these containers are not automatically dealt in the code. I should manually delete these container.
+  if (!m_doTruth || m_isData) {
+    delete m_bornTruthMuon;
+    delete m_bornTruthMuonAux;
+    delete m_bornTruthElectron;
+    delete m_bornTruthElectronAux;
+    delete m_bareTruthMuon;
+    delete m_bareTruthMuonAux;
+    delete m_bareTruthElectron;
+    delete m_bareTruthElectronAux;
+    delete m_selectedTruthNeutrino;
+    delete m_selectedTruthNeutrinoAux;
+    delete m_dressedTruthMuon;
+    delete m_dressedTruthMuonAux;
+    delete m_dressedTruthElectron;
+    delete m_dressedTruthElectronAux;
+    delete m_selectedTruthTau;
+    delete m_selectedTruthTauAux;
+    delete m_selectedTruthJet;
+    delete m_selectedTruthJetAux;
+    if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
+      delete m_selectedTruthWZJet;
+      delete m_selectedTruthWZJetAux;
+    }
+    delete m_truthJet;
+    delete m_truthJetAux;
+  }
 
 
 
