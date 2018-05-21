@@ -425,13 +425,14 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Enable Reconstruction level analysis
   m_doReco = true;
 
+  if (m_isData) m_doReco = true;
   if (m_fileType == "truth1") m_doReco = false;
 
   // Enable Truth level analysis
-  m_doTruth = true;
+  m_doTruth = false;
 
   // Enable Systematics
-  m_doSys = false;
+  m_doSys = true;
 
   // Scale factor
   m_recoSF = true;
@@ -1451,43 +1452,47 @@ EL::StatusCode smZInvAnalysis :: execute ()
     return EL::StatusCode::FAILURE;
   }
 
-  // Apply the prwTool first before calling the efficiency correction methods
-  m_prwTool->apply(*eventInfo, true); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though! 
+  if (m_doReco) {
 
-  // Get run number for both Data and MC
-  // The following example assumes that you have instantiated the PileupReweightingTool and called the apply() method.
-  unsigned int m_runNumber = 0;
-  // case where the event is data
-  if (m_isData) {
-    ANA_MSG_DEBUG("The current event is a data event. Return m_runNumber instead.");
-    m_runNumber = eventInfo->runNumber();
-  }
-  // case where the event is simulation
-  else {
-    if( eventInfo->auxdecor<unsigned int>("RandomRunNumber") ) {
-      m_runNumber = eventInfo->auxdecor<unsigned int>("RandomRunNumber");
-    } else {
-      ANA_MSG_WARNING("Failed to find the RandomRunNumber decoration. Please call the apply() method from the PileupReweightingTool before hand in order to get period dependent SFs. You'll receive SFs from the most recent period.");
-      m_runNumber=9999999;
+    // Apply the prwTool first before calling the efficiency correction methods
+    m_prwTool->apply(*eventInfo, true); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though! 
+
+    // Get run number for both Data and MC
+    // The following example assumes that you have instantiated the PileupReweightingTool and called the apply() method.
+    unsigned int m_runNumber = 0;
+    // case where the event is data
+    if (m_isData) {
+      ANA_MSG_DEBUG("The current event is a data event. Return m_runNumber instead.");
+      m_runNumber = eventInfo->runNumber();
     }
-  }
+    // case where the event is simulation (MC)
+    else {
+      if( eventInfo->auxdecor<unsigned int>("RandomRunNumber") ) {
+        m_runNumber = eventInfo->auxdecor<unsigned int>("RandomRunNumber");
+      } else {
+        ANA_MSG_WARNING("Failed to find the RandomRunNumber decoration. Please call the apply() method from the PileupReweightingTool before hand in order to get period dependent SFs. You'll receive SFs from the most recent period.");
+        m_runNumber=9999999;
+      }
+    }
 
-  m_dataYear = "";
-  // 2015 Dataset
-  if (m_runNumber >= 276262 && m_runNumber <= 284484) {
-    m_dataYear = "2015";
-  }
-  // 2016 Dataset
-  else if (m_runNumber >= 297730 && m_runNumber <= 311481) {
-    m_dataYear = "2016";
-  }
-  // 2017 Dataset
-  else if (m_runNumber >= 325713 && m_runNumber <= 340453 ) {
-    m_dataYear = "2017";
-  }
+    m_dataYear = "";
+    // 2015 Dataset
+    if (m_runNumber >= 276262 && m_runNumber <= 284484) {
+      m_dataYear = "2015";
+    }
+    // 2016 Dataset
+    else if (m_runNumber >= 297730 && m_runNumber <= 311481) {
+      m_dataYear = "2016";
+    }
+    // 2017 Dataset
+    else if (m_runNumber >= 325713 && m_runNumber <= 340453 ) {
+      m_dataYear = "2017";
+    }
 
-  //std::cout << "[execute] run Number = " << m_runNumber << endl;
-  //std::cout << "[execute] m_dataYear = " << m_dataYear << endl;
+    //std::cout << "[execute] run Number = " << m_runNumber << endl;
+    //std::cout << "[execute] m_dataYear = " << m_dataYear << endl;
+
+  } // Get run number when m_doReco
 
 
   // Calculate EventWeight
@@ -4730,6 +4735,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     hMap1D["SM_study_bare_OS_good_jet_n"]->Fill(m_OSbareTruthNominalJet->size(), m_mcEventWeight);
 
     delete m_copyGoodTruthJetForBareOS;
+    delete m_copyGoodTruthJetForBareOSAux;
 
 
     // --------------------------
@@ -4870,6 +4876,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     hMap1D["SM_study_dress_OS_good_jet_n"]->Fill(m_OSdressTruthNominalJet->size(), m_mcEventWeight);
 
     delete m_copyGoodTruthJetForDressOS;
+    delete m_copyGoodTruthJetForDressOSAux;
 
 
 

@@ -206,8 +206,10 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("mc16_13TeV.root").scan(sh,inputFilePath); // 364123.Zee_MAXHTPTV280_500_CVetoBVeto
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/atlas09Home/Work/smZinvSkim/run/testRun_05032018_test_zmumu/data-mini-xAOD");
   //SH::ScanDir().filePattern("mc16_13TeV.364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto.deriv.DAOD_EXOT5.e5271_s3126_r9364_r9315_p3238.root").scan(sh,inputFilePath); // 364123.Zee_MAXHTPTV280_500_CVetoBVeto
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/atlas09Home/Work/smZinvSkim/run/testRun_05032018_test_zee/data-mini-xAOD");
-  SH::ScanDir().filePattern("mc16_13TeV.364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto.deriv.DAOD_STDM4.e5271_s3126_r9364_r9315_p3371.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas16/hson02/Dataset/Rel21/MC");
+  //SH::ScanDir().filePattern("user.hson.14171858._000003.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3238, skim, EXOT5)
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas16/hson02/Dataset/Rel21/MC");
+  SH::ScanDir().filePattern("user.hson.14171859._000003.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim, STMD4)
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
