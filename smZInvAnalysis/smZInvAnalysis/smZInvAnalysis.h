@@ -62,6 +62,7 @@
 #include "JetSelectorTools/JetCleaningTool.h"
 #include "JetMomentTools/JetVertexTaggerTool.h"
 #include "JetMomentTools/JetForwardJvtTool.h"
+#include "JetJvtEfficiency/JetJvtEfficiency.h"
 
 // Muon tools
 #include "MuonMomentumCorrections/MuonCalibrationAndSmearingTool.h"
@@ -284,6 +285,7 @@ public:
   JetCleaningTool *m_jetCleaningTightBad; //!
   ToolHandle<IJetUpdateJvt> m_hjvtagup; //!
   asg::AnaToolHandle<IJetModifier> m_fJvtTool; //!
+  CP::JetJvtEfficiency* m_jvtefficiencyTool; //!
 
   // Muon
   CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool2016; //!

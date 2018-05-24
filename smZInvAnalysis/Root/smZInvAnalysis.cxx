@@ -415,10 +415,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   //m_MC_campaign = "mc16d"; // re-reconstruct MC16c (unavailable yet)
 
   // Event Channel
-  m_isZnunu = true;
+  m_isZnunu = false;
   m_isZmumu = true;
-  m_isZee = true;
-  m_isWmunu = true;
+  m_isZee = false;
+  m_isWmunu = false;
   m_isWenu = false;
   m_isZemu = false;
 
@@ -429,10 +429,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   if (m_fileType == "truth1") m_doReco = false;
 
   // Enable Truth level analysis
-  m_doTruth = false;
+  m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = true;
+  m_doSys = false;
 
   // Scale factor
   m_recoSF = true;
@@ -633,6 +633,12 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     m_fJvtTool.setProperty("CentralMaxPt",60e3);
     ANA_CHECK( m_fJvtTool.retrieve() );
 
+    // Initialise Jet JVT Efficiency Tool
+    m_jvtefficiencyTool = new CP::JetJvtEfficiency("JvtEfficiencyTool");
+    ANA_CHECK(m_jvtefficiencyTool->setProperty("WorkingPoint", "Medium"));
+    ANA_CHECK(m_jvtefficiencyTool->setProperty("SFFile","JetJvtEfficiency/Moriond2017/JvtSFFile_EM.root"));
+    ANA_CHECK(m_jvtefficiencyTool->initialize());
+
     // Muon calibration and smearing tool (For 2015 and 2016 dataset)
     m_muonCalibrationAndSmearingTool2016 = new CP::MuonCalibrationAndSmearingTool( "MuonCorrectionTool2016" );
     // For 2015 and 2016 datasets
@@ -746,7 +752,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     corrFileNameList_reco.push_back("ElectronEfficiencyCorrection/2015_2017/rel21.2/Moriond_February2018_v1/offline/efficiencySF.offline.RecoTrk.root");
     ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("CorrectionFileNameList", corrFileNameList_reco) );
     ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("ForceDataType", 1) );
-    //ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("CorrelationModel", "FULL") );
+    ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("CorrelationModel", "TOTAL") );
     ANA_CHECK(m_elecEfficiencySFTool_reco->initialize() );
 
     m_elecEfficiencySFTool_id = new AsgElectronEfficiencyCorrectionTool("AsgElectronEfficiencyCorrectionTool_id");
@@ -754,7 +760,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     corrFileNameList_id.push_back("ElectronEfficiencyCorrection/2015_2017/rel21.2/Moriond_February2018_v1/offline/efficiencySF.offline.TightLLH_d0z0_v13.root");
     ANA_CHECK(m_elecEfficiencySFTool_id->setProperty("CorrectionFileNameList", corrFileNameList_id) );
     ANA_CHECK(m_elecEfficiencySFTool_id->setProperty("ForceDataType", 1) );
-    //ANA_CHECK(m_elecEfficiencySFTool_id->setProperty("CorrelationModel", "FULL") );
+    ANA_CHECK(m_elecEfficiencySFTool_id->setProperty("CorrelationModel", "TOTAL") );
     ANA_CHECK(m_elecEfficiencySFTool_id->initialize() );
 
     m_elecEfficiencySFTool_iso = new AsgElectronEfficiencyCorrectionTool("AsgElectronEfficiencyCorrectionTool_iso");
@@ -762,7 +768,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     corrFileNameList_iso.push_back("ElectronEfficiencyCorrection/2015_2017/rel21.2/Moriond_February2018_v1/isolation/efficiencySF.Isolation.TightLLH_d0z0_v13_isolFixedCutTight.root");
     ANA_CHECK(m_elecEfficiencySFTool_iso->setProperty("CorrectionFileNameList", corrFileNameList_iso) );
     ANA_CHECK(m_elecEfficiencySFTool_iso->setProperty("ForceDataType", 1) );
-    //ANA_CHECK(m_elecEfficiencySFTool_iso->setProperty("CorrelationModel", "FULL") );
+    ANA_CHECK(m_elecEfficiencySFTool_iso->setProperty("CorrelationModel", "TOTAL") );
     ANA_CHECK(m_elecEfficiencySFTool_iso->initialize() );
 
     m_elecEfficiencySFTool_trigSF = new AsgElectronEfficiencyCorrectionTool("AsgElectronEfficiencyCorrectionTool_trigSF");
@@ -770,7 +776,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     corrFileNameList_trigSF.push_back("ElectronEfficiencyCorrection/2015_2017/rel21.2/Moriond_February2018_v1/trigger/efficiency.SINGLE_E_2015_e24_lhmedium_L1EM20VH_OR_e60_lhmedium_OR_e120_lhloose_2016_2017_e26_lhtight_nod0_ivarloose_OR_e60_lhmedium_nod0_OR_e140_lhloose_nod0.TightLLH_d0z0_v13_isolFixedCutTight.root");
     ANA_CHECK(m_elecEfficiencySFTool_trigSF->setProperty("CorrectionFileNameList", corrFileNameList_trigSF) );
     ANA_CHECK(m_elecEfficiencySFTool_trigSF->setProperty("ForceDataType", 1) );
-    //ANA_CHECK(m_elecEfficiencySFTool_trigSF->setProperty("CorrelationModel", "FULL") );
+    ANA_CHECK(m_elecEfficiencySFTool_trigSF->setProperty("CorrelationModel", "TOTAL") );
     ANA_CHECK(m_elecEfficiencySFTool_trigSF->initialize() );
 
 
@@ -1252,6 +1258,12 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     for (const auto &sysList : m_sysList){
       if ((!m_doSys || m_isData) && (sysList).name() != "") continue;
       std::string m_sysName = (sysList).name();
+
+      if (m_doSys && (m_sysName.find("TAUS_")!=std::string::npos || m_sysName.find("PH_")!=std::string::npos )) continue;
+      if (m_isZmumu && !m_isZee && !m_isZnunu && m_doSys && ((m_sysName.find("EL_")!=std::string::npos || m_sysName.find("EG_")!=std::string::npos))) continue;
+      if (m_isZee && !m_isZmumu && !m_isZnunu && m_doSys && ((m_sysName.find("MUON_")!=std::string::npos || m_sysName.find("MUONS_")!=std::string::npos))) continue;
+      if (m_isZnunu && !m_isZmumu && !m_isZee && m_doSys && ((m_sysName.find("MUON_")!=std::string::npos || m_sysName.find("MUONS_")!=std::string::npos || m_sysName.find("EL_")!=std::string::npos || m_sysName.find("EG_")!=std::string::npos)) ) continue;
+
 
       // Print the list of systematics
       if(m_sysName=="") std::cout << "Nominal (no syst) "  << std::endl;
@@ -5474,6 +5486,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::string m_sysName = (sysList).name();
     if ((!m_doSys || m_isData) && m_sysName != "") continue;
 
+    if (m_doSys && (m_sysName.find("TAUS_")!=std::string::npos || m_sysName.find("PH_")!=std::string::npos )) continue;
+    if (m_isZmumu && !m_isZee && !m_isZnunu && m_doSys && ((m_sysName.find("EL_")!=std::string::npos || m_sysName.find("EG_")!=std::string::npos))) continue;
+    if (m_isZee && !m_isZmumu && !m_isZnunu && m_doSys && ((m_sysName.find("MUON_")!=std::string::npos || m_sysName.find("MUONS_")!=std::string::npos))) continue;
+    if (m_isZnunu && !m_isZmumu && !m_isZee && m_doSys && ((m_sysName.find("MUON_")!=std::string::npos || m_sysName.find("MUONS_")!=std::string::npos || m_sysName.find("EL_")!=std::string::npos || m_sysName.find("EG_")!=std::string::npos)) ) continue;
+
     // Print the list of systematics
     //if(m_sysName=="") std::cout << "Nominal (no syst) "  << std::endl;
     //else std::cout << "Systematic: " << m_sysName << std::endl;
@@ -5488,6 +5505,12 @@ EL::StatusCode smZInvAnalysis :: execute ()
     // apply recommended systematic for JetUncertaintiesTool
     if (m_jetUncertaintiesTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
       Error("execute()", "Cannot configure JetUncertaintiesTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for JvtEfficiencyTool
+    if (m_jvtefficiencyTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure JvtEfficiencyTool for systematics");
       continue; // go to next systematic
     } // end check that systematic applied ok
 
@@ -5507,10 +5530,51 @@ EL::StatusCode smZInvAnalysis :: execute ()
       } // end check that systematic applied ok
     }
 
+    // apply recommended systematic for MuonEfficiencySFTool
+    if (m_muonEfficiencySFTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure MuonEfficiencySFTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for MuonIsolationSFTool
+    if (m_muonIsolationSFTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure MuonIsolationSFTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for MuonTTVAEfficiencySFTool
+    if (m_muonTTVAEfficiencySFTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure MuonTTVAEfficiencySFTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
 
     // apply recommended systematic for EgammaCalibrationAndSmearingTool
     if (m_egammaCalibrationAndSmearingTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
       Error("execute()", "Cannot configure EgammaCalibrationAndSmearingTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for ElectronEfficiencyCorrectionToolRecoSF
+    if (m_elecEfficiencySFTool_reco->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure ElectronEfficiencyCorrectionToolRecoSF for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for ElectronEfficiencyCorrectionToolId
+    if (m_elecEfficiencySFTool_id->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure ElectronEfficiencyCorrectionToolId for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for ElectronEfficiencyCorrectionToolIsoSF
+    if (m_elecEfficiencySFTool_iso->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure ElectronEfficiencyCorrectionToolIsoSF for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
+    // apply recommended systematic for ElectronEfficiencyCorrectionToolTriggerSF
+    if (m_elecEfficiencySFTool_trigSF->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure ElectronEfficiencyCorrectionToolTriggerSF for systematics");
       continue; // go to next systematic
     } // end check that systematic applied ok
 
@@ -5525,6 +5589,13 @@ EL::StatusCode smZInvAnalysis :: execute ()
       Error("execute()", "Cannot configure METSystematicsTool for systematics");
       continue; // go to next systematic
     } // end check that systematic applied ok
+
+    // apply recommended systematic for PileupReweightingTool
+    if (m_prwTool->applySystematicVariation( sysList ) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure PileupReweightingTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
 
 
 
@@ -6073,7 +6144,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
         //std::cout << "jet: Jet EM scale pT = " << jets->jetP4(xAOD::JetConstitScaleMomentum).pt() * 0.001 << " GeV" << std::endl;
       }
       // Jvt cut
-      if (jets->pt() < 60000. && std::fabs(jet_EMScale_eta) < 2.4 && newjvt < 0.59) badJet = true; 
+      //if (jets->pt() < 60000. && std::fabs(jet_EMScale_eta) < 2.4 && newjvt < 0.59) badJet = true;
+      // Use JVT Efficiency tool
+      //if (jets->pt() < 60000. && std::fabs(jet_EMScale_eta) < 2.4 && !m_jvtefficiencyTool->passesJvtCut(*jets)) badJet = true;
+      //if (jets->pt() < 60000. && std::fabs(jets->eta()) < 2.4 && !m_jvtefficiencyTool->passesJvtCut(*jets)) badJet = true;
+      if (!m_jvtefficiencyTool->passesJvtCut(*jets)) badJet = true;
 
 
       // decorate selected objects for overlap removal tool
@@ -8164,6 +8239,12 @@ EL::StatusCode smZInvAnalysis :: finalize ()
     if( m_jetCleaningTightBad ) {
       delete m_jetCleaningTightBad;
       m_jetCleaningTightBad = 0;
+    }
+
+    // Jet JVT Efficiency Tool
+    if( m_jvtefficiencyTool ) {
+      delete m_jvtefficiencyTool;
+      m_jvtefficiencyTool = 0;
     }
 
     // Muon calibration and smearing
