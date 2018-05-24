@@ -114,7 +114,7 @@ atlas_add_dictionary (smZInvAnalysisDict
 atlas_install_data( share/* )
 
 # Executable(s) in the package:
-atlas_add_executable( testAnalysisRun util/testAnalysisRun.cxx
+atlas_add_executable( testAnalRun util/testAnalRun.cxx
    INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
    LINK_LIBRARIES ${ROOT_LIBRARIES}
    smZInvAnalysisLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
