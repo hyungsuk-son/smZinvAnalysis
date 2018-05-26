@@ -20,6 +20,7 @@ atlas_depends_on_subdirs(
    PhysicsAnalysis/D3PDTools/EventLoopAlgs
    PhysicsAnalysis/D3PDTools/SampleHandler
    PhysicsAnalysis/Interfaces/AsgAnalysisInterfaces
+   PhysicsAnalysis/AnalysisCommon/AssociationUtils
    Event/xAOD/xAODBase
    Event/xAOD/xAODCore
    Event/xAOD/xAODEgamma
@@ -118,6 +119,31 @@ atlas_add_executable( testAnalRun util/testAnalRun.cxx
    INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
    LINK_LIBRARIES ${ROOT_LIBRARIES}
    smZInvAnalysisLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
+)
+atlas_add_executable( batchTestAnalRun util/batchTestAnalRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES}
+   smZInvAnalysisLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
+)
+atlas_add_executable( submitBatchAnalRun.cxx util/submitBatchAnalRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES}
+   smZInvAnalysisLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
+)
+atlas_add_executable( gridAnalRun util/gridAnalRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES} smZInvAnalysisLib PATInterfaces xAODRootAccess
+   RootCoreUtils SampleHandler EventLoop EventLoopGrid EventLoopAlgs
+)
+atlas_add_executable( submitGridAnalRun util/submitGridAnalRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES} smZInvAnalysisLib PATInterfaces xAODRootAccess
+   RootCoreUtils SampleHandler EventLoop EventLoopGrid EventLoopAlgs
+)
+atlas_add_executable( waitAnalRun util/waitAnalRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES} smZInvAnalysisLib PATInterfaces xAODRootAccess
+   RootCoreUtils SampleHandler EventLoop EventLoopGrid EventLoopAlgs
 )
 
 

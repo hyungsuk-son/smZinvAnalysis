@@ -417,7 +417,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Event Channel
   m_isZnunu = false;
   m_isZmumu = true;
-  m_isZee = false;
+  m_isZee = true;
   m_isWmunu = false;
   m_isWenu = false;
   m_isZemu = false;
