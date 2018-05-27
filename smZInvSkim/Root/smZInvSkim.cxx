@@ -391,9 +391,11 @@ EL::StatusCode smZInvSkim :: initialize ()
   m_grl = new GoodRunsListSelectionTool("GoodRunsListSelectionTool");
   std::vector<std::string> vecStringGRL;
   // 2015 data
-  //vecStringGRL.push_back( gSystem->ExpandPathName("$ROOTCOREBIN/data/smZInvSkim/data15_13TeV.periodAllYear_DetStatus-v79-repro20-02_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml") );
+    std::string fullGRLFilePath2015 = PathResolverFindCalibFile("smZInvSkim/data15_13TeV.periodAllYear_DetStatus-v89-pro21-02_Unknown_PHYS_StandardGRL_All_Good_25ns.xml");
+    vecStringGRL.push_back(fullGRLFilePath2015);
   // 2016 data
-  //vecStringGRL.push_back( gSystem->ExpandPathName("$ROOTCOREBIN/data/smZInvSkim/data16_13TeV.periodAllYear_DetStatus-v88-pro20-21_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml") );
+    std::string fullGRLFilePath2016 = PathResolverFindCalibFile("smZInvSkim/data16_13TeV.periodAllYear_DetStatus-v89-pro21-01_DQDefects-00-02-04_PHYS_StandardGRL_All_Good_25ns.xml");
+    vecStringGRL.push_back(fullGRLFilePath2016);
   ANA_CHECK(m_grl->setProperty( "GoodRunsListVec", vecStringGRL));
   ANA_CHECK(m_grl->setProperty("PassThrough", false)); // if true (default) will ignore result of GRL and will just pass all events
   ANA_CHECK(m_grl->initialize());

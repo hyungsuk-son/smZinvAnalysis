@@ -45,6 +45,9 @@
 #include "xAODMetaDataCnv/FileMetaDataTool.h"
 #include "xAODTriggerCnv/TriggerMenuMetaDataTool.h"
 
+// PathResolver
+#include "PathResolver/PathResolver.h"
+
 // AnaAlgorithm
 //#include <AnaAlgorithm/AnaAlgorithm.h>
 

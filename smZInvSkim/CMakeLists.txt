@@ -76,6 +76,8 @@ atlas_add_dictionary (smZInvSkimDict
    LINK_LIBRARIES smZInvSkimLib
 )
 
+# Add share directory (i.e. GRL xml files, prw root files.. )
+atlas_install_data( share/* )
 
 # Executable(s) in the package:
 atlas_add_executable( testSkimRun util/testSkimRun.cxx
