@@ -88,6 +88,11 @@ atlas_add_executable( gridSkimRun util/gridSkimRun.cxx
    LINK_LIBRARIES ${ROOT_LIBRARIES} smZInvSkimLib PATInterfaces xAODRootAccess
    RootCoreUtils SampleHandler EventLoop EventLoopGrid EventLoopAlgs
 )
+atlas_add_executable( submitGridSkimRun util/submitGridSkimRun.cxx
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES} smZInvSkimLib PATInterfaces xAODRootAccess
+   RootCoreUtils SampleHandler EventLoop EventLoopGrid EventLoopAlgs
+)
 
 
 
