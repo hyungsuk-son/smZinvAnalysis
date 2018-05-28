@@ -46,46 +46,48 @@ int main( int argc, char* argv[] ) {
   // https://atlaswww.hep.anl.gov/asc/WebSVN/filedetails.php?repname=dijets&path=%2Fcode%2Ftrunk%2Futil%2FrunDijetResonance.cxx
  
   // Create my output mini-xAOD dataset name
+  std::string myTagVer = "v1";
   // MC16a backgrounds
   // EXOT5
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_EXOT5_v1"; // Zmumu
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_EXOT5_v1"; // Zee
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Znunu_skim_EXOT5_v1"; // Znunu
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Ztautau_skim_EXOT5_v1"; // Ztautau
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Wmunu_skim_EXOT5_v1"; // Wmunu
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Wenu_skim_EXOT5_v1"; // Wenu
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Wtaunu_skim_EXOT5_v1"; // Wtaunu
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Diboson_skim_EXOT5_v1"; // Diboson
-  //std::string myTagName = "mc16a_13TeV.PowhegPythiaEvtGen_Top_skim_EXOT5_v1"; // Top
-  //std::string myTagName = "mc16a_13TeV.Pythia8EvtGen_Top_skim_EXOT5_v1"; // Multijet
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_EXOT5_"+myTagVer; // Zmumu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_EXOT5_"+myTagVer; // Zee
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Znunu_skim_EXOT5_"+myTagVer; // Znunu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Ztautau_skim_EXOT5_"+myTagVer; // Ztautau
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Wmunu_skim_EXOT5_"+myTagVer; // Wmunu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Wenu_skim_EXOT5_"+myTagVer; // Wenu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Wtaunu_skim_EXOT5_"+myTagVer; // Wtaunu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Diboson_skim_EXOT5_"+myTagVer; // Diboson
+  //std::string myTagName = "mc16a_13TeV.PowhegPythiaEvtGen_Top_skim_EXOT5_"+myTagVer; // Top
+  std::string myTagName = "mc16a_13TeV.Pythia8EvtGen_Multijet_skim_EXOT5_"+myTagVer; // Multijet
   // STDM4
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_STDM4_v1"; // Zmumu
-  //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_v1"; // Zee
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_"+myTagVer; // Zee
   // Data
-  std::string myTagName = "data15_13TeV.skim_EXOT5_v1"; // Data 2015 (EXOT5 derivation)
-  //std::string myTagName = "data16_13TeV.skim_EXOT5_v1"; // Data 2016 (EXOT5 derivation)
+  //std::string myTagName = "data15_13TeV.skim_EXOT5_"+myTagVer; // Data 2015 (EXOT5 derivation)
+  //std::string myTagName = "data16_13TeV.skim_EXOT5_"+myTagVer; // Data 2016 (EXOT5 derivation)
   std::string containerName;
   std::vector< std::string > outputContainerNames; //for grid only
 
   // List of input dataset
   // MC16a backgrounds
+  std::string listFilePath = "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/";
   // EXOT5
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Zmumu_dataset.txt" ); // Zmumu
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Zee_dataset.txt" ); // Zee
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Znunu_dataset.txt" ); // Znunu
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Ztautau_dataset.txt" ); // Ztautau
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Wmunu_dataset.txt" ); // Wmunu
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Wenu_dataset.txt" ); // Wenu
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Wtaunu_dataset.txt" ); // Wtaunu
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Diboson_dataset.txt" ); // Diboson
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Top_dataset.txt" ); // Top
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_EXOT5_Multijet_dataset.txt" ); // Multijet
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Zmumu_dataset.txt" ); // Zmumu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Zee_dataset.txt" ); // Zee
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Znunu_dataset.txt" ); // Znunu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Ztautau_dataset.txt" ); // Ztautau
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wmunu_dataset.txt" ); // Wmunu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wenu_dataset.txt" ); // Wenu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wtaunu_dataset.txt" ); // Wtaunu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Diboson_dataset.txt" ); // Diboson
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Top_dataset.txt" ); // Top
+  std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Multijet_dataset.txt" ); // Multijet
   // STDM4
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_STDM4_Zmumu_dataset.txt" ); // Zmumu
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/mc16a_deriv_STDM4_Zee_dataset.txt" ); // Zee
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_Zmumu_dataset.txt" ); // Zmumu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_Zee_dataset.txt" ); // Zee
   // Data
-  std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/data15_deriv_EXOT5.txt" ); // Data 2015 (EXOT5 derivation)
-  //std::ifstream inFile( "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/data16_deriv_EXOT5.txt" ); // Data 2016 (EXOT5 derivation)
+  //std::ifstream inFile( listFilePath+"data15_deriv_EXOT5.txt" ); // Data 2015 (EXOT5 derivation)
+  //std::ifstream inFile( listFilePath+"data16_deriv_EXOT5.txt" ); // Data 2016 (EXOT5 derivation)
   while(std::getline(inFile, containerName) ){
     if (containerName.size() > 1 && containerName.find("#") != 0 ){
       std::cout << "Adding container : " << containerName << std::endl;

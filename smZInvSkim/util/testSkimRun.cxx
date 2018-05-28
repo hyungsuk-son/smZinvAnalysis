@@ -52,8 +52,9 @@ int main( int argc, char* argv[] ) {
 
 
   // Data15
-  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas09/hson02/Dataset/Data/derivation");
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/derivation");
   //SH::ScanDir().filePattern("DAOD_EXOT5.10298531._000*").scan(sh,inputFilePath); // 284484 (random 10 files)
+  SH::ScanDir().filePattern("DAOD_EXOT5.13612879._0000*").scan(sh,inputFilePath); // 276073 (Test:including 0 event file)
 
   // MC15c (EXOT5)
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas08/MCSamples");
@@ -69,11 +70,11 @@ int main( int argc, char* argv[] ) {
 
   // Rel. 21
   // MC16c (EXOT5)
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas16/hson02/Dataset/Rel21/MC");
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas16/hson02/Dataset/Rel21/MC");
   //SH::ScanDir().filePattern("DAOD_EXOT5.11892347._000020.pool.root.1").scan(sh,inputFilePath); // 364123.Zee_MAXHTPTV280_500_CVetoBVeto
   //SH::ScanDir().filePattern("DAOD_EXOT5.11869241._000002.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
   // MC16c (STDM4)
-  SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
+  //SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
