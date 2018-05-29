@@ -46,7 +46,7 @@ int main( int argc, char* argv[] ) {
   // https://atlaswww.hep.anl.gov/asc/WebSVN/filedetails.php?repname=dijets&path=%2Fcode%2Ftrunk%2Futil%2FrunDijetResonance.cxx
  
   // Create my output mini-xAOD dataset name
-  std::string myTagVer = "v1";
+  std::string myTagVer = "v1.1";
   // MC16a backgrounds
   // EXOT5
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_EXOT5_"+myTagVer; // Zmumu
