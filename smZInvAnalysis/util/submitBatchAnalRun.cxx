@@ -96,23 +96,23 @@ int main( int argc, char* argv[] ) {
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364111.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_BFilter
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364112.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV500_1000
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364113.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV1000_E_CMS
-  // STDM4 for Ztautau
+  // EXOT5 for Ztautau
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim");
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364128.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV0_70_CVetoBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364129.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV0_70_CFilterBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364130.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV0_70_BFilter
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364131.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV70_140_CVetoBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364132.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV70_140_CFilterBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364133.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV70_140_BFilter
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364134.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV140_280_CVetoBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364135.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV140_280_CFilterBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364136.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV140_280_BFilter
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364137.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV280_500_CVetoBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364138.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV280_500_CFilterBVeto
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364139.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV280_500_BFilter
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364140.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV500_1000
-//  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364141.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV1000_E_CMS
-// STDM4 for Wenu
+//  SH::ScanDir().filePattern("user.hson.14247038._000*").scan(sh,inputFilePath); // 364128.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV0_70_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.14247039._000*").scan(sh,inputFilePath); // 364129.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV0_70_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.14247040._000*").scan(sh,inputFilePath); // 364130.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV0_70_BFilter
+//  SH::ScanDir().filePattern("user.hson.14247041._000*").scan(sh,inputFilePath); // 364131.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV70_140_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.14247042._000*").scan(sh,inputFilePath); // 364132.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV70_140_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.14247043._000*").scan(sh,inputFilePath); // 364133.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV70_140_BFilter
+//  SH::ScanDir().filePattern("user.hson.14247044._000*").scan(sh,inputFilePath); // 364134.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV140_280_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.14247045._000*").scan(sh,inputFilePath); // 364135.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV140_280_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.14247046._000*").scan(sh,inputFilePath); // 364136.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV140_280_BFilter
+//  SH::ScanDir().filePattern("user.hson.14247047._000*").scan(sh,inputFilePath); // 364137.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV280_500_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.14247048._000*").scan(sh,inputFilePath); // 364138.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV280_500_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.14247049._000*").scan(sh,inputFilePath); // 364139.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV280_500_BFilter
+//  SH::ScanDir().filePattern("user.hson.14247050._000*").scan(sh,inputFilePath); // 364140.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV500_1000
+//  SH::ScanDir().filePattern("user.hson.14247051._000*").scan(sh,inputFilePath); // 364141.Sherpa_221_NNPDF30NNLO_Ztautau_MAXHTPTV1000_E_CMS
+// EXOT5 for Wenu
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim");
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364170.Sherpa_221_NNPDF30NNLO_Wenu_MAXHTPTV0_70_CVetoBVeto
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364171.Sherpa_221_NNPDF30NNLO_Wenu_MAXHTPTV0_70_CFilterBVeto
@@ -128,7 +128,7 @@ int main( int argc, char* argv[] ) {
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364181.Sherpa_221_NNPDF30NNLO_Wenu_MAXHTPTV280_500_BFilter
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364182.Sherpa_221_NNPDF30NNLO_Wenu_MAXHTPTV500_1000
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364183.Sherpa_221_NNPDF30NNLO_Wenu_MAXHTPTV1000_E_CMS
-  // STDM4 for Wmunu
+  // EXOT5 for Wmunu
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim");
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364156.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV0_70_CVetoBVeto
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364157.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV0_70_CFilterBVeto
@@ -144,7 +144,7 @@ int main( int argc, char* argv[] ) {
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364167.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV280_500_BFilter
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364168.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV500_1000
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364169.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV1000_E_CMS
-  // STDM4 for Wtaunu
+  // EXOT5 for Wtaunu
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim");
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364184.Sherpa_221_NNPDF30NNLO_Wtaunu_MAXHTPTV0_70_CVetoBVeto
 //  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 364185.Sherpa_221_NNPDF30NNLO_Wtaunu_MAXHTPTV0_70_CFilterBVeto
@@ -208,7 +208,7 @@ int main( int argc, char* argv[] ) {
   // Period A ~ G (run 276262 ~ 281075) : 226 files
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas11/hson02/Dataset/Data/skim_v3/Data15_Period_AtoG");
   //SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
-  // Period A ~ G (run 281317 ~ 284484) : 218 files
+  // Period H ~ J (run 281317 ~ 284484) : 218 files
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas11/hson02/Dataset/Data/skim_v3/Data15_Period_HtoJ");
   //SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
 
@@ -264,7 +264,7 @@ int main( int argc, char* argv[] ) {
 //  job.options()->setString(EL::Job::optSubmitFlags, slurmOptions);
 
   system("mkdir -p ~/bin/; ln -s /usr/bin/sbatch ~/bin/bsub; export PATH=$PATH:~/bin");
-  std::string slurmJobName = "diboson";
+  std::string slurmJobName = "ztautau";
   // No delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021 -o stdout.%j -e stderr.%j --mail-type=END --mail-user=Hyungsuk.Son@tufts.edu --job-name="+slurmJobName;
   // Submit batch runs with 10min delay
