@@ -125,7 +125,7 @@ atlas_add_executable( batchTestAnalRun util/batchTestAnalRun.cxx
    LINK_LIBRARIES ${ROOT_LIBRARIES}
    smZInvAnalysisLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
 )
-atlas_add_executable( submitBatchAnalRun.cxx util/submitBatchAnalRun.cxx
+atlas_add_executable( submitBatchAnalRun util/submitBatchAnalRun.cxx
    INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
    LINK_LIBRARIES ${ROOT_LIBRARIES}
    smZInvAnalysisLib PATInterfaces xAODRootAccess RootCoreUtils SampleHandler EventLoop
