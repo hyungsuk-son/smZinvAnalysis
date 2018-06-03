@@ -415,10 +415,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   //m_MC_campaign = "mc16d"; // re-reconstruct MC16c (unavailable yet)
 
   // Event Channel
-  m_isZnunu = false;
+  m_isZnunu = true;
   m_isZmumu = true;
   m_isZee = true;
-  m_isWmunu = false;
+  m_isWmunu = true;
   m_isWenu = false;
   m_isZemu = false;
 
