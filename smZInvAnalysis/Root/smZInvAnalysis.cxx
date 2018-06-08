@@ -171,7 +171,7 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     m_generatorType = "madgraph";
   }
 
-  if (m_fileType == "DxAOD") {
+  if (m_fileType == "DxAOD" || m_isData) {
 
     // Event Bookkeepers
     // https://twiki.cern.ch/twiki/bin/view/AtlasProtected/AnalysisMetadata#Luminosity_Bookkeepers
@@ -189,91 +189,94 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     ////////////////////////////
     // To get Derivation info //
     ////////////////////////////
-    // FileMetaData no loger exists in Rel.21
-    /*
-    //----------------------------
-    // MetaData information
-    //--------------------------- 
-    const xAOD::FileMetaData* fileMetaData = 0;
-    //const xAOD::FileMetaDataAuxInfo* fileMetaData = 0;
-    if( ! m_event->retrieveMetaInput( fileMetaData, "FileMetaData").isSuccess() ){
-      Error("fileExecute()", "Failed to retrieve FileMetaData from MetaData. Exiting." );
-      return EL::StatusCode::FAILURE;
-    }
-
-
-    // Initialize string variable
-    m_dataType = "";
-    // Read dataType from FileMetaData and store it to m_dataType
-    const bool s = fileMetaData->value(xAOD::FileMetaData::dataType, m_dataType);
-
-    if (s) {
-      if ( m_dataType.find("EXOT")!=std::string::npos ) { // Exotic Derivation (EXOT)
-        std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-        m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
+    // FileMetaData no loger exists in Rel.21 MC but exist in Rel.21 Data
+    if(m_isData){ // For data
+      //----------------------------
+      // MetaData information
+      //--------------------------- 
+      const xAOD::FileMetaData* fileMetaData = 0;
+      //const xAOD::FileMetaDataAuxInfo* fileMetaData = 0;
+      if( ! m_event->retrieveMetaInput( fileMetaData, "FileMetaData").isSuccess() ){
+        Error("fileExecute()", "Failed to retrieve FileMetaData from MetaData. Exiting." );
+        return EL::StatusCode::FAILURE;
       }
-      if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
-        std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-        m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
+
+
+      // Initialize string variable
+      m_dataType = "";
+      // Read dataType from FileMetaData and store it to m_dataType
+      const bool s = fileMetaData->value(xAOD::FileMetaData::dataType, m_dataType);
+
+      if (s) {
+        if ( m_dataType.find("EXOT")!=std::string::npos ) { // Exotic Derivation (EXOT)
+          std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
+          m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
+        }
+        if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
+          std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
+          m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
+        }
+        std::cout << " data type = " << m_dataType << std::endl;
+        std::cout << " Derivation name = " << m_nameDerivation << std::endl;
+
+        // Save a derivation name in a histogram
+        h_dataType->Fill(m_dataType.c_str(), 1);
       }
-      std::cout << " data type = " << m_dataType << std::endl;
-      std::cout << " Derivation name = " << m_nameDerivation << std::endl;
+
+      /* // beamEnergy is removed in MetaData in Rel.21
+      // Test (Retrieve beam energy info from FileMetaData using TBranch and TTree)
+      TBranch *branch = MetaData->GetBranch("FileMetaDataAuxDyn.beamEnergy");
+      branch->Print();
+
+      Float_t m_beamEnergy;
+      branch->SetAddress(&m_beamEnergy);
+      branch->GetEntry(0);
+
+      std::cout << " beam Energy = " << m_beamEnergy << std::endl;
+      */
+
+    } else { // FileMetaData no loger exists in Rel.21 MC, so I use "CutBookkeepers" to retrieve derivation information
+
+      //----------------------------
+      // MetaData information
+      //--------------------------- 
+      const xAOD::CutBookkeeperContainer* cutBookkeeper = 0;
+      if(!m_event->retrieveMetaInput(cutBookkeeper, "CutBookkeepers").isSuccess()){
+        Error("initializeEvent()","Failed to retrieve CutBookkeepers from MetaData! Exiting.");
+        return EL::StatusCode::FAILURE;
+      }
+
+      // Initialize string variable
+      m_dataType = "";
+      bool s = false;
+
+      // Now, let's actually find the right one that contains all the needed info...
+      int maxcycle = -1;
+      for ( auto cbk : *cutBookkeeper ) {
+        if ( cbk->name() == "AllExecutedEvents" && cbk->inputStream().find("StreamDAOD")!=std::string::npos && cbk->cycle() > maxcycle){
+          maxcycle = cbk->cycle();
+          m_dataType = cbk->inputStream();
+          s = true;
+        }
+      }
+
+      if (s) {
+        if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
+          std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
+          m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
+        }
+        if ( m_dataType.find("STDM")!=std::string::npos ) { // Derivation (STDM)
+          std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
+          m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
+        }
+        std::cout << " data type = " << m_dataType << std::endl;
+        std::cout << " Derivation name = " << m_nameDerivation << std::endl;
+      }
 
       // Save a derivation name in a histogram
       h_dataType->Fill(m_dataType.c_str(), 1);
-    }
 
-    // Test (Retrieve beam energy info from FileMetaData using TBranch and TTree)
-    TBranch *branch = MetaData->GetBranch("FileMetaDataAuxDyn.beamEnergy");
-    branch->Print();
-
-    Float_t m_beamEnergy;
-    branch->SetAddress(&m_beamEnergy);
-    branch->GetEntry(0);
-
-    std::cout << " beam Energy = " << m_beamEnergy << std::endl;
-
-*/
-
-    //----------------------------
-    // MetaData information
-    //--------------------------- 
-    const xAOD::CutBookkeeperContainer* cutBookkeeper = 0;
-    if(!m_event->retrieveMetaInput(cutBookkeeper, "CutBookkeepers").isSuccess()){
-      Error("initializeEvent()","Failed to retrieve CutBookkeepers from MetaData! Exiting.");
-      return EL::StatusCode::FAILURE;
-    }
-
-    // Initialize string variable
-    m_dataType = "";
-    bool s = false;
-
-    // Now, let's actually find the right one that contains all the needed info...
-    int maxcycle = -1;
-    for ( auto cbk : *cutBookkeeper ) {
-      if ( cbk->name() == "AllExecutedEvents" && cbk->inputStream().find("StreamDAOD")!=std::string::npos && cbk->cycle() > maxcycle){
-        maxcycle = cbk->cycle();
-        m_dataType = cbk->inputStream();
-        s = true;
-      }
-    }
-
-    if (s) {
-      if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
-        std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-        m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
-      }
-      if ( m_dataType.find("STDM")!=std::string::npos ) { // Derivation (STDM)
-        std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-        m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
-      }
-      std::cout << " data type = " << m_dataType << std::endl;
-      std::cout << " Derivation name = " << m_nameDerivation << std::endl;
-    }
-
-    // Save a derivation name in a histogram
-    h_dataType->Fill(m_dataType.c_str(), 1);
-
+    } // MC
 
 
     //////////////////////////
@@ -316,7 +319,7 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
 
 
   }
-  if (m_fileType == "skim") {
+  if (m_fileType == "skim" && !m_isData) { // For skimmed MC
 
     // Retrieve histograms
     TH1F *temp_dataType = dynamic_cast<TH1F*>(wk()->inputFile()->Get("h_dataType"));
@@ -846,6 +849,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     orFlags.doElectrons = true;
     orFlags.doMuons = true;
     orFlags.doJets = true;
+    orFlags.doTaus = false;
     if ( m_dataType.find("EXOT")!=std::string::npos ) { //EXOT5 derivation
       orFlags.doTaus = false;
     } else if ( m_dataType.find("STDM")!=std::string::npos ) { // STDM4 Derivation
