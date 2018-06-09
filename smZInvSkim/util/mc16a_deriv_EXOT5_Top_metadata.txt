@@ -1,0 +1,13 @@
+dataset_number/I:crossSection/D:kFactor/D:genFiltEff/D
+# TOP PAIR PRODUCTION
+410501  7.3017E-01  1.13913198296  5.4383E-01  
+# SINGLE TOP
+410011  4.3739E-02  1.00944237408  1.0000E+00  
+410012  2.5778E-02  1.01931879898  1.0000E+00  
+410013  3.4009E-02  1.054          1.0000E+00  
+410014  3.3989E-02  1.054          1.0000E+00  
+410025  2.0514E-03  1.00478210003  1.0000E+00  
+410026  1.2615E-03  1.02153151011  1.0000E+00  
+
+#lsetup  "asetup AthAnalysis,21.2.33" pyAMI
+#getMetadata.py --timestamp="2018-06-08 23:09:16" --physicsGroups="PMG,MCGN" --fields="dataset_number,crossSection,kFactor,genFiltEff" --inDS="mc16_13TeV.410501.PowhegPythia8EvtGen_A14_ttbar_hdamp258p75_nonallhad.deriv.DAOD_EXOT5.e5458_s3126_r9364_r9315_p3500,mc16_13TeV.410011.PowhegPythiaEvtGen_P2012_singletop_tchan_lept_top.deriv.DAOD_EXOT5.e3824_s3126_r9364_r9315_p3480,mc16_13TeV.410012.PowhegPythiaEvtGen_P2012_singletop_tchan_lept_antitop.deriv.DAOD_EXOT5.e3824_s3126_r9364_r9315_p3480,mc16_13TeV.410013.PowhegPythiaEvtGen_P2012_Wt_inclusive_top.deriv.DAOD_EXOT5.e3753_s3126_r9364_r9315_p3480,mc16_13TeV.410014.PowhegPythiaEvtGen_P2012_Wt_inclusive_antitop.deriv.DAOD_EXOT5.e3753_s3126_r9364_r9315_p3480,mc16_13TeV.410025.PowhegPythiaEvtGen_P2012_SingleTopSchan_noAllHad_top.deriv.DAOD_EXOT5.e3998_s3126_r9364_r9315_p3480,mc16_13TeV.410026.PowhegPythiaEvtGen_P2012_SingleTopSchan_noAllHad_antitop.deriv.DAOD_EXOT5.e3998_s3126_r9364_r9315_p3480"
