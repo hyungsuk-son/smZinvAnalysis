@@ -124,6 +124,32 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     m_isData = false; // can do something with this later
   }
 
+  // Extract MC campaign automatically from Run Number (ex. 284500: mc16a, 300000: mc16c)
+  // mc16a : matching 2015+2016 data
+  // mc16c : matching 2017 data
+  // mc16d : re-reconstruct MC16c (unavailable yet)
+  if (!m_isData) {
+
+    uint32_t runNum = eventInfo->runNumber();
+
+    switch(runNum)
+    {
+      case 284500 :
+        m_MC_campaign="mc16a";
+        break;
+        // This should be switched to mc16d once it is available.
+      case 300000 :
+        m_MC_campaign="mc16c";
+        break;
+      default :
+        ANA_MSG_ERROR( "Could not determine mc campaign from run number! Impossible to autocongigure PRW. Aborting." );
+        return StatusCode::FAILURE;
+        break;
+    }
+    ANA_MSG_INFO( "Determined MC campaign to be " << m_MC_campaign);
+  }
+
+
   // Retrieve the Dataset name
   m_nameDataset = wk()->metaData()->castString (SH::MetaNames::sampleName());
   std::cout << " Dataset name = " << m_nameDataset << std::endl;
@@ -411,11 +437,6 @@ EL::StatusCode smZInvAnalysis :: initialize ()
 
   // Enable analysis cutflow to store into histogram
   m_useBitsetCutflow = true;
-
-  // MC Campaigns
-  m_MC_campaign = "mc16a"; // matching 2015+2016 data
-  //m_MC_campaign = "mc16c"; // matching 2017 data
-  //m_MC_campaign = "mc16d"; // re-reconstruct MC16c (unavailable yet)
 
   // Event Channel
   m_isZnunu = true;
@@ -1476,7 +1497,9 @@ EL::StatusCode smZInvAnalysis :: execute ()
   if (m_doReco) {
 
     // Apply the prwTool first before calling the efficiency correction methods
-    m_prwTool->apply(*eventInfo, true); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though! 
+    if (!m_isData) {
+      m_prwTool->apply(*eventInfo, true); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though!
+    }
 
     // Get run number for both Data and MC
     // The following example assumes that you have instantiated the PileupReweightingTool and called the apply() method.
@@ -5619,19 +5642,17 @@ EL::StatusCode smZInvAnalysis :: execute ()
       //float pu_weight = m_prwTool->getCombinedWeight(*eventInfo); // Get Pile-up weight
       float pu_weight = eventInfo->auxdecor<float>("PileupWeight"); // Get Pile-up weight
       print_puweight = pu_weight;
-      m_mcEventWeight = mcWeight * pu_weight;
+      m_mcEventWeight = mcWeight * pu_weight; // Multiply by mcWeight instead of m_mcEventWeight in order to reset m_mcEventWeight for PRW systematics
       // Get random run number
       // I can get the runNumber which is weighted by integrated luminosity using "getRandomRunnumber" in PileupReweightingTool.
       //unsigned int randomRunNumber = m_prwTool->getRandomRunNumber( *eventInfo, false ); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though! 
 
       // Print out pileup reweighting
-      /*
          Info("execute()", "================================================");
          Info("execute()", " Event # = %llu", eventInfo->eventNumber());
          Info("execute()", " MC Weight = %f", print_mcWeight);
          Info("execute()", " PU Weight = %f", print_puweight);
          Info("execute()", " mcEventWeight (mc_weight * pu_weight) = %f", m_mcEventWeight);
-      */
     }
 
 
@@ -9782,9 +9803,9 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   /////////////////////////////////
   float mcEventWeight_Zmumu = mcEventWeight;
   if (!m_isData) {
-    //Info("execute()", " Zmumu original mcEventWeight = %.3f ", mcEventWeight);
+    Info("execute()", " Zmumu original mcEventWeight = %.3f ", mcEventWeight);
     mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
-    //Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
+    Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
   }
 
 
