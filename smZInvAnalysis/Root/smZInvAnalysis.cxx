@@ -422,7 +422,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_isZmumu = true;
   m_isZee = true;
   m_isWmunu = true;
-  m_isWenu = false;
+  m_isWenu = true;
   m_isZemu = false;
 
   // Enable Reconstruction level analysis
@@ -445,7 +445,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_isoMuonSFforZ = false; // Muons in Z->mumu are not isolated (Exotic analysis)
   m_elecTrigSF = true; // for electron trigger
   m_muonTrigSFforExotic = false; // for muon trigger (muon trigger is not used for Zmumu channel)
-  m_muonTrigSFforSM = true; // for muon trigger (If I use muon triggers for Zmumu channel)
+  m_muonTrigSFforSM = false; // for muon trigger (If I use muon triggers for Zmumu channel)
   m_isoElectronSF = true; // for electron iso
 
 
@@ -460,6 +460,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_photEtaCut = 2.47;
   m_mllMin = 66000.; ///MeV
   m_mllMax = 116000.; ///MeV
+  m_mTCut = 50000.; ///MeV
   m_monoJetPtCut = 120000.; /// MeV
   m_monoJetEtaCut = 2.4;
   m_diJet1PtCut = 80000.; /// MeV
@@ -1279,10 +1280,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
       ////////////////////
 
       // Analysis plots
-      const int sm_channel_n = 3;
+      const int sm_channel_n = 5;
       const int sm_level_n = 1;
       const int sm_monojet_n = 2;
-      std::string sm_channel[sm_channel_n] = {"znunu_","zee_","zmumu_"};
+      std::string sm_channel[sm_channel_n] = {"znunu_","zee_","zmumu_","wenu_","wmunu_"};
       std::string sm_level[sm_level_n] = {"reco_"};
       std::string sm_monojet[sm_monojet_n] = {"exclusive_","inclusive_"};
       for(int i=0; i < sm_channel_n; i++) {
@@ -1295,7 +1296,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             if (sm_monojet[k] == "inclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, in_nbinMET, in_binsMET);
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 100., 1100.);
-            if (m_sysName=="") { // No systematic
+            if (m_sysName=="" && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // No systematic
                 // Statistical Unc. Test for ratio (scanning leading jet cuts)
               if (sm_monojet[k] == "exclusive_") { // Exclusive
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_LeadjetPt160"+m_sysName, 130, 130., 1430.);
@@ -1316,11 +1317,15 @@ EL::StatusCode smZInvAnalysis :: initialize ()
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_LeadjetPt300"+m_sysName, 130, 130., 1430.);
               }
             }
-            if (sm_channel[i] != "znunu_") {
+            if (sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"mll"+m_sysName, 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_pt"+m_sysName, 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_pt"+m_sysName, 140, 0., 1400.);
-            } 
+            }
+            if (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"mT"+m_sysName, 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep_pt"+m_sysName, 140, 0., 1400.);
+            }
           }
         }
       }
@@ -6707,6 +6712,12 @@ EL::StatusCode smZInvAnalysis :: execute ()
         // Inclusive
         doWmunuSMReco(m_metCore, m_metMap, MET, MET_phi, m_mcEventWeight, "_reco_inclusive_", m_sysName);
       }
+      if (m_isWenu) {
+        // Exclusive
+        doWenuSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_mcEventWeight, "_reco_exclusive_", m_sysName);
+        // Inclusive
+        doWenuSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_mcEventWeight, "_reco_inclusive_", m_sysName);
+      }
 
 
     }
@@ -6981,8 +6992,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
       */
 
-
-      // Not adding in other objects as we veto on additional leptons and photons might be an issue for muon FSR
 
       // JET
       //-----------------
@@ -7674,7 +7683,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       m_metMap->resetObjSelectionFlags();
 
 
-      // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for muon FSR
+      // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for electron FSR
 
       // Electron
       //-----------------
@@ -7695,8 +7704,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
       // Mark electrons invisible (No electrons)
       m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), m_metMap, m_met);
-
-      // Not adding Photon, Tau, Muon objects as we veto on additional leptons and photons might be an issue for muon FSR
 
       // JET
       //-----------------
@@ -8755,8 +8762,6 @@ void smZInvAnalysis::doZmumuExoticReco(const xAOD::MissingETContainer* metCore, 
   m_metMaker->markInvisible(m_invisibleMuons.asDataVector(), metMap, m_met);
 
 
-  // Not adding in other objects as we veto on additional leptons and photons might be an issue for muon FSR
-
   // JET
   //-----------------
   //Now time to rebuild jetMet and get the soft term
@@ -9032,7 +9037,7 @@ void smZInvAnalysis::doZeeExoticReco(const xAOD::MissingETContainer* metCore, co
   metMap->resetObjSelectionFlags();
 
 
-  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for muon FSR
+  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for electron FSR
 
   // Electron
   //-----------------
@@ -9054,7 +9059,6 @@ void smZInvAnalysis::doZeeExoticReco(const xAOD::MissingETContainer* metCore, co
   // Mark electrons invisible (No electrons)
   m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
 
-  // Not adding Photon, Tau, Muon objects as we veto on additional leptons and photons might be an issue for muon FSR
 
   // JET
   //-----------------
@@ -9608,8 +9612,6 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   m_metMaker->markInvisible(m_invisibleMuons.asDataVector(), metMap, m_met);
 
 
-  // Not adding in other objects as we veto on additional leptons and photons might be an issue for muon FSR
-
   // JET
   //-----------------
   //Now time to rebuild jetMet and get the soft term
@@ -9761,12 +9763,12 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   //----------------
   // MET trigger 
   //----------------
-  //if ( !m_trigDecisionTool->isPassed("HLT_xe70_mht") ) return;
+  if ( !m_trigDecisionTool->isPassed("HLT_xe70_mht") ) return;
 
   //---------------------
   // Single muon trigger
   //---------------------
-  if ( !m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") && !m_trigDecisionTool->isPassed("HLT_mu50") ) return;
+  //if ( !m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") && !m_trigDecisionTool->isPassed("HLT_mu50") ) return;
 
 
   //----------
@@ -9891,7 +9893,7 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   metMap->resetObjSelectionFlags();
 
 
-  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for muon FSR
+  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for electron FSR
 
   // Electron
   //-----------------
@@ -9913,7 +9915,6 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   // Mark electrons invisible (No electrons)
   m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
 
-  // Not adding Photon, Tau, Muon objects as we veto on additional leptons and photons might be an issue for muon FSR
 
   // JET
   //-----------------
@@ -10146,85 +10147,14 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   float MET_phi = -9e9;
 
 
-  //===========================
-  // For rebuild the real MET
-  //===========================
-
+  //===================================================================
+  // For rebuild the emulated MET for Wmunu (by marking Muon invisible)
+  //===================================================================
 
   // It is necessary to reset the selected objects before every MET calculation
   m_met->clear();
   metMap->resetObjSelectionFlags();
 
-
-  // Electron
-  //-----------------
-  /// Creat New Hard Object Containers
-  // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectrons
-  ConstDataVector<xAOD::ElectronContainer> m_MetElectrons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Electron>
-
-  // iterate over our shallow copy
-  for (const auto& electron : *m_goodElectron) { // C++11 shortcut
-    // For MET rebuilding
-    m_MetElectrons.push_back( electron );
-  } // end for loop over shallow copied electrons
-  //const xAOD::ElectronContainer* p_MetElectrons = m_MetElectrons.asDataVector();
-
-  m_metMaker->rebuildMET("RefElectron",           //name of metElectrons in metContainer
-      xAOD::Type::Electron,                       //telling the rebuilder that this is electron met
-      m_met,                                      //filling this met container
-      m_MetElectrons.asDataVector(),              //using these metElectrons that accepted our cuts
-      metMap);                                  //and this association map
-
-
-  /*
-  // Photon
-  //-----------------
-  /// Creat New Hard Object Containers
-  // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
-  ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
-
-  // iterate over our shallow copy
-  for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
-  // For MET rebuilding
-  m_MetPhotons.push_back( photon );
-  } // end for loop over shallow copied photons
-
-  m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
-  xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
-  m_met,                                    //filling this met container
-  m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
-  metMap);                                //and this association map
-
-*/
-
-
-  /*
-  // Only implement at EXOT5 derivation
-  // METRebuilder will use "trackLinks" aux data in Tau container
-  // However STDM4 derivation does not contain a aux data "trackLinks" in Tau container
-  // So one cannot build the real MET using Tau objects
-  if ( m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
-
-    // TAUS
-    //-----------------
-    /// Creat New Hard Object Containers
-    // [For MET building] filter the TauJet container m_taus, placing selected taus into m_MetTaus
-    ConstDataVector<xAOD::TauJetContainer> m_MetTaus(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::TauJet>
-
-    // iterate over our shallow copy
-    for (const auto& taujet : *m_goodTau) { // C++11 shortcut
-      // For MET rebuilding
-      m_MetTaus.push_back( taujet );
-    } // end for loop over shallow copied taus
-
-    m_metMaker->rebuildMET("RefTau",           //name of metTaus in metContainer
-        xAOD::Type::Tau,                       //telling the rebuilder that this is tau met
-        m_met,                                 //filling this met container
-        m_MetTaus.asDataVector(),              //using these metTaus that accepted our cuts
-        metMap);                             //and this association map
-
-  } // Only using EXOT5 derivation
-  */
 
   // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for muon FSR
 
@@ -10274,7 +10204,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   // Soft term uncertainties //
   /////////////////////////////
   if (!m_isData) {
-    // Get the track soft term for Zmumu (For emulated MET marking muons invisible)
+    // Get the track soft term for Wmunu (For emulated MET marking muons invisible)
     xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
     if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
       Error("execute()", "METSystematicsTool returns Error CorrectionCode");
@@ -10284,14 +10214,15 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   ///////////////
   // MET Build //
   ///////////////
-  // For emulated MET for Zmumu marking muons invisible
+  // For emulated MET for Wmunu marking muons invisible
   m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
 
   //////////////////////////////////////////////////////////////
-  // Fill emulated MET for Zmumu (by marking muons invisible) //
+  // Fill emulated MET for Wmunu (by marking muons invisible) //
   //////////////////////////////////////////////////////////////
   MET = ((*m_met)["Final"]->met());
   MET_phi = ((*m_met)["Final"]->phi());
+
 
 
 
@@ -10308,19 +10239,19 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   float lepton_phi = m_goodMuon->at(0)->phi();
 
   // Transverse Mass
-  float mT = TMath::Sqrt( 2. * lepton_pt * met * ( 1. - TMath::Cos(lepton_phi - metPhi) ) );
+  float mT = TMath::Sqrt( 2. * lepton_pt * met * ( 1. - TMath::Cos(lepton_phi - metPhi) ) ); // where met and metPhi are from real MET
 
 
   //---------------
   // muon pt cut
   //---------------
-  if ( lepton_pt < 25000. ) return;
+  if ( lepton_pt < sm_lep1PtCut ) return;
 
 
   //-------------------------
   // mT cut (Transverse Mass)
   //-------------------------
-  if ( mT < 50000. ) return;
+  if ( mT < m_mTCut ) return;
 
 
 
@@ -10332,19 +10263,6 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   // Tau veto "ONLY" available in EXOT5 derivation
   // because STDM4 derivation does not contain a aux data "trackLinks" in Tau container, I could not use tau selection tool
   //if ( m_goodTau->size() > 0  ) return;
-
-
-
-
-  /////////////////////////////////
-  // Calculate muon SF for Wmumu //
-  /////////////////////////////////
-  float mcEventWeight_Wmumu = mcEventWeight;
-  if (!m_isData) {
-    //Info("execute()", " Wmumu original mcEventWeight = %.3f ", mcEventWeight);
-    mcEventWeight_Wmumu = mcEventWeight_Wmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
-    //Info("execute()", " Wmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wmumu);
-  }
 
 
 
@@ -10397,8 +10315,289 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
+  //----------------
+  // MET trigger 
+  //----------------
+  if ( !m_trigDecisionTool->isPassed("HLT_xe70_mht") ) return;
+
+  //---------------------
+  // Single muon trigger
+  //---------------------
+  //if ( !m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") && !m_trigDecisionTool->isPassed("HLT_mu50") ) return;
+
+
+  //----------
+  // MET cut
+  //----------
+  if ( MET < sm_metCut ) return;
+
+
+  /////////////////////////////////
+  // Calculate muon SF for Wmunu //
+  /////////////////////////////////
+  float mcEventWeight_Wmunu = mcEventWeight;
+  if (!m_isData) {
+    //Info("execute()", " Wmunu original mcEventWeight = %.3f ", mcEventWeight);
+    mcEventWeight_Wmunu = mcEventWeight_Wmunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
+    //Info("execute()", " Wmunu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wmunu);
+  }
+
+
+
+
+
+  ///////////////////
+  // Analysis Plot //
+  ///////////////////
+
+  // Exclusive
+  if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+    // Common plots
+    if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
+      // Leading jet pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Wmunu);
+      // Lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wmunu);
+      // mT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wmunu);
+    }
+  }
+
+  // Inclusive
+  if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+    // Common plots
+    if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
+      // Leading jet pT distribution
+      for (const auto &jet : *m_goodJet) {
+        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wmunu);
+      }
+      // Lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wmunu);
+      // mT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wmunu);
+    }
+  }
+
+
+
 
 }
+
+
+
+void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& met, const float& metPhi, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName){
+
+  std::string channel = "wenu";
+
+
+  //==============//
+  // MET building //
+  //==============//
+
+  std::string softTerm = "PVSoftTrk";
+
+  // MET
+  float MET = -9e9;
+  float MET_phi = -9e9;
+
+
+  //======================================================================
+  // For rebuild the emulated MET for Wenu (by marking Electron invisible)
+  //======================================================================
+
+  // It is necessary to reset the selected objects before every MET calculation
+  m_met->clear();
+  metMap->resetObjSelectionFlags();
+
+
+  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for electron FSR
+
+  // Electron
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectrons
+  //
+  // For emulated MET (No electrons)
+  // Make a container for invisible electrons
+  ConstDataVector<xAOD::ElectronContainer> m_invisibleElectrons(SG::VIEW_ELEMENTS);
+  for (const auto& electron : *elecSC) { // C++11 shortcut
+    for (const auto& goodelectron : *m_goodElectron) { // C++11 shortcut
+      // Check if electrons are matched to good electrons
+      if (electron->pt() == goodelectron->pt() && electron->eta() == goodelectron->eta() && electron->phi() == goodelectron->phi()){
+        // Put good electrons in
+        m_invisibleElectrons.push_back( electron );
+      }
+    }
+  }
+  // Mark electrons invisible (No electrons)
+  m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
+
+
+  // JET
+  //-----------------
+  //Now time to rebuild jetMet and get the soft term
+  //This adds the necessary soft term for both CST and TST
+  //these functions create an xAODMissingET object with the given names inside the container
+
+  // For emulated MET marking muons invisible
+  m_metMaker->rebuildJetMET("RefJet",          //name of jet met
+      "SoftClus",           //name of soft cluster term met
+      "PVSoftTrk",          //name of soft track term met
+      m_met,       //adding to this new met container
+      m_allJet,                //using this jet collection to calculate jet met
+      metCore,   //core met container
+      metMap,    //with this association map
+      true);                //apply jet jvt cut
+
+  /////////////////////////////
+  // Soft term uncertainties //
+  /////////////////////////////
+  if (!m_isData) {
+    // Get the track soft term for Wenu (For emulated MET marking electrons invisible)
+    xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
+    if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
+      Error("execute()", "METSystematicsTool returns Error CorrectionCode");
+    }
+  }
+
+  ///////////////
+  // MET Build //
+  ///////////////
+  // For emulated MET for Wenu marking electrons invisible
+  m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
+
+  /////////////////////////////////////////////////////////////////
+  // Fill emulated MET for Wenu (by marking electrons invisible) //
+  /////////////////////////////////////////////////////////////////
+  MET = ((*m_met)["Final"]->met());
+  MET_phi = ((*m_met)["Final"]->phi());
+
+
+
+
+  //--------------------
+  // Exact one electron
+  //--------------------
+  if (m_goodElectron->size() != 1) return;
+
+
+  //----------------------
+  // Define W Selection
+  //----------------------
+  float lepton_pt = m_goodElectron->at(0)->pt();
+  float lepton_phi = m_goodElectron->at(0)->phi();
+
+  // Transverse Mass
+  float mT = TMath::Sqrt( 2. * lepton_pt * met * ( 1. - TMath::Cos(lepton_phi - metPhi) ) ); // where met and metPhi are from real MET
+
+
+  //---------------
+  // electron pt cut
+  //---------------
+  if ( lepton_pt < sm_lep1PtCut ) return;
+
+
+  //-------------------------
+  // mT cut (Transverse Mass)
+  //-------------------------
+  if ( mT < m_mTCut ) return;
+
+
+
+  //------------------------
+  // Additional lepton Veto 
+  //------------------------
+  // Muon veto
+  if ( m_goodMuon->size() > 0  ) return;
+  // Tau veto "ONLY" available in EXOT5 derivation
+  // because STDM4 derivation does not contain a aux data "trackLinks" in Tau container, I could not use tau selection tool
+  //if ( m_goodTau->size() > 0  ) return;
+
+
+
+  //---------------------------
+  // Single electron trigger
+  //---------------------------
+  bool passElectronTrig = (!m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM18VH")) || (m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH")) || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose");
+  if (!passElectronTrig) return;
+
+
+  //----------
+  // MET cut
+  //----------
+  if ( MET < sm_metCut ) return;
+
+
+
+  ////////////////////////////////
+  // Calculate muon SF for Wenu //
+  ////////////////////////////////
+  float mcEventWeight_Wenu = mcEventWeight;
+  if (!m_isData) {
+    //Info("execute()", " Wenu original mcEventWeight = %.3f ", mcEventWeight);
+    mcEventWeight_Wenu = mcEventWeight_Wenu * GetTotalElectronSF(*m_goodElectron, m_recoSF, m_idSF, m_isoElectronSF, m_elecTrigSF);
+    //Info("execute()", " Wenu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wenu);
+  }
+
+
+  ///////////////////
+  // Analysis Plot //
+  ///////////////////
+
+  // Exclusive
+  if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+    // Common plots
+    if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
+      // Leading jet pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Wenu);
+      // Lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wenu);
+      // mT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wenu);
+    }
+  }
+
+  // Inclusive
+  if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+    // Common plots
+    if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
+      // Leading jet pT distribution
+      for (const auto &jet : *m_goodJet) {
+        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wenu);
+      }
+      // Lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wenu);
+      // mT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wenu);
+    }
+  }
+
+
+
+
+}
+
+
 
 
 

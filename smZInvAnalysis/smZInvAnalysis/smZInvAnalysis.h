@@ -157,8 +157,8 @@ public:
   // Event Channel
   bool m_isZnunu; //!
   bool m_isZmumu; //!
-  bool m_isWmunu; //!
   bool m_isZee; //!
+  bool m_isWmunu; //!
   bool m_isWenu; //!
   bool m_isZemu; //!
 
@@ -224,6 +224,7 @@ public:
   float m_photEtaCut; //!
   float m_mllMin; //!
   float m_mllMax; //!
+  float m_mTCut; //!
   float m_monoJetPtCut; //!
   float m_monoJetEtaCut; //!
   float m_diJet1PtCut; //!
@@ -441,6 +442,7 @@ public:
   void doZmumuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const xAOD::MuonContainer* muons, const xAOD::MuonContainer* muonSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
   void doZeeSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
   void doWmunuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& met, const float& metPhi, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
+  void doWenuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& met, const float& metPhi, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
   void doZmumuTruth(const xAOD::TruthParticleContainer* truthMuon, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
   void doZllEmulTruth(const xAOD::TruthParticleContainer* truthLepton, const xAOD::JetContainer* truthJet, const float& lep1Pt, const float& lep2Pt, const float& lepEta, const float& mcEventWeight, std::string channel, std::string hist_prefix );
   void doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthLepton, const xAOD::JetContainer* truthJet, const float& mcEventWeight, std::string channel, std::string hist_prefix );
