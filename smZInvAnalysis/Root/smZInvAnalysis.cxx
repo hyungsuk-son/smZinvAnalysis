@@ -197,7 +197,7 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     m_generatorType = "madgraph";
   }
 
-  if (m_fileType == "DxAOD" || m_isData) {
+  if (m_fileType == "DxAOD" || m_fileType == "skim") {
 
     // Event Bookkeepers
     // https://twiki.cern.ch/twiki/bin/view/AtlasProtected/AnalysisMetadata#Luminosity_Bookkeepers
@@ -215,94 +215,50 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     ////////////////////////////
     // To get Derivation info //
     ////////////////////////////
-    // FileMetaData no loger exists in Rel.21 MC but exist in Rel.21 Data
-    if(m_isData){ // For data
-      //----------------------------
-      // MetaData information
-      //--------------------------- 
-      const xAOD::FileMetaData* fileMetaData = 0;
-      //const xAOD::FileMetaDataAuxInfo* fileMetaData = 0;
-      if( ! m_event->retrieveMetaInput( fileMetaData, "FileMetaData").isSuccess() ){
-        Error("fileExecute()", "Failed to retrieve FileMetaData from MetaData. Exiting." );
-        return EL::StatusCode::FAILURE;
+    //----------------------------
+    // MetaData information
+    //--------------------------- 
+    const xAOD::FileMetaData* fileMetaData = 0;
+    //const xAOD::FileMetaDataAuxInfo* fileMetaData = 0;
+    if( ! m_event->retrieveMetaInput( fileMetaData, "FileMetaData").isSuccess() ){
+      Error("fileExecute()", "Failed to retrieve FileMetaData from MetaData. Exiting." );
+      return EL::StatusCode::FAILURE;
+    }
+
+
+    // Initialize string variable
+    m_dataType = "";
+    // Read dataType from FileMetaData and store it to m_dataType
+    const bool s = fileMetaData->value(xAOD::FileMetaData::dataType, m_dataType);
+
+    if (s) {
+      if ( m_dataType.find("EXOT")!=std::string::npos ) { // Exotic Derivation (EXOT)
+        std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
+        m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
       }
-
-
-      // Initialize string variable
-      m_dataType = "";
-      // Read dataType from FileMetaData and store it to m_dataType
-      const bool s = fileMetaData->value(xAOD::FileMetaData::dataType, m_dataType);
-
-      if (s) {
-        if ( m_dataType.find("EXOT")!=std::string::npos ) { // Exotic Derivation (EXOT)
-          std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-          m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
-        }
-        if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
-          std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-          m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
-        }
-        std::cout << " data type = " << m_dataType << std::endl;
-        std::cout << " Derivation name = " << m_nameDerivation << std::endl;
-
-        // Save a derivation name in a histogram
-        h_dataType->Fill(m_dataType.c_str(), 1);
+      if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
+        std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
+        m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
       }
-
-      /* // beamEnergy is removed in MetaData in Rel.21
-      // Test (Retrieve beam energy info from FileMetaData using TBranch and TTree)
-      TBranch *branch = MetaData->GetBranch("FileMetaDataAuxDyn.beamEnergy");
-      branch->Print();
-
-      Float_t m_beamEnergy;
-      branch->SetAddress(&m_beamEnergy);
-      branch->GetEntry(0);
-
-      std::cout << " beam Energy = " << m_beamEnergy << std::endl;
-      */
-
-    } else { // FileMetaData no loger exists in Rel.21 MC, so I use "CutBookkeepers" to retrieve derivation information
-
-      //----------------------------
-      // MetaData information
-      //--------------------------- 
-      const xAOD::CutBookkeeperContainer* cutBookkeeper = 0;
-      if(!m_event->retrieveMetaInput(cutBookkeeper, "CutBookkeepers").isSuccess()){
-        Error("initializeEvent()","Failed to retrieve CutBookkeepers from MetaData! Exiting.");
-        return EL::StatusCode::FAILURE;
-      }
-
-      // Initialize string variable
-      m_dataType = "";
-      bool s = false;
-
-      // Now, let's actually find the right one that contains all the needed info...
-      int maxcycle = -1;
-      for ( auto cbk : *cutBookkeeper ) {
-        if ( cbk->name() == "AllExecutedEvents" && cbk->inputStream().find("StreamDAOD")!=std::string::npos && cbk->cycle() > maxcycle){
-          maxcycle = cbk->cycle();
-          m_dataType = cbk->inputStream();
-          s = true;
-        }
-      }
-
-      if (s) {
-        if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
-          std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-          m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
-        }
-        if ( m_dataType.find("STDM")!=std::string::npos ) { // Derivation (STDM)
-          std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-          m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
-        }
-        std::cout << " data type = " << m_dataType << std::endl;
-        std::cout << " Derivation name = " << m_nameDerivation << std::endl;
-      }
+      std::cout << " data type = " << m_dataType << std::endl;
+      std::cout << " Derivation name = " << m_nameDerivation << std::endl;
 
       // Save a derivation name in a histogram
       h_dataType->Fill(m_dataType.c_str(), 1);
+    }
 
-    } // MC
+    /*
+    // Test (Retrieve beam energy info from FileMetaData using TBranch and TTree)
+    TBranch *branch = MetaData->GetBranch("FileMetaDataAuxDyn.beamEnergy");
+    branch->Print();
+
+    Float_t m_beamEnergy;
+    branch->SetAddress(&m_beamEnergy);
+    branch->GetEntry(0);
+
+    std::cout << " beam Energy = " << m_beamEnergy << std::endl;
+    */
+
 
 
     //////////////////////////
@@ -312,7 +268,9 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     //check if file is from a DxAOD
     bool m_isDerivation = !MetaData->GetBranch("StreamAOD");
 
-    if(!m_isData && m_isDerivation){
+    // For Derivation MC
+    if(m_isDerivation && m_fileType == "DxAOD" && !m_isData) {
+    // Note that m_isDerivation means Derivation dataset including skim. DxAOD means original Derivation dataset and skim means my skimmed dataset.
 
       // Now, let's find the actual information
       const xAOD::CutBookkeeperContainer* completeCBC = 0;
@@ -343,46 +301,48 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
       //Info("execute()", " Event # = %llu, sumOfWeights/nEventsProcessed = %f", eventInfo->eventNumber(), sumOfWeights/double(nEventsProcessed));
     }
 
+    // For skimmed MC
+    if (!m_isData && m_fileType == "skim") {
 
-  }
-  if (m_fileType == "skim" && !m_isData) { // For skimmed MC
+      // Retrieve histograms
+      //TH1F *temp_dataType = dynamic_cast<TH1F*>(wk()->inputFile()->Get("h_dataType"));
+      //temp_dataType->SetName("temp_dataType");
+      TH1D *temp_sumOfWeights = dynamic_cast<TH1D*>(wk()->inputFile()->Get("h_sumOfWeights"));
+      temp_sumOfWeights->SetName("temp_sumOfWeights");
 
-    // Retrieve histograms
-    TH1F *temp_dataType = dynamic_cast<TH1F*>(wk()->inputFile()->Get("h_dataType"));
-    temp_dataType->SetName("temp_dataType");
-    TH1D *temp_sumOfWeights = dynamic_cast<TH1D*>(wk()->inputFile()->Get("h_sumOfWeights"));
-    temp_sumOfWeights->SetName("temp_sumOfWeights");
-
-    // Retrieve bin Label
-    m_dataType = temp_dataType->GetXaxis()->GetBinLabel(1);
+      // Retrieve bin Label
+      //m_dataType = temp_dataType->GetXaxis()->GetBinLabel(1);
 
 
-    if ( m_dataType.find("EXOT")!=std::string::npos ) { // Exotic Derivation (EXOT)
-      std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-      m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
+      /*
+         if ( m_dataType.find("EXOT")!=std::string::npos ) { // Exotic Derivation (EXOT)
+         std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
+         m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
+         }
+         if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
+         std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
+         m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
+         }
+
+
+      // Save a derivation name in a histogram
+      h_dataType->Fill(m_dataType.c_str(), 1);
+
+      std::cout << " data type = " << m_dataType << std::endl;
+      */
+
+
+      // Save Sum of Weights in a histogram
+      uint64_t nEventsProcessed  = temp_sumOfWeights->GetBinContent(3);
+      double sumOfWeights        = temp_sumOfWeights->GetBinContent(1);
+      double sumOfWeightsSquared = temp_sumOfWeights->GetBinContent(2);
+      h_sumOfWeights -> Fill(1, sumOfWeights);
+      h_sumOfWeights -> Fill(2, sumOfWeightsSquared);
+      h_sumOfWeights -> Fill(3, nEventsProcessed);
+
     }
-    if ( m_dataType.find("STDM")!=std::string::npos ) { // SM Derivation (STDM)
-      std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-      m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
-    }
 
-
-    // Save a derivation name in a histogram
-    h_dataType->Fill(m_dataType.c_str(), 1);
-
-    std::cout << " data type = " << m_dataType << std::endl;
-
-
-    // Save Sum of Weights in a histogram
-    uint64_t nEventsProcessed  = temp_sumOfWeights->GetBinContent(3);
-    double sumOfWeights        = temp_sumOfWeights->GetBinContent(1);
-    double sumOfWeightsSquared = temp_sumOfWeights->GetBinContent(2);
-    h_sumOfWeights -> Fill(1, sumOfWeights);
-    h_sumOfWeights -> Fill(2, sumOfWeightsSquared);
-    h_sumOfWeights -> Fill(3, nEventsProcessed);
-
-  }
-
+  } // Fro Derivation or Skim dataset
 
 
   return EL::StatusCode::SUCCESS;
@@ -453,7 +413,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   if (m_fileType == "truth1") m_doReco = false;
 
   // Enable Truth level analysis
-  m_doTruth = true;
+  m_doTruth = false;
 
   // Enable Systematics
   m_doSys = false;

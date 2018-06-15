@@ -52,9 +52,9 @@ int main( int argc, char* argv[] ) {
 
 
   // Data15
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/derivation");
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/derivation");
   //SH::ScanDir().filePattern("DAOD_EXOT5.10298531._000*").scan(sh,inputFilePath); // 284484 (random 10 files)
-  SH::ScanDir().filePattern("DAOD_EXOT5.13612879._0000*").scan(sh,inputFilePath); // 276073 (Test:including 0 event file)
+  //SH::ScanDir().filePattern("DAOD_EXOT5.13612879._0000*").scan(sh,inputFilePath); // 276073 (Test:including 0 event file)
 
   // MC15c (EXOT5)
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas08/MCSamples");
@@ -75,6 +75,8 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("DAOD_EXOT5.11869241._000002.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
   // MC16c (STDM4)
   //SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
+  SH::ScanDir().filePattern("DAOD_EXOT5.13463081._000027.pool.root.1").scan(sh,inputFilePath); // Multijet
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
@@ -89,7 +91,7 @@ int main( int argc, char* argv[] ) {
   job.sampleHandler( sh );
   // make sure we can read trigger decision
   job.options()->setString(EL::Job::optXaodAccessMode, EL::Job::optXaodAccessMode_class);
-  //job.options()->setDouble (EL::Job::optMaxEvents, 500); // for testing
+  job.options()->setDouble (EL::Job::optMaxEvents, 1000); // for testing
 /*
   // For ntuple
   // define an output and an ntuple associated to that output (For ntuple)

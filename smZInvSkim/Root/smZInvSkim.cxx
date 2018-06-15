@@ -156,80 +156,35 @@ EL::StatusCode smZInvSkim :: fileExecute ()
   // To get Derivation info //
   ////////////////////////////
 
-  // FileMetaData no loger exists in Rel.21 for MC but still exist for Data
-  if(m_isData){
-    //----------------------------
-    // MetaData information
-    //--------------------------- 
-    const xAOD::FileMetaData* fileMetaData = 0;
-    if( ! m_event->retrieveMetaInput( fileMetaData, "FileMetaData").isSuccess() ){
-      Error("fileExecute()", "Failed to retrieve FileMetaData from MetaData. Exiting." );
-      return EL::StatusCode::FAILURE;
-    }
-
-    // Initialize string variable
-    m_dataType = "";
-    // Read dataType from FileMetaData and store it to m_dataType
-    const bool s = fileMetaData->value(xAOD::FileMetaData::dataType, m_dataType);
-
-    if (s) {
-      if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
-        std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-        m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
-      }
-      if ( m_dataType.find("STDM")!=std::string::npos ) { // Derivation (STDM)
-        std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-        m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
-      }
-      std::cout << " data type = " << m_dataType << std::endl;
-      std::cout << " Derivation name = " << m_nameDerivation << std::endl;
-    }
-
-    // Save a derivation name in a histogram
-    h_dataType->Fill(m_dataType.c_str(), 1);
-
-  } else { // FileMetaData no loger exists in Rel.21 for MC
-
-    //----------------------------
-    // MetaData information
-    //--------------------------- 
-    const xAOD::CutBookkeeperContainer* cutBookkeeper = 0;
-    if(!m_event->retrieveMetaInput(cutBookkeeper, "CutBookkeepers").isSuccess()){
-      Error("initializeEvent()","Failed to retrieve CutBookkeepers from MetaData! Exiting.");
-      return EL::StatusCode::FAILURE;
-    }
-
-    // Initialize string variable
-    m_dataType = "";
-    bool s = false;
-
-    // Now, let's actually find the right one that contains all the needed info...
-    int maxcycle = -1;
-    for ( auto cbk : *cutBookkeeper ) {
-      if ( cbk->name() == "AllExecutedEvents" && cbk->inputStream().find("StreamDAOD")!=std::string::npos && cbk->cycle() > maxcycle){
-        maxcycle = cbk->cycle();
-        m_dataType = cbk->inputStream();
-        s = true;
-      }
-    }
-
-    if (s) {
-      if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
-        std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
-        m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
-      }
-      if ( m_dataType.find("STDM")!=std::string::npos ) { // Derivation (STDM)
-        std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
-        m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
-      }
-      std::cout << " data type = " << m_dataType << std::endl;
-      std::cout << " Derivation name = " << m_nameDerivation << std::endl;
-    }
-
-    // Save a derivation name in a histogram
-    h_dataType->Fill(m_dataType.c_str(), 1);
-
+  //----------------------------
+  // MetaData information
+  //--------------------------- 
+  const xAOD::FileMetaData* fileMetaData = 0;
+  if( ! m_event->retrieveMetaInput( fileMetaData, "FileMetaData").isSuccess() ){
+    Error("fileExecute()", "Failed to retrieve FileMetaData from MetaData. Exiting." );
+    return EL::StatusCode::FAILURE;
   }
+
+  // Initialize string variable
+  m_dataType = "";
+  // Read dataType from FileMetaData and store it to m_dataType
+  const bool s = fileMetaData->value(xAOD::FileMetaData::dataType, m_dataType);
+
+  if (s) {
+    if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
+      std::string temp (m_dataType, 11, 5); // (ex) m_dataType: StreamDAOD_EXOT5
+      m_nameDerivation = temp; // take "EXOT5" in "StreamDAOD_EXOT5"
+    }
+    if ( m_dataType.find("STDM")!=std::string::npos ) { // Derivation (STDM)
+      std::string temp (m_dataType, 11, 4); // (ex) m_dataType: StreamDAOD_STDM4
+      m_nameDerivation = temp; // only take "STDM" in "StreamDAOD_STDM4"
+    }
+    std::cout << " data type = " << m_dataType << std::endl;
+    std::cout << " Derivation name = " << m_nameDerivation << std::endl;
+  }
+
+  // Save a derivation name in a histogram
+  h_dataType->Fill(m_dataType.c_str(), 1);
 
 
 
@@ -779,7 +734,7 @@ EL::StatusCode smZInvSkim :: execute ()
   ANA_CHECK(m_event->copy("MuonSegments"));
   if ( m_dataType.find("EXOT")!=std::string::npos ) { // Derivation (EXOT)
     //ANA_CHECK(m_event->copy("TrigNavigation")); // Too big
-    ANA_CHECK(m_event->copy("MET_LocHadTopo"));
+    //ANA_CHECK(m_event->copy("MET_LocHadTopo"));
     ANA_CHECK(m_event->copy("HLT_xAOD__MuonContainer_MuonEFInfo"));
     ANA_CHECK(m_event->copy("HLT_xAOD__ElectronContainer_egamma_Electrons"));
   }
