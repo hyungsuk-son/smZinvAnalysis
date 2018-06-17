@@ -525,24 +525,26 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     ANA_CHECK(m_trigDecisionTool->initialize() );
 
     // PileupReweighting Tool
-    m_prwTool = new CP::PileupReweightingTool("PrwTool");
-    std::vector<std::string> file_conf;
-    uint32_t dsid = 0;
-    if (!m_isData) dsid = eventInfo->mcChannelNumber();
-    // Pile-up config files are in SUSYTools pileup database. http://atlas.web.cern.ch/Atlas/GROUPS/DATABASE/GroupData/dev/SUSYTools/PRW_AUTOCONFIG/files/
-    file_conf.push_back(PathResolverFindCalibFile("dev/SUSYTools/PRW_AUTOCONGIF/files/pileup_" + m_MC_campaign + "_dsid" + std::to_string(dsid) + ".root"));
-    std::vector<std::string> file_ilumi;
-    // 2015 dataset
-    file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_276262-284484_OflLumi-13TeV-010.root"));
-    // 2016 dataset
-    //file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_297730-311481_OflLumi-13TeV-008.root"));
-    ANA_CHECK(m_prwTool->setProperty("ConfigFiles", file_conf) );
-    ANA_CHECK(m_prwTool->setProperty("LumiCalcFiles", file_ilumi) );
-    ANA_CHECK(m_prwTool->setProperty("DataScaleFactor",     1.0 / 1.03) ); // the recommended value for MC16
-    ANA_CHECK(m_prwTool->setProperty("DataScaleFactorUP",   1.0) );
-    ANA_CHECK(m_prwTool->setProperty("DataScaleFactorDOWN", 1.0 / 1.06) );
-    //ANA_CHECK(m_prwTool->setProperty("UnrepresentedDataAction", 2));
-    ANA_CHECK(m_prwTool->initialize() );
+    if (!m_isData) { // For MC
+      m_prwTool = new CP::PileupReweightingTool("PrwTool");
+      std::vector<std::string> file_conf;
+      uint32_t dsid = 0;
+      if (!m_isData) dsid = eventInfo->mcChannelNumber();
+      // Pile-up config files are in SUSYTools pileup database. http://atlas.web.cern.ch/Atlas/GROUPS/DATABASE/GroupData/dev/SUSYTools/PRW_AUTOCONFIG/files/
+      file_conf.push_back(PathResolverFindCalibFile("dev/SUSYTools/PRW_AUTOCONGIF/files/pileup_" + m_MC_campaign + "_dsid" + std::to_string(dsid) + ".root"));
+      std::vector<std::string> file_ilumi;
+      // 2015 dataset
+      file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_276262-284484_OflLumi-13TeV-010.root"));
+      // 2016 dataset
+      //file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_297730-311481_OflLumi-13TeV-008.root"));
+      ANA_CHECK(m_prwTool->setProperty("ConfigFiles", file_conf) );
+      ANA_CHECK(m_prwTool->setProperty("LumiCalcFiles", file_ilumi) );
+      ANA_CHECK(m_prwTool->setProperty("DataScaleFactor",     1.0 / 1.03) ); // the recommended value for MC16
+      ANA_CHECK(m_prwTool->setProperty("DataScaleFactorUP",   1.0) );
+      ANA_CHECK(m_prwTool->setProperty("DataScaleFactorDOWN", 1.0 / 1.06) );
+      //ANA_CHECK(m_prwTool->setProperty("UnrepresentedDataAction", 2));
+      ANA_CHECK(m_prwTool->initialize() );
+    }
 
     // JES Calibration (https://twiki.cern.ch/twiki/bin/view/AtlasProtected/ApplyJetCalibrationR21)
     const std::string name_JetCalibTools = "JetCalibTools";
@@ -5583,10 +5585,12 @@ EL::StatusCode smZInvAnalysis :: execute ()
     } // end check that systematic applied ok
 
     // apply recommended systematic for PileupReweightingTool
-    if (m_prwTool->applySystematicVariation( sysList ) != CP::SystematicCode::Ok) {
-      Error("execute()", "Cannot configure PileupReweightingTool for systematics");
-      continue; // go to next systematic
-    } // end check that systematic applied ok
+    if (!m_isData) { // MC
+      if (m_prwTool->applySystematicVariation( sysList ) != CP::SystematicCode::Ok) {
+        Error("execute()", "Cannot configure PileupReweightingTool for systematics");
+        continue; // go to next systematic
+      } // end check that systematic applied ok
+    }
 
 
 
@@ -5608,11 +5612,13 @@ EL::StatusCode smZInvAnalysis :: execute ()
       //unsigned int randomRunNumber = m_prwTool->getRandomRunNumber( *eventInfo, false ); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though! 
 
       // Print out pileup reweighting
+      /*
          Info("execute()", "================================================");
          Info("execute()", " Event # = %llu", eventInfo->eventNumber());
          Info("execute()", " MC Weight = %f", print_mcWeight);
          Info("execute()", " PU Weight = %f", print_puweight);
          Info("execute()", " mcEventWeight (mc_weight * pu_weight) = %f", m_mcEventWeight);
+      */
     }
 
 
@@ -8182,9 +8188,11 @@ EL::StatusCode smZInvAnalysis :: finalize ()
     }
 
     // PileupReweighting Tool
-    if(m_prwTool){
-      delete m_prwTool;
-      m_prwTool = 0;
+    if (!m_isData) { // For MC
+      if(m_prwTool){
+        delete m_prwTool;
+        m_prwTool = 0;
+      }
     }
 
     // cleaning up trigger tools
@@ -9763,9 +9771,9 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   /////////////////////////////////
   float mcEventWeight_Zmumu = mcEventWeight;
   if (!m_isData) {
-    Info("execute()", " Zmumu original mcEventWeight = %.3f ", mcEventWeight);
+    //Info("execute()", " Zmumu original mcEventWeight = %.3f ", mcEventWeight);
     mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
-    Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
+    //Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
   }
 
 

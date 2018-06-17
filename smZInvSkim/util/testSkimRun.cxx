@@ -76,7 +76,10 @@ int main( int argc, char* argv[] ) {
   // MC16c (STDM4)
   //SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
   const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
-  SH::ScanDir().filePattern("DAOD_EXOT5.13463081._000027.pool.root.1").scan(sh,inputFilePath); // Multijet
+  //SH::ScanDir().filePattern("DAOD_EXOT5.13463081._000027.pool.root.1").scan(sh,inputFilePath); // Multijet
+  //SH::ScanDir().filePattern("DAOD_EXOT5.13463907._000007.pool.root.1").scan(sh,inputFilePath); // Zmumu
+  //SH::ScanDir().filePattern("DAOD_EXOT5.13461333._000007.pool.root.1").scan(sh,inputFilePath); // Zee
+  SH::ScanDir().filePattern("DAOD_EXOT5.13472375._000019.pool.root.1").scan(sh,inputFilePath); // Znunu
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
