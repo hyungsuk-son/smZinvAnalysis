@@ -157,7 +157,9 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14195993._0000*").scan(sh,inputFilePath); // 364123.Sherpa_221_NNPDF30NNLO_Zee_MAXHTPTV280_500_CVetoBVeto
   // STDM4
   //SH::ScanDir().filePattern("user.hson.14171859._0000*").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
-  SH::ScanDir().filePattern("user.hson.14195996._0000*").scan(sh,inputFilePath); // 364123.Sherpa_221_NNPDF30NNLO_Zee_MAXHTPTV280_500_CVetoBVeto
+  //SH::ScanDir().filePattern("user.hson.14195996._0000*").scan(sh,inputFilePath); // 364123.Sherpa_221_NNPDF30NNLO_Zee_MAXHTPTV280_500_CVetoBVeto
+  // Data15
+  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 
 
 
 
@@ -210,7 +212,7 @@ int main( int argc, char* argv[] ) {
 //  job.options()->setString(EL::Job::optSubmitFlags, slurmOptions);
 
   system("mkdir -p ~/bin/; ln -s /usr/bin/sbatch ~/bin/bsub; export PATH=$PATH:~/bin");
-  std::string slurmJobName = "deriv_zmm_exo";
+  std::string slurmJobName = "data15";
   std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+2000 --exclude=m4lmem01,alpha018 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+1hour --exclude=m4lmem01,alpha018 -o stdout.%j -e stderr.%j --mail-type=END --mail-user=Hyungsuk.Son@tufts.edu --job-name="+slurmJobName;
   EL::LSFDriver driver; //batch

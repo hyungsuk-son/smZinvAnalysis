@@ -243,8 +243,8 @@ int main( int argc, char* argv[] ) {
 
   // Full Skim Dataset (Data15)
   // Period A ~ G (run 276262 ~ 281075) : 313 files
-//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_AtoG");
-//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_AtoG");
+  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
   // Period H ~ J (run 281317 ~ 284484) : 328 files
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_HtoJ");
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 

@@ -174,6 +174,11 @@ public:
   // Enable Systematics
   bool m_doSys; //!
 
+  // Trigger Decision
+  bool m_met_trig_fire; //!
+  bool m_ele_trig_fire; //!
+
+
   // Scale factor
   bool m_recoSF; //!
   bool m_idSF; //!

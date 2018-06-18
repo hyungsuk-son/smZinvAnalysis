@@ -128,7 +128,7 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
   // mc16a : matching 2015+2016 data
   // mc16c : matching 2017 data
   // mc16d : re-reconstruct MC16c (unavailable yet)
-  if (!m_isData) {
+  if (!m_isData) { // MC
 
     uint32_t runNum = eventInfo->runNumber();
 
@@ -148,7 +148,6 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
     }
     ANA_MSG_INFO( "Determined MC campaign to be " << m_MC_campaign);
   }
-
 
   // Retrieve the Dataset name
   m_nameDataset = wk()->metaData()->castString (SH::MetaNames::sampleName());
@@ -393,7 +392,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
 
   // Enable Local Cutflow test
   // !Caution! When enabling this test, real analysis code will "NOT" be implemented.
-  m_useArrayCutflow = false; // For Exotic analysis cutflow comparison
+  m_useArrayCutflow = true; // For Exotic analysis cutflow comparison
 
   // Enable analysis cutflow to store into histogram
   m_useBitsetCutflow = true;
@@ -536,7 +535,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
       // 2015 dataset
       file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_276262-284484_OflLumi-13TeV-010.root"));
       // 2016 dataset
-      //file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_297730-311481_OflLumi-13TeV-008.root"));
+      file_ilumi.push_back(PathResolverFindCalibFile("smZInvAnalysis/ilumicalc_histograms_None_297730-311481_OflLumi-13TeV-010.root"));
       ANA_CHECK(m_prwTool->setProperty("ConfigFiles", file_conf) );
       ANA_CHECK(m_prwTool->setProperty("LumiCalcFiles", file_ilumi) );
       ANA_CHECK(m_prwTool->setProperty("DataScaleFactor",     1.0 / 1.03) ); // the recommended value for MC16
@@ -1564,6 +1563,17 @@ EL::StatusCode smZInvAnalysis :: execute ()
 */
 
 
+  //-----------------------
+  // Trigger Decision
+  //-----------------------
+  m_met_trig_fire = false;
+  m_ele_trig_fire = false;
+  // MET Triggers
+  m_met_trig_fire = ( (m_dataYear == "2015" && m_trigDecisionTool->isPassed("HLT_xe70_mht")) ||
+                      (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_xe90_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe100_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe110_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe130_mht_L1XE50") )) );
+  // Single Electron Triggers
+  m_ele_trig_fire = ( (m_dataYear == "2015" && ( m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH") || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose") )) ||
+                      (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_e26_lhtight_nod0_ivarloose") || m_trigDecisionTool->isPassed("HLT_e60_lhmedium_nod0") || m_trigDecisionTool->isPassed("HLT_e140_lhloose_nod0") )) );
 
 
   //-----------------------------------------------------------
@@ -7026,9 +7036,12 @@ EL::StatusCode smZInvAnalysis :: execute ()
       //------------------
       // Pass MET Trigger
       //------------------
+      /*
       if (m_isData) { // Data
         if (!(m_trigDecisionTool->isPassed("HLT_xe80_tc_lcw_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe90_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe100_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe110_mht_L1XE50") ) ) continue; // go to next systematic
       }
+      */
+      if (!m_met_trig_fire) continue; // go to next systematic
       if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[4]+=1;
       if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("MET Trigger");
 
@@ -9163,9 +9176,9 @@ void smZInvAnalysis::doZeeExoticReco(const xAOD::MissingETContainer* metCore, co
 
 
 
-  ///////////////////////////////
-  // Calculate muon SF for Zee //
-  ///////////////////////////////
+  ///////////////////////////////////
+  // Calculate electron SF for Zee //
+  ///////////////////////////////////
   float mcEventWeight_Zee = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Zee original mcEventWeight = %.3f ", mcEventWeight);
@@ -10026,9 +10039,9 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
 
 
 
-  ///////////////////////////////
-  // Calculate muon SF for Zee //
-  ///////////////////////////////
+  ///////////////////////////////////
+  // Calculate electron SF for Zee //
+  ///////////////////////////////////
   float mcEventWeight_Zee = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Zee original mcEventWeight = %.3f ", mcEventWeight);
@@ -10528,9 +10541,9 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
 
 
 
-  ////////////////////////////////
-  // Calculate muon SF for Wenu //
-  ////////////////////////////////
+  ////////////////////////////////////
+  // Calculate electron SF for Wenu //
+  ////////////////////////////////////
   float mcEventWeight_Wenu = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Wenu original mcEventWeight = %.3f ", mcEventWeight);
