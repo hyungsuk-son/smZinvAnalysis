@@ -399,10 +399,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
 
   // Event Channel
   m_isZnunu = true;
-  m_isZmumu = true;
-  m_isZee = true;
-  m_isWmunu = true;
-  m_isWenu = true;
+  m_isZmumu = false;
+  m_isZee = false;
+  m_isWmunu = false;
+  m_isWenu = false;
   m_isZemu = false;
 
   // Enable Reconstruction level analysis
@@ -6725,6 +6725,485 @@ EL::StatusCode smZInvAnalysis :: execute ()
     ///////////////////////
     // Local Cutflow Test//
     ///////////////////////
+
+    //---------------
+    // Znunu Channel
+    //---------------
+    if ( m_sysName=="" && m_useArrayCutflow && m_isZnunu ) {
+
+
+      //==============//
+      // MET building //
+      //==============//
+
+      // do CST or TST
+      //std::string softTerm = "SoftClus";
+      std::string softTerm = "PVSoftTrk";
+
+      // Real MET
+      float MET = -9e9;
+      float MET_phi = -9e9;
+
+      //=============================
+      // Create MissingETContainers 
+      //=============================
+
+      //retrieve the original containers
+      const xAOD::MissingETContainer* m_metCore(0);
+      std::string coreMetKey = "MET_Core_" + jetType;
+      coreMetKey.erase(coreMetKey.length() - 4); //this removes the Jets from the end of the jetType
+      if ( !m_event->retrieve( m_metCore, coreMetKey ).isSuccess() ){ // retrieve arguments: container type, container key
+        Error("execute()", "Unable to retrieve MET core container: " );
+        return EL::StatusCode::FAILURE;
+      }
+
+      //retrieve the MET association map
+      const xAOD::MissingETAssociationMap* m_metMap = 0;
+      std::string metAssocKey = "METAssoc_" + jetType;
+      metAssocKey.erase(metAssocKey.length() - 4 );//this removes the Jets from the end of the jetType
+      if ( !m_event->retrieve( m_metMap, metAssocKey ).isSuccess() ){ // retrieve arguments: container type, container key
+        Error("execute()", "Unable to retrieve MissingETAssociationMap: " );
+        return EL::StatusCode::FAILURE;
+      }
+
+
+      // It is necessary to reset the selected objects before every MET calculation
+      m_met->clear();
+      m_metMap->resetObjSelectionFlags();
+
+
+
+      //===========================
+      // For rebuild the real MET
+      //===========================
+
+      // Only implement at EXOT5 derivation
+      // METRebuilder will use "trackLinks" aux data in Tau container
+      // However STDM4 derivation does not contain a aux data "trackLinks" in Tau container
+      // So one cannot build the real MET using Tau objects
+      if ( m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
+
+        // Electron
+        //-----------------
+        /// Creat New Hard Object Containers
+        // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectrons
+        ConstDataVector<xAOD::ElectronContainer> m_MetElectrons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Electron>
+
+        // iterate over our shallow copy
+        for (const auto& electron : *m_goodElectron) { // C++11 shortcut
+          // For MET rebuilding
+          m_MetElectrons.push_back( electron );
+        } // end for loop over shallow copied electrons
+        //const xAOD::ElectronContainer* p_MetElectrons = m_MetElectrons.asDataVector();
+
+        // For real MET
+        m_metMaker->rebuildMET("RefElectron",           //name of metElectrons in metContainer
+            xAOD::Type::Electron,                       //telling the rebuilder that this is electron met
+            m_met,                                      //filling this met container
+            m_MetElectrons.asDataVector(),              //using these metElectrons that accepted our cuts
+            m_metMap);                                  //and this association map
+
+
+        /*
+        // Photon
+        //-----------------
+        /// Creat New Hard Object Containers
+        // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
+        ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
+
+        // iterate over our shallow copy
+        for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
+        // For MET rebuilding
+        m_MetPhotons.push_back( photon );
+        } // end for loop over shallow copied photons
+
+        // For real MET
+        m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
+        xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
+        m_met,                                    //filling this met container
+        m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
+        m_metMap);                                //and this association map
+
+*/
+
+        // TAUS
+        //-----------------
+        /// Creat New Hard Object Containers
+        // [For MET building] filter the TauJet container m_taus, placing selected taus into m_MetTaus
+        ConstDataVector<xAOD::TauJetContainer> m_MetTaus(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::TauJet>
+
+        // iterate over our shallow copy
+        for (const auto& taujet : *m_goodTau) { // C++11 shortcut
+          // For MET rebuilding
+          m_MetTaus.push_back( taujet );
+        } // end for loop over shallow copied taus
+
+        // For real MET
+        m_metMaker->rebuildMET("RefTau",           //name of metTaus in metContainer
+            xAOD::Type::Tau,                       //telling the rebuilder that this is tau met
+            m_met,                                 //filling this met container
+            m_MetTaus.asDataVector(),              //using these metTaus that accepted our cuts
+            m_metMap);                             //and this association map
+
+
+        // Muon
+        //-----------------
+        /// Creat New Hard Object Containers
+        // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuons
+        ConstDataVector<xAOD::MuonContainer> m_MetMuons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Muon>
+
+        // iterate over our shallow copy
+        for (const auto& muon : *m_goodMuon) { // C++11 shortcut
+          // For MET rebuilding
+          m_MetMuons.push_back( muon );
+        } // end for loop over shallow copied muons
+        // For real MET
+        m_metMaker->rebuildMET("RefMuon",           //name of metMuons in metContainer
+            xAOD::Type::Muon,                       //telling the rebuilder that this is muon met
+            m_met,                                  //filling this met container
+            m_MetMuons.asDataVector(),              //using these metMuons that accepted our cuts
+            m_metMap);                              //and this association map
+
+
+
+
+        // JET
+        //-----------------
+        //Now time to rebuild jetMet and get the soft term
+        //This adds the necessary soft term for both CST and TST
+        //these functions create an xAODMissingET object with the given names inside the container
+        // For real MET
+        m_metMaker->rebuildJetMET("RefJet",          //name of jet met
+            "SoftClus",        //name of soft cluster term met
+            "PVSoftTrk",       //name of soft track term met
+            m_met,             //adding to this new met container
+            m_allJet,          //using this jet collection to calculate jet met
+            m_metCore,         //core met container
+            m_metMap,          //with this association map
+            true);             //apply jet jvt cut
+
+
+
+
+        /////////////////////////////
+        // Soft term uncertainties //
+        /////////////////////////////
+        if (!m_isData) {
+          // Get the track soft term (For real MET)
+          xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
+          if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
+            Error("execute()", "METSystematicsTool returns Error CorrectionCode");
+          }
+        }
+
+
+        ///////////////
+        // MET Build //
+        ///////////////
+        //m_metMaker->rebuildTrackMET("RefJetTrk", softTerm, m_met, m_jetSC, m_metCore, m_metMap, true);
+
+        //this builds the final track or cluster met sums, using systematic varied container
+        //In the future, you will be able to run both of these on the same container to easily output CST and TST
+
+        // For real MET
+        m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
+
+
+
+
+        ///////////////////
+        // Fill real MET //
+        ///////////////////
+
+        MET = ((*m_met)["Final"]->met());
+        MET_phi = ((*m_met)["Final"]->phi());
+
+
+      } // Only using EXOT5 derivation
+
+
+
+      //------------------
+      // Pass MET Trigger
+      //------------------
+      /*
+      if (m_isData) { // Data
+        if (!(m_trigDecisionTool->isPassed("HLT_xe80_tc_lcw_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe90_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe100_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe110_mht_L1XE50") ) ) continue; // go to next systematic
+      }
+      */
+      if (!m_met_trig_fire) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[4]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("MET Trigger");
+
+
+
+
+      //----------
+      // MET cut
+      //----------
+      if ( MET < m_metCut ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[5]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("MET cut");
+
+
+
+
+
+      // Event Jet cleaning
+      bool isBadJet = false;
+      //------------------
+      // Bad Jet Decision
+      //------------------
+      // iterate over our deep copy
+      for (const auto& jets : *m_goodJet) { // C++11 shortcut
+        if ( !m_jetCleaningLooseBad->accept(*jets) ) isBadJet = true;
+      }
+      if (isBadJet) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[6]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("Jet Cleaning");
+
+
+
+
+
+      //-------------------------------------
+      // Define Monojet and DiJet Properties
+      //-------------------------------------
+
+      // Monojet
+      float monojet_pt = 0;
+      float monojet_phi = 0;
+      float monojet_eta = 0;
+      float monojet_rapidity = 0;
+      float dPhiMonojetMet = 0;
+      // Dijet
+      TLorentzVector jet1;
+      TLorentzVector jet2;
+      float jet1_pt = 0;
+      float jet2_pt = 0;
+      float jet3_pt = 0;
+      float jet1_phi = 0;
+      float jet2_phi = 0;
+      float jet3_phi = 0;
+      float jet1_eta = 0;
+      float jet2_eta = 0;
+      float jet3_eta = 0;
+      float jet1_rapidity = 0;
+      float jet2_rapidity = 0;
+      float jet3_rapidity = 0;
+
+      float goodJet_ht = 0;
+      float dPhiJet1Met = 0;
+      float dPhiJet2Met = 0;
+      float dPhiJet3Met = 0;
+
+      float mjj = 0;
+      bool pass_monoJet = false; // Select monoJet
+      bool pass_diJet = false; // Select DiJet
+      bool pass_CJV = true; // Central Jet Veto (CJV)
+      bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
+
+
+      ///////////////////////
+      // Monojet Selection //
+      ///////////////////////
+      if (m_goodJet->size() > 0) {
+
+        monojet_pt = m_goodJet->at(0)->pt();
+        monojet_phi = m_goodJet->at(0)->phi();
+        monojet_eta = m_goodJet->at(0)->eta();
+        monojet_rapidity = m_goodJet->at(0)->rapidity();
+
+
+        // Define Monojet
+        if ( monojet_pt > m_monoJetPtCut ){
+          if ( fabs(monojet_eta) < m_monoJetEtaCut){
+            if ( m_jetCleaningTightBad->accept( *m_goodJet->at(0) ) ){ //Tight Leading Jet 
+              pass_monoJet = true;
+              //Info("execute()", "  Leading jet pt = %.2f GeV", monojet_pt * 0.001);
+            }
+          }
+        }
+
+        // deltaPhi(monojet,MET) decision
+        // For Znunu
+        dPhiMonojetMet = deltaPhi(monojet_phi, MET_phi);
+
+      } // MonoJet selection 
+
+
+
+      /////////////////////
+      // DiJet Selection //
+      /////////////////////
+      if (m_goodJet->size() > 1) {
+
+        jet1 = m_goodJet->at(0)->p4();
+        jet2 = m_goodJet->at(1)->p4();
+        jet1_pt = m_goodJet->at(0)->pt();
+        jet2_pt = m_goodJet->at(1)->pt();
+        jet1_phi = m_goodJet->at(0)->phi();
+        jet2_phi = m_goodJet->at(1)->phi();
+        jet1_eta = m_goodJet->at(0)->eta();
+        jet2_eta = m_goodJet->at(1)->eta();
+        jet1_rapidity = m_goodJet->at(0)->rapidity();
+        jet2_rapidity = m_goodJet->at(1)->rapidity();
+        auto dijet = jet1 + jet2;
+        mjj = dijet.M();
+
+        //Info("execute()", "  jet1 = %.2f GeV, jet2 = %.2f GeV", jet1_pt * 0.001, jet2_pt * 0.001);
+        //Info("execute()", "  mjj = %.2f GeV", mjj * 0.001);
+
+        // Define Dijet
+        if ( jet1_pt > m_diJet1PtCut && jet2_pt > m_diJet2PtCut ){
+          if ( m_jetCleaningTightBad->accept( *m_goodJet->at(0) ) ){ //Tight Leading Jet 
+            pass_diJet = true;
+          }
+        }
+
+        // deltaPhi(Jet1,MET) or deltaPhi(Jet2,MET) decision
+        // For Znunu
+        dPhiJet1Met = deltaPhi(jet1_phi, MET_phi);
+        dPhiJet2Met = deltaPhi(jet2_phi, MET_phi);
+
+      } // DiJet selection 
+
+
+
+      // For jet3
+      if (m_goodJet->size() > 2) {
+        jet3_pt = m_goodJet->at(2)->pt();
+        jet3_phi = m_goodJet->at(2)->phi();
+        jet3_eta = m_goodJet->at(2)->eta();
+        jet3_rapidity = m_goodJet->at(2)->rapidity();
+        // deltaPhi(Jet3,MET)
+        dPhiJet3Met = deltaPhi(jet3_phi, MET_phi);
+      }
+
+      // Define deltaPhi(Jet_i,MET) cut and Central Jet Veto (CJV)
+      if (m_goodJet->size() > 0) {
+
+        // loop over the jets in the Good Jets Container
+        for (const auto& jet : *m_goodJet) {
+          float good_jet_pt = jet->pt();
+          float good_jet_rapidity = jet->rapidity();
+          float good_jet_phi = jet->phi();
+
+          // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
+          if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet || m_goodJet->at(3) == jet){ // apply cut only to leading jet1, jet2, jet3 and jet4
+            // For Znunu
+            float dPhijetmet = deltaPhi(good_jet_phi,MET_phi);
+            if ( good_jet_pt > 30000. && fabs(good_jet_rapidity) < 4.4 && dPhijetmet < 0.4 ) pass_dPhijetmet = false;
+            dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          }
+
+          // Central Jet Veto (CJV)
+          if ( m_goodJet->size() > 2 && pass_diJet ){
+            if (m_goodJet->at(0) != jet && m_goodJet->at(1) != jet){
+              //cout << "m_goodJet->at(0) = " << m_goodJet->at(0) << " jet = " << jet << endl;
+              if (good_jet_pt > m_CJVptCut && fabs(good_jet_rapidity) < m_diJetRapCut) {
+                if ( (jet1_rapidity > jet2_rapidity) && (good_jet_rapidity < jet1_rapidity && good_jet_rapidity > jet2_rapidity)){
+                  pass_CJV = false;
+                }
+                if ( (jet1_rapidity < jet2_rapidity) && (good_jet_rapidity > jet1_rapidity && good_jet_rapidity < jet2_rapidity)){
+                  pass_CJV = false;
+                }
+                /* //Valentinos' way (same result as mine)
+                   float rapLow  = std::min(jet1_rapidity, jet2_rapidity);
+                   float rapHigh = std::max(jet1_rapidity, jet2_rapidity);
+                   if (good_jet_rapidity > rapLow && good_jet_rapidity < rapHigh) pass_CJV = false;
+                   */
+              }
+            }
+          }
+
+          //Info("execute()", "  Znunu Signal Jet pt = %.2f GeV, eta = %.2f", good_pt_jet * 0.001, good_eta_jet);
+          goodJet_ht += good_jet_pt;
+        } // Jet loop
+
+      } // End deltaPhi(Jet_i,MET) cut and Central Jet Veto (CJV)
+
+
+
+
+      //--------------------------
+      // Leading jet pass TightBad
+      //--------------------------
+      if ( m_goodJet->size() > 0 && !m_jetCleaningTightBad->accept( *m_goodJet->at(0) ) ) continue; // go to next systematic
+      if ( m_goodJet->size() < 1 ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[7]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("Leading Jet");
+
+
+
+      //-----------------
+      // At least 2 jets
+      //-----------------
+      if ( m_goodJet->size() < 2 ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[8]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("At least 2 jets");
+
+
+
+      //---------------------------------------------------
+      // At least 2 jets with pT1>80GeV, pT2>50GeV, |y|<4.4
+      //---------------------------------------------------
+      if ( !pass_diJet ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[9]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("VBF jet pt cut");
+
+
+
+
+
+
+      //---------
+      // Mjj cut
+      //---------
+      if ( mjj < m_mjjCut ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[10]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("Mjj cut");
+
+      //--------------
+      // Jet-MET veto
+      //--------------
+      if ( !pass_dPhijetmet ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[11]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("Jet-MET veto");
+
+
+
+      //------------------------
+      // Additional lepton Veto 
+      //------------------------
+      // Muon veto
+      if ( m_goodMuon->size() > 0  ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[12]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("muon veto");
+      // Electron veto
+      if ( m_goodElectron->size() > 0  ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[13]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("electron veto");
+      // Tau veto "ONLY" available in EXOT5 derivation
+      // because aux item "trackLinks" is missing in the STDM4 derivation samples
+      if ( m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
+        if ( m_goodTau->size() > 0  ) continue; // go to next systematic
+      }
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[14]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("tau veto");
+
+      //------------------
+      // Central Jet Veto
+      //------------------
+      if ( !pass_CJV ) continue; // go to next systematic
+      if (m_sysName == "" && m_useArrayCutflow) m_eventCutflow[15]+=1;
+      if (m_sysName == "" && m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("CJV cut");
+
+
+
+    } // End of Cutflow (Znunu channel)
+
 
 
     //---------------

@@ -234,8 +234,11 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("*.root").scan(sh,inputFilePath);
 
   // Cutflow test
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation/STDM4");
-  SH::ScanDir().filePattern("DAOD_STDM4.13860139._000007.pool.root.1").scan(sh,inputFilePath); // Wmunu
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
+  // Znunu (EXOT5)
+  SH::ScanDir().filePattern("DAOD_EXOT5.13472375._000010.pool.root.1").scan(sh,inputFilePath); // 364151.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV280_500_CVetoBVeto
+  // Zmumu (STDM4, noskim)
+  //SH::ScanDir().filePattern("DAOD_STDM4.13860139._000007.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
