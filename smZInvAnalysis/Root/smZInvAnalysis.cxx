@@ -441,6 +441,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_mllMin = 66000.; ///MeV
   m_mllMax = 116000.; ///MeV
   m_mTCut = 50000.; ///MeV
+  m_mTMin = 30000.; ///MeV
+  m_mTMax = 100000.; ///MeV
   m_monoJetPtCut = 120000.; /// MeV
   m_monoJetEtaCut = 2.4;
   m_diJet1PtCut = 80000.; /// MeV
@@ -961,7 +963,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
           addHist(hMap1D, h_channel+h_level+"truth_vbf_dPhijj", nbinDPhi, binsDPhi);
           addHist(hMap1D, h_channel+h_level+"truth_vbf_mll", 150, 0., 300.);
         }
-      } // m_isZmuu
+      } // m_isZmumu
 
 
       if (m_isZee) {
@@ -1368,12 +1370,12 @@ EL::StatusCode smZInvAnalysis :: initialize ()
       }
 
 
-      ////////////////////
-      // Reco Histogram //
-      ////////////////////
-      const int channel_num = 2;
+      ///////////////////////////
+      // Exotic Reco Histogram //
+      ///////////////////////////
+      const int channel_num = 3;
       const int prefix_num = 1;
-      std::string channel[channel_num] = {"h_zee_","h_zmumu_"};
+      std::string channel[channel_num] = {"h_znunu","h_zee_","h_zmumu_"};
       std::string PreFix[prefix_num] = {""};
       for(int i=0; i < channel_num; i++) {
         for(int j=0; j < prefix_num; j++) {
@@ -1946,7 +1948,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
 
     //----------------
-    // Truth Neutinos
+    // Truth Neutrinos
     //----------------
     /// shallow copy to retrive auxdata variables
     std::pair< xAOD::TruthParticleContainer*, xAOD::ShallowAuxContainer* > truth_neutrino_shallowCopy = xAOD::shallowCopyContainer( *m_truthNeutrinos );
@@ -5525,7 +5527,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     } // end check that systematic applied ok
 
     // apply recommended systematic for MuonCalibrationAndSmearingTool (For 2015 and 2016 dataset)
-    if (m_dataYear == "2016") {
+    if (m_dataYear == "2015" || m_dataYear == "2016") {
       if( m_muonCalibrationAndSmearingTool2016->applySystematicVariation( sysList ) != CP::SystematicCode::Ok ) {
         Error("execute()", "Cannot configure muon calibration tool for systematic" );
         continue; // go to next systematic
@@ -5686,7 +5688,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       if (muon->muonType() != xAOD::Muon_v1::Combined && muon->muonType() != xAOD::Muon_v1::SegmentTagged) continue;
 
       // Muon calibration and smearing tool (For 2015 and 2016 dataset)
-      if (m_dataYear == "2016") {
+      if (m_dataYear == "2015" || m_dataYear == "2016") {
         if(m_muonCalibrationAndSmearingTool2016->applyCorrection(*muon) == CP::CorrectionCode::Error){ // apply correction and check return code
           // Can have CorrectionCode values of Ok, OutOfValidityRange, or Error. Here only checking for Error.
           // If OutOfValidityRange is returned no modification is made and the original muon values are taken.
@@ -6462,6 +6464,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     //---------------
     // Jet Cleaning
     //---------------
+    // Note that Jet Cleaning should be implemented after Overlap removal
     if (!m_useArrayCutflow) { // Implement Event Cleaning "ONLY" when doing real analysis
                               // Do not use this for local cutflow test because the test will do the event cleaning later by order of culflow
       
@@ -6470,7 +6473,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       for (const auto& jets : *m_goodJet) { // C++11 shortcut
         if ( !m_jetCleaningLooseBad->accept(*jets) ) isBadJet = true;
       }
-      if (isBadJet) continue;
+      if (isBadJet) continue; // go to the next systematic
 
     }
 
@@ -6570,8 +6573,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     m_met,                                    //filling this met container
     m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
     m_metMap);                                //and this association map
+    */
 
-*/
 
     // Only implement at EXOT5 derivation
     // METRebuilder will use "trackLinks" aux data in Tau container
@@ -6687,6 +6690,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
                               // because event cleaning should be implemented after MET cut following our cutflow order.
 
       // For Exotic study
+      if (m_isZnunu) doZnunuExoticReco(m_metCore, m_metMap, m_mcEventWeight, m_sysName);
       if (m_isZmumu) doZmumuExoticReco(m_metCore, m_metMap, m_muons, m_muonSC, m_mcEventWeight, m_sysName);
       if (m_isZee) doZeeExoticReco(m_metCore, m_metMap, m_elecSC, m_mcEventWeight, m_sysName);
 
@@ -9190,6 +9194,201 @@ void smZInvAnalysis::plotVBF(const xAOD::JetContainer* goodJet, const float& met
 
 
 
+void smZInvAnalysis::doZnunuExoticReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& mcEventWeight, std::string sysName){
+
+  h_channel = "h_znunu_";
+
+  //==============//
+  // MET building //
+  //==============//
+
+  std::string softTerm = "PVSoftTrk";
+
+  // MET
+  float MET = -9e9;
+  float MET_phi = -9e9;
+
+
+
+  //===========================
+  // For rebuild the real MET
+  //===========================
+
+
+  // It is necessary to reset the selected objects before every MET calculation
+  m_met->clear();
+  metMap->resetObjSelectionFlags();
+
+
+  // Electron
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectrons
+  ConstDataVector<xAOD::ElectronContainer> m_MetElectrons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Electron>
+
+  // iterate over our shallow copy
+  for (const auto& electron : *m_goodElectron) { // C++11 shortcut
+    // For MET rebuilding
+    m_MetElectrons.push_back( electron );
+  } // end for loop over shallow copied electrons
+  //const xAOD::ElectronContainer* p_MetElectrons = m_MetElectrons.asDataVector();
+
+  // For real MET
+  m_metMaker->rebuildMET("RefElectron",           //name of metElectrons in metContainer
+      xAOD::Type::Electron,                       //telling the rebuilder that this is electron met
+      m_met,                                      //filling this met container
+      m_MetElectrons.asDataVector(),              //using these metElectrons that accepted our cuts
+      metMap);                                  //and this association map
+
+
+  /*
+  // Photon
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
+  ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
+
+  // iterate over our shallow copy
+  for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
+  // For MET rebuilding
+  m_MetPhotons.push_back( photon );
+  } // end for loop over shallow copied photons
+
+  // For real MET
+  m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
+  xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
+  m_met,                                    //filling this met container
+  m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
+  metMap);                                //and this association map
+  */
+
+
+  // Only implement at EXOT5 derivation
+  // METRebuilder will use "trackLinks" aux data in Tau container
+  // However STDM4 derivation does not contain a aux data "trackLinks" in Tau container
+  // So one cannot build the real MET using Tau objects
+  if ( m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
+
+    // TAUS
+    //-----------------
+    /// Creat New Hard Object Containers
+    // [For MET building] filter the TauJet container m_taus, placing selected taus into m_MetTaus
+    ConstDataVector<xAOD::TauJetContainer> m_MetTaus(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::TauJet>
+
+    // iterate over our shallow copy
+    for (const auto& taujet : *m_goodTau) { // C++11 shortcut
+      // For MET rebuilding
+      m_MetTaus.push_back( taujet );
+    } // end for loop over shallow copied taus
+
+    // For real MET
+    m_metMaker->rebuildMET("RefTau",           //name of metTaus in metContainer
+        xAOD::Type::Tau,                       //telling the rebuilder that this is tau met
+        m_met,                                 //filling this met container
+        m_MetTaus.asDataVector(),              //using these metTaus that accepted our cuts
+        metMap);                             //and this association map
+
+  } // Only using EXOT5 derivation
+
+
+  // Muon
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuons
+  ConstDataVector<xAOD::MuonContainer> m_MetMuons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Muon>
+
+  // iterate over our shallow copy
+  for (const auto& muon : *m_goodMuon) { // C++11 shortcut
+    // For MET rebuilding
+    m_MetMuons.push_back( muon );
+  } // end for loop over shallow copied muons
+  // For real MET
+  m_metMaker->rebuildMET("RefMuon",           //name of metMuons in metContainer
+      xAOD::Type::Muon,                       //telling the rebuilder that this is muon met
+      m_met,                                  //filling this met container
+      m_MetMuons.asDataVector(),              //using these metMuons that accepted our cuts
+      metMap);                              //and this association map
+
+
+
+  // JET
+  //-----------------
+  //Now time to rebuild jetMet and get the soft term
+  //This adds the necessary soft term for both CST and TST
+  //these functions create an xAODMissingET object with the given names inside the container
+
+  // For real MET
+  m_metMaker->rebuildJetMET("RefJet",          //name of jet met
+      "SoftClus",           //name of soft cluster term met
+      "PVSoftTrk",          //name of soft track term met
+      m_met,       //adding to this new met container
+      m_allJet,                //using this jet collection to calculate jet met
+      metCore,   //core met container
+      metMap,    //with this association map
+      true);                //apply jet jvt cut
+
+  /////////////////////////////
+  // Soft term uncertainties //
+  /////////////////////////////
+  if (!m_isData) {
+    // Get the track soft term (For real MET)
+    xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
+    if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
+      Error("execute()", "METSystematicsTool returns Error CorrectionCode");
+    }
+  }
+
+  ///////////////
+  // MET Build //
+  ///////////////
+  // For real MET
+  m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
+
+  /////////////////////////////
+  // Fill real MET for Znunu //
+  /////////////////////////////
+  MET = ((*m_met)["Final"]->met());
+  MET_phi = ((*m_met)["Final"]->phi());
+
+
+  //------------------
+  // Pass MET Trigger
+  //------------------
+  if (!m_met_trig_fire) return;
+
+
+  //----------
+  // MET cut
+  //----------
+  if ( MET < m_metCut ) return;
+
+
+
+  //--------------
+  // Lepton Veto 
+  //--------------
+  // Muon veto
+  if ( m_goodMuon->size() > 0  ) return;
+  // Electron veto
+  if ( m_goodElectron->size() > 0  ) return;
+  // Tau veto "ONLY" available in EXOT5 derivation
+  // because tau selection tool is unavailable without "trackLinks" aux data in Tau container)
+  if ( m_dataType.find("EXOT")!=std::string::npos ) { // SM Derivation (EXOT)
+    if ( m_goodTau->size() > 0  ) return;
+  }
+
+
+  ////////////////////////////
+  // Plot Reco Znunu Signal //
+  ////////////////////////////
+  plotMonojet(m_goodJet, MET, MET_phi, mcEventWeight, h_channel, sysName);
+  plotVBF(m_goodJet, MET, MET_phi, mcEventWeight, h_channel, sysName);
+
+}
+
+
+
+
 void smZInvAnalysis::doZmumuExoticReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const xAOD::MuonContainer* muons, const xAOD::MuonContainer* muonSC, const float& mcEventWeight, std::string sysName){
 
   h_channel = "h_zmumu_";
@@ -9454,6 +9653,11 @@ void smZInvAnalysis::doZmumuExoticReco(const xAOD::MissingETContainer* metCore, 
 
 
 
+  //------------------
+  // Pass MET Trigger
+  //------------------
+  if (!m_met_trig_fire) return;
+
 
   //----------
   // MET cut
@@ -9625,6 +9829,13 @@ void smZInvAnalysis::doZeeExoticReco(const xAOD::MissingETContainer* metCore, co
   //----------------------------------------------------------------------
   if ( !pass_OS ) return;
   if ( mll < m_mllMin || mll > m_mllMax ) return;
+
+
+
+  //------------------------------
+  // Pass Single Electron Triggers
+  //------------------------------
+  if (!m_ele_trig_fire) return;
 
 
   //----------
@@ -9918,7 +10129,7 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   //This adds the necessary soft term for both CST and TST
   //these functions create an xAODMissingET object with the given names inside the container
 
-  // For emulated MET marking muons invisible
+  // For real MET
   m_metMaker->rebuildJetMET("RefJet",          //name of jet met
       "SoftClus",           //name of soft cluster term met
       "PVSoftTrk",          //name of soft track term met
@@ -9932,7 +10143,7 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   // Soft term uncertainties //
   /////////////////////////////
   if (!m_isData) {
-    // Get the track soft term for Zmumu (For emulated MET marking muons invisible)
+    // Get the track soft term (For real MET)
     xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
     if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
       Error("execute()", "METSystematicsTool returns Error CorrectionCode");
@@ -9942,20 +10153,22 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   ///////////////
   // MET Build //
   ///////////////
-  // For emulated MET for Zmumu marking muons invisible
+  // For real MET for Znunu
   m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
 
-  //////////////////////////////////////////////////////////////
-  // Fill emulated MET for Zmumu (by marking muons invisible) //
-  //////////////////////////////////////////////////////////////
+  /////////////////////////////
+  // Fill real MET for Znunu //
+  /////////////////////////////
   MET = ((*m_met)["Final"]->met());
   MET_phi = ((*m_met)["Final"]->phi());
 
 
-  //----------------
-  // MET trigger 
-  //----------------
-  if ( !m_trigDecisionTool->isPassed("HLT_xe70_mht") ) return;
+
+  //------------------
+  // Pass MET Trigger
+  //------------------
+  if (!m_met_trig_fire) return;
+
 
   //----------
   // MET cut
@@ -10244,10 +10457,13 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   } // No systematic
 
 
-  //----------------
-  // MET trigger 
-  //----------------
-  if ( !m_trigDecisionTool->isPassed("HLT_xe70_mht") ) return;
+
+  //------------------
+  // Pass MET Trigger
+  //------------------
+  if (!m_met_trig_fire) return;
+
+
 
   //---------------------
   // Single muon trigger
@@ -10479,11 +10695,11 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   if ( !pass_OS ) return;
 
 
-  //---------------------------
-  // Single electron trigger
-  //---------------------------
-  bool passElectronTrig = (!m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM18VH")) || (m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH")) || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose");
-  if (!passElectronTrig) return;
+  //-------------------------------
+  // Pass Single Electron Triggers
+  //-------------------------------
+  if (!m_ele_trig_fire) return;
+
 
   //----------
   // MET cut
@@ -10824,7 +11040,8 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   //-------------------------
   // mT cut (Transverse Mass)
   //-------------------------
-  if ( mT < m_mTCut ) return;
+  //if ( mT < m_mTCut ) return;
+  if ( mT < m_mTMin || mT > m_mTMax ) return;
 
 
 
@@ -10888,10 +11105,11 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
-  //----------------
-  // MET trigger 
-  //----------------
-  if ( !m_trigDecisionTool->isPassed("HLT_xe70_mht") ) return;
+  //------------------
+  // Pass MET Trigger
+  //------------------
+  if (!m_met_trig_fire) return;
+
 
   //---------------------
   // Single muon trigger
@@ -11185,7 +11403,8 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //-------------------------
   // mT cut (Transverse Mass)
   //-------------------------
-  if ( mT < m_mTCut ) return;
+  //if ( mT < m_mTCut ) return;
+  if ( mT < m_mTMin || mT > m_mTMax ) return;
 
 
 
@@ -11199,12 +11418,11 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //if ( m_goodTau->size() > 0  ) return;
 
 
+  //-------------------------------
+  // Pass Single Electron Triggers
+  //-------------------------------
+  if (!m_ele_trig_fire) return;
 
-  //---------------------------
-  // Single electron trigger
-  //---------------------------
-  bool passElectronTrig = (!m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM18VH")) || (m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH")) || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose");
-  if (!passElectronTrig) return;
 
 
   //----------

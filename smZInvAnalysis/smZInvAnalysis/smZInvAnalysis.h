@@ -230,6 +230,8 @@ public:
   float m_mllMin; //!
   float m_mllMax; //!
   float m_mTCut; //!
+  float m_mTMin; //!
+  float m_mTMax; //!
   float m_monoJetPtCut; //!
   float m_monoJetEtaCut; //!
   float m_diJet1PtCut; //!
@@ -441,6 +443,7 @@ public:
   void plotMonojet(const xAOD::JetContainer* goodJet, const float& met, const float& metPhi, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
   void plotVBF(const xAOD::JetContainer* goodJet, const float& met, const float& metPhi, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
 
+  void doZnunuExoticReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& mcEventWeight, std::string sysName);
   void doZmumuExoticReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const xAOD::MuonContainer* muons, const xAOD::MuonContainer* muonSC, const float& mcEventWeight, std::string sysName);
   void doZeeExoticReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string sysName);
   void doZnunuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& mcEventWeight, std::string hist_prefix, std::string sysName);
