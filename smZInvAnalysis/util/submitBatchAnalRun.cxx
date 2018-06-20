@@ -243,12 +243,47 @@ int main( int argc, char* argv[] ) {
 
   // Full Skim Dataset (Data15)
   // Period A ~ G (run 276262 ~ 281075) : 313 files
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_AtoG");
-  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_AtoG");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
   // Period H ~ J (run 281317 ~ 284484) : 328 files
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_HtoJ");
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
 
+
+  // Full Skim Dataset (Data16)
+  // Period A ~ C (run 297730 ~ 302393) : 1030 files
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_AtoC/1");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_AtoC/2");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_AtoC/3");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_AtoC/4");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+  // Period D ~ G (run 302737 ~ 306451) : 1731 files
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/1");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/2");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/3");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/4");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/5");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/6");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+  // Period I ~ L (run 307126 ~ 311481) : 1569 files
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/1");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/2");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/3");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/4");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/5");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
 
 
 
@@ -301,11 +336,11 @@ int main( int argc, char* argv[] ) {
 //  job.options()->setString(EL::Job::optSubmitFlags, slurmOptions);
 
   system("mkdir -p ~/bin/; ln -s /usr/bin/sbatch ~/bin/bsub; export PATH=$PATH:~/bin");
-  std::string slurmJobName = "data15";
+  std::string slurmJobName = "znunu";
   // No delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021 -o stdout.%j -e stderr.%j --mail-type=END --mail-user=Hyungsuk.Son@tufts.edu --job-name="+slurmJobName;
-  // Submit batch runs with 10min delay
-  std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+2000 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
+  // Submit batch runs with 50min delay
+  std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+3000 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   // Submit batch runs with 1hour delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+1hour --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   EL::LSFDriver driver; //batch

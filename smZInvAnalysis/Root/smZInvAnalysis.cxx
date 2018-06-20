@@ -1375,7 +1375,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
       ///////////////////////////
       const int channel_num = 3;
       const int prefix_num = 1;
-      std::string channel[channel_num] = {"h_znunu","h_zee_","h_zmumu_"};
+      std::string channel[channel_num] = {"h_znunu_","h_zee_","h_zmumu_"};
       std::string PreFix[prefix_num] = {""};
       for(int i=0; i < channel_num; i++) {
         for(int j=0; j < prefix_num; j++) {
