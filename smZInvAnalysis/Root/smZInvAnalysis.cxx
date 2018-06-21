@@ -412,7 +412,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   if (m_fileType == "truth1") m_doReco = false;
 
   // Enable Truth level analysis
-  m_doTruth = false;
+  m_doTruth = true;
 
   // Enable Systematics
   m_doSys = false;
