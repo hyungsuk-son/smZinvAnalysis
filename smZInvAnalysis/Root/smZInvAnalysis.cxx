@@ -10846,87 +10846,6 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   float MET = -9e9;
   float MET_phi = -9e9;
 
-  /*
-
-  //===================================================================
-  // For rebuild the emulated MET for Wmunu (by marking Muon invisible)
-  //===================================================================
-
-  // It is necessary to reset the selected objects before every MET calculation
-  m_met->clear();
-  metMap->resetObjSelectionFlags();
-
-
-  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for muon FSR
-
-  // Muon
-  //-----------------
-  /// Creat New Hard Object Containers
-  // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuons
-  //
-  // For emulated MET (No muons)
-  // Make a empty container for invisible muons
-  ConstDataVector<xAOD::MuonContainer> m_EmptyMuons(SG::VIEW_ELEMENTS);
-  m_EmptyMuons.clear();
-  m_metMaker->rebuildMET("RefMuon",           //name of metMuons in metContainer
-      xAOD::Type::Muon,                       //telling the rebuilder that this is muon met
-      m_met,                         //filling this met container
-      m_EmptyMuons.asDataVector(),            //using these metMuons that accepted our cuts
-      metMap);                     //and this association map
-
-  // Make a container for invisible muons
-  ConstDataVector<xAOD::MuonContainer> m_invisibleMuons(SG::VIEW_ELEMENTS);
-  // iterate over our shallow copy
-  for (const auto& muon : *m_goodMuon) { // C++11 shortcut
-    m_invisibleMuons.push_back( muon );
-  } // end for loop over shallow copied muons
-
-  // Mark muons invisible
-  m_metMaker->markInvisible(m_invisibleMuons.asDataVector(), metMap, m_met);
-
-
-  // JET
-  //-----------------
-  //Now time to rebuild jetMet and get the soft term
-  //This adds the necessary soft term for both CST and TST
-  //these functions create an xAODMissingET object with the given names inside the container
-
-  // For emulated MET marking muons invisible
-  m_metMaker->rebuildJetMET("RefJet",          //name of jet met
-      "SoftClus",           //name of soft cluster term met
-      "PVSoftTrk",          //name of soft track term met
-      m_met,       //adding to this new met container
-      m_allJet,                //using this jet collection to calculate jet met
-      metCore,   //core met container
-      metMap,    //with this association map
-      true);                //apply jet jvt cut
-
-  /////////////////////////////
-  // Soft term uncertainties //
-  /////////////////////////////
-  if (!m_isData) {
-    // Get the track soft term for Wmunu (For emulated MET marking muons invisible)
-    xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
-    if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
-      Error("execute()", "METSystematicsTool returns Error CorrectionCode");
-    }
-  }
-
-  ///////////////
-  // MET Build //
-  ///////////////
-  // For emulated MET for Wmunu marking muons invisible
-  m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
-
-  //////////////////////////////////////////////////////////////
-  // Fill emulated MET for Wmunu (by marking muons invisible) //
-  //////////////////////////////////////////////////////////////
-  MET = ((*m_met)["Final"]->met());
-  MET_phi = ((*m_met)["Final"]->phi());
-
-
-  */
-
 
   //===================================================================
   // For rebuild the emulated MET for Wmunu (by marking Muon invisible)
@@ -11201,86 +11120,11 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   float MET = -9e9;
   float MET_phi = -9e9;
 
-  /*
-
-  //======================================================================
-  // For rebuild the emulated MET for Wenu (by marking Electron invisible)
-  //======================================================================
-
-  // It is necessary to reset the selected objects before every MET calculation
-  m_met->clear();
-  metMap->resetObjSelectionFlags();
 
 
-  // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for electron FSR
-
-  // Electron
-  //-----------------
-  /// Creat New Hard Object Containers
-  // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectrons
-  //
-  // For emulated MET (No electrons)
-  // Make a container for invisible electrons
-  ConstDataVector<xAOD::ElectronContainer> m_invisibleElectrons(SG::VIEW_ELEMENTS);
-  for (const auto& electron : *elecSC) { // C++11 shortcut
-    for (const auto& goodelectron : *m_goodElectron) { // C++11 shortcut
-      // Check if electrons are matched to good electrons
-      if (electron->pt() == goodelectron->pt() && electron->eta() == goodelectron->eta() && electron->phi() == goodelectron->phi()){
-        // Put good electrons in
-        m_invisibleElectrons.push_back( electron );
-      }
-    }
-  }
-  // Mark electrons invisible (No electrons)
-  m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
-
-
-  // JET
-  //-----------------
-  //Now time to rebuild jetMet and get the soft term
-  //This adds the necessary soft term for both CST and TST
-  //these functions create an xAODMissingET object with the given names inside the container
-
-  // For emulated MET marking muons invisible
-  m_metMaker->rebuildJetMET("RefJet",          //name of jet met
-      "SoftClus",           //name of soft cluster term met
-      "PVSoftTrk",          //name of soft track term met
-      m_met,       //adding to this new met container
-      m_allJet,                //using this jet collection to calculate jet met
-      metCore,   //core met container
-      metMap,    //with this association map
-      true);                //apply jet jvt cut
-
-  /////////////////////////////
-  // Soft term uncertainties //
-  /////////////////////////////
-  if (!m_isData) {
-    // Get the track soft term for Wenu (For emulated MET marking electrons invisible)
-    xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
-    if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
-      Error("execute()", "METSystematicsTool returns Error CorrectionCode");
-    }
-  }
-
-  ///////////////
-  // MET Build //
-  ///////////////
-  // For emulated MET for Wenu marking electrons invisible
-  m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
-
-  /////////////////////////////////////////////////////////////////
-  // Fill emulated MET for Wenu (by marking electrons invisible) //
-  /////////////////////////////////////////////////////////////////
-  MET = ((*m_met)["Final"]->met());
-  MET_phi = ((*m_met)["Final"]->phi());
-
-  */
-
-
-
-  //======================================================================
-  // For rebuild the emulated MET for Wenu (by marking Electron invisible)
-  //======================================================================
+  //=======================================
+  // For rebuild the emulated MET for Wenu
+  //=======================================
 
   // It is necessary to reset the selected objects before every MET calculation
   m_met->clear();
@@ -11301,6 +11145,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       m_EmptyElectrons.asDataVector(),            //using these metElectrons that accepted our cuts
       metMap);                     //and this association map
 
+  /* // Do not use "Mark electron invisible" for Wenu CR
   // Make a container for invisible electrons
   ConstDataVector<xAOD::ElectronContainer> m_invisibleElectrons(SG::VIEW_ELEMENTS);
   for (const auto& electron : *elecSC) { // C++11 shortcut
@@ -11314,6 +11159,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   }
   // Mark electrons invisible (No electrons)
   m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
+  */
 
 
   // Muon

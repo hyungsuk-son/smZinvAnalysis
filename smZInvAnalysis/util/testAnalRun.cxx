@@ -217,17 +217,17 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3480, skim, EXOT5)
 
   // Skim_v2 (EXOT5)
-  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v2");
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v2");
   //SH::ScanDir().filePattern("user.hson.14316785._000010.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3480, skim, EXOT5)
-  //SH::ScanDir().filePattern("user.hson.14316903._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
+  SH::ScanDir().filePattern("user.hson.14316903._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
   //SH::ScanDir().filePattern("user.hson.14316951._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
 
   // Skim_v3 (EXOT5)
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
   //SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("user.hson.14408279._000007.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu
   //SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
-  SH::ScanDir().filePattern("user.hson.14408499._000048.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
+  //SH::ScanDir().filePattern("user.hson.14408499._000048.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
 
   // data15
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_HtoJ");

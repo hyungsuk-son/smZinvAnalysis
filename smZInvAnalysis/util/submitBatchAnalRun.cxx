@@ -336,7 +336,7 @@ int main( int argc, char* argv[] ) {
 //  job.options()->setString(EL::Job::optSubmitFlags, slurmOptions);
 
   system("mkdir -p ~/bin/; ln -s /usr/bin/sbatch ~/bin/bsub; export PATH=$PATH:~/bin");
-  std::string slurmJobName = "znunu";
+  std::string slurmJobName = "wmunu";
   // No delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021 -o stdout.%j -e stderr.%j --mail-type=END --mail-user=Hyungsuk.Son@tufts.edu --job-name="+slurmJobName;
   // Submit batch runs with 50min delay
