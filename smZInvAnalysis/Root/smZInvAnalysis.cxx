@@ -440,9 +440,9 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_photEtaCut = 2.47;
   m_mllMin = 66000.; ///MeV
   m_mllMax = 116000.; ///MeV
-  m_mTCut = 50000.; ///MeV
-  m_mTMin = 30000.; ///MeV
-  m_mTMax = 100000.; ///MeV
+  m_mTCut = 50000.; ///MeV // SM Analysis
+  m_mTMin = 30000.; ///MeV // Exotic Analysis
+  m_mTMax = 100000.; ///MeV // Exotic Analysis
   m_monoJetPtCut = 120000.; /// MeV
   m_monoJetEtaCut = 2.4;
   m_diJet1PtCut = 80000.; /// MeV
@@ -1274,6 +1274,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
         for(int j=0; j < sm_level_n; j++) {
           for(int k=0; k < sm_monojet_n; k++) {
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met"+m_sysName, 130, 130., 1430.);
+            // WpT Test (Emulation of WpT (realMET+Lepton))
+            if (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"emul_Wpt"+m_sysName, 130, 130., 1430.);
+            }
             //  For publication binning (Exclusive)
             if (sm_monojet[k] == "exclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
             //  For publication binning (Inclusive)
@@ -6425,29 +6429,31 @@ EL::StatusCode smZInvAnalysis :: execute ()
     ////////////////////////////////////////////
     // Electron overlap removal with non-isolated muons
     // loop round electrons and remove if it is close to a muon that has bremmed and likely faked an electron
-    int j=0;
-    for (const auto &electron : *m_goodElectron) {
-      for (const auto &muon : *m_goodMuonForZ) {
-        if (deltaR(electron->caloCluster()->etaBE(2),muon->eta(),electron->phi(),muon->phi()) < 0.3 && muon->auxdata<bool>("brem") == true) {
-          m_goodElectron->erase(m_goodElectron->begin()+j);
-          j--;
-          break;
-        }
-      } // break to here
-      j++;
-    }
-    // Tau overlap removal with non-isolated muons
-    // loop round taus and remove if it is close to a muon that has bremmed and likely faked an electron
-    int jj=0;
-    for (const auto &tau : *m_goodTau) {
-      for (const auto &muon : *m_goodMuonForZ) {
-        if (deltaR(tau->eta(),muon->eta(),tau->phi(),muon->phi()) < 0.3) {
-          m_goodTau->erase(m_goodTau->begin()+jj);
-          jj--;
-          break;
-        }
-      } // break to here
-      jj++;
+    if (m_useArrayCutflow) {
+      int j=0;
+      for (const auto &electron : *m_goodElectron) {
+        for (const auto &muon : *m_goodMuonForZ) {
+          if (deltaR(electron->caloCluster()->etaBE(2),muon->eta(),electron->phi(),muon->phi()) < 0.3 && muon->auxdata<bool>("brem") == true) {
+            m_goodElectron->erase(m_goodElectron->begin()+j);
+            j--;
+            break;
+          }
+        } // break to here
+        j++;
+      }
+      // Tau overlap removal with non-isolated muons
+      // loop round taus and remove if it is close to a muon that has bremmed and likely faked an electron
+      int jj=0;
+      for (const auto &tau : *m_goodTau) {
+        for (const auto &muon : *m_goodMuonForZ) {
+          if (deltaR(tau->eta(),muon->eta(),tau->phi(),muon->phi()) < 0.3) {
+            m_goodTau->erase(m_goodTau->begin()+jj);
+            jj--;
+            break;
+          }
+        } // break to here
+        jj++;
+      }
     }
 
 
@@ -10847,6 +10853,103 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   float MET_phi = -9e9;
 
 
+  //===========================
+  // For rebuild the real MET
+  //===========================
+
+
+  // It is necessary to reset the selected objects before every MET calculation
+  m_met->clear();
+  metMap->resetObjSelectionFlags();
+
+
+  // Electron
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectron
+  ConstDataVector<xAOD::ElectronContainer> m_MetElectron(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Electron>
+
+  // iterate over our shallow copy
+  for (const auto& electron : *m_goodElectron) { // C++11 shortcut
+    // For MET rebuilding
+    m_MetElectron.push_back( electron );
+  } // end for loop over shallow copied electrons
+  //const xAOD::ElectronContainer* p_MetElectrons = m_MetElectron.asDataVector();
+
+  // For real MET
+  m_metMaker->rebuildMET("RefElectron",           //name of metElectrons in metContainer
+      xAOD::Type::Electron,                       //telling the rebuilder that this is electron met
+      m_met,                                      //filling this met container
+      m_MetElectron.asDataVector(),              //using these metElectrons that accepted our cuts
+      metMap);                                  //and this association map
+
+  // Muon
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuons
+  ConstDataVector<xAOD::MuonContainer> m_MetMuons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Muon>
+
+  // iterate over our shallow copy
+  for (const auto& muon : *m_goodMuon) { // C++11 shortcut
+    // For MET rebuilding
+    m_MetMuons.push_back( muon );
+  } // end for loop over shallow copied muons
+  // For real MET
+  m_metMaker->rebuildMET("RefMuon",           //name of metMuons in metContainer
+      xAOD::Type::Muon,                       //telling the rebuilder that this is muon met
+      m_met,                                  //filling this met container
+      m_MetMuons.asDataVector(),              //using these metMuons that accepted our cuts
+      metMap);                              //and this association map
+
+
+
+  // JET
+  //-----------------
+  //Now time to rebuild jetMet and get the soft term
+  //This adds the necessary soft term for both CST and TST
+  //these functions create an xAODMissingET object with the given names inside the container
+
+  // For real MET
+  m_metMaker->rebuildJetMET("RefJet",          //name of jet met
+      "SoftClus",           //name of soft cluster term met
+      "PVSoftTrk",          //name of soft track term met
+      m_met,       //adding to this new met container
+      m_allJet,                //using this jet collection to calculate jet met
+      metCore,   //core met container
+      metMap,    //with this association map
+      true);                //apply jet jvt cut
+
+  /////////////////////////////
+  // Soft term uncertainties //
+  /////////////////////////////
+  if (!m_isData) {
+    // Get the track soft term (For real MET)
+    xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
+    if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
+      Error("execute()", "METSystematicsTool returns Error CorrectionCode");
+    }
+  }
+
+  ///////////////
+  // MET Build //
+  ///////////////
+  // For real MET for Znunu
+  m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
+
+  /////////////////////////////
+  // Fill real MET for Znunu //
+  /////////////////////////////
+  MET = ((*m_met)["Final"]->met());
+  MET_phi = ((*m_met)["Final"]->phi());
+
+
+  float real_mpx = ((*m_met)["Final"]->mpx());
+  float real_mpy = ((*m_met)["Final"]->mpy());
+  
+  //std::cout << "Real MET = " << MET * 0.001 << " , sqrt(mpx^2+mpy^2) = " << std::sqrt(real_mpx*real_mpx+real_mpy*real_mpy) * 0.001 << std::endl;
+
+
+
   //===================================================================
   // For rebuild the emulated MET for Wmunu (by marking Muon invisible)
   //===================================================================
@@ -10959,8 +11062,8 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   //-------------------------
   // mT cut (Transverse Mass)
   //-------------------------
-  //if ( mT < m_mTCut ) return;
-  if ( mT < m_mTMin || mT > m_mTMax ) return;
+  if ( mT < m_mTCut ) return; // SM Analysis
+  //if ( mT < m_mTMin || mT > m_mTMax ) return; // Exotic Analysis
 
 
 
@@ -11042,6 +11145,17 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   if ( MET < sm_metCut ) return;
 
 
+
+  /////////////////
+  // Emulate WpT //
+  /////////////////
+
+  float lepton_px = lepton_pt * TMath::Sin(lepton_phi);
+  float lepton_py = lepton_pt * TMath::Cos(lepton_phi);
+  float emul_WpT = TMath::Sqrt((real_mpx+lepton_px)*(real_mpx+lepton_px)+(real_mpy+lepton_py)*(real_mpy+lepton_py));
+
+
+
   /////////////////////////////////
   // Calculate muon SF for Wmunu //
   /////////////////////////////////
@@ -11066,6 +11180,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
     if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wmunu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
@@ -11084,6 +11199,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
     if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wmunu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
@@ -11122,6 +11238,103 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
 
 
 
+  //===========================
+  // For rebuild the real MET
+  //===========================
+
+
+  // It is necessary to reset the selected objects before every MET calculation
+  m_met->clear();
+  metMap->resetObjSelectionFlags();
+
+
+  // Electron
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Electron container m_electrons, placing selected electrons into m_MetElectron
+  ConstDataVector<xAOD::ElectronContainer> m_MetElectron(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Electron>
+
+  // iterate over our shallow copy
+  for (const auto& electron : *m_goodElectron) { // C++11 shortcut
+    // For MET rebuilding
+    m_MetElectron.push_back( electron );
+  } // end for loop over shallow copied electrons
+  //const xAOD::ElectronContainer* p_MetElectrons = m_MetElectron.asDataVector();
+
+  // For real MET
+  m_metMaker->rebuildMET("RefElectron",           //name of metElectrons in metContainer
+      xAOD::Type::Electron,                       //telling the rebuilder that this is electron met
+      m_met,                                      //filling this met container
+      m_MetElectron.asDataVector(),              //using these metElectrons that accepted our cuts
+      metMap);                                  //and this association map
+
+  // Muon
+  //-----------------
+  /// Creat New Hard Object Containers
+  // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuons
+  ConstDataVector<xAOD::MuonContainer> m_MetMuons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Muon>
+
+  // iterate over our shallow copy
+  for (const auto& muon : *m_goodMuon) { // C++11 shortcut
+    // For MET rebuilding
+    m_MetMuons.push_back( muon );
+  } // end for loop over shallow copied muons
+  // For real MET
+  m_metMaker->rebuildMET("RefMuon",           //name of metMuons in metContainer
+      xAOD::Type::Muon,                       //telling the rebuilder that this is muon met
+      m_met,                                  //filling this met container
+      m_MetMuons.asDataVector(),              //using these metMuons that accepted our cuts
+      metMap);                              //and this association map
+
+
+
+  // JET
+  //-----------------
+  //Now time to rebuild jetMet and get the soft term
+  //This adds the necessary soft term for both CST and TST
+  //these functions create an xAODMissingET object with the given names inside the container
+
+  // For real MET
+  m_metMaker->rebuildJetMET("RefJet",          //name of jet met
+      "SoftClus",           //name of soft cluster term met
+      "PVSoftTrk",          //name of soft track term met
+      m_met,       //adding to this new met container
+      m_allJet,                //using this jet collection to calculate jet met
+      metCore,   //core met container
+      metMap,    //with this association map
+      true);                //apply jet jvt cut
+
+  /////////////////////////////
+  // Soft term uncertainties //
+  /////////////////////////////
+  if (!m_isData) {
+    // Get the track soft term (For real MET)
+    xAOD::MissingET* softTrkmet = (*m_met)[softTerm];
+    if (m_metSystTool->applyCorrection(*softTrkmet) != CP::CorrectionCode::Ok) {
+      Error("execute()", "METSystematicsTool returns Error CorrectionCode");
+    }
+  }
+
+  ///////////////
+  // MET Build //
+  ///////////////
+  // For real MET for Znunu
+  m_metMaker->buildMETSum("Final", m_met, (*m_met)[softTerm]->source());
+
+  /////////////////////////////
+  // Fill real MET for Znunu //
+  /////////////////////////////
+  MET = ((*m_met)["Final"]->met());
+  MET_phi = ((*m_met)["Final"]->phi());
+
+
+  float real_mpx = ((*m_met)["Final"]->mpx());
+  float real_mpy = ((*m_met)["Final"]->mpy());
+  
+  //std::cout << "Real MET = " << MET * 0.001 << " , sqrt(mpx^2+mpy^2) = " << std::sqrt(real_mpx*real_mpx+real_mpy*real_mpy) * 0.001 << std::endl;
+
+
+
   //=======================================
   // For rebuild the emulated MET for Wenu
   //=======================================
@@ -11145,7 +11358,6 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       m_EmptyElectrons.asDataVector(),            //using these metElectrons that accepted our cuts
       metMap);                     //and this association map
 
-  /* // Do not use "Mark electron invisible" for Wenu CR
   // Make a container for invisible electrons
   ConstDataVector<xAOD::ElectronContainer> m_invisibleElectrons(SG::VIEW_ELEMENTS);
   for (const auto& electron : *elecSC) { // C++11 shortcut
@@ -11159,25 +11371,24 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   }
   // Mark electrons invisible (No electrons)
   m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
-  */
 
 
   // Muon
   //-----------------
   /// Creat New Hard Object Containers
-  // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuons
-  ConstDataVector<xAOD::MuonContainer> m_MetMuons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Muon>
+  // [For MET building] filter the Muon container m_muons, placing selected muons into m_MetMuon
+  ConstDataVector<xAOD::MuonContainer> m_MetMuon(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Muon>
 
   // iterate over our shallow copy
   for (const auto& muon : *m_goodMuon) { // C++11 shortcut
     // For MET rebuilding
-    m_MetMuons.push_back( muon );
+    m_MetMuon.push_back( muon );
   } // end for loop over shallow copied muons
   // For real MET
   m_metMaker->rebuildMET("RefMuon",           //name of metMuons in metContainer
       xAOD::Type::Muon,                       //telling the rebuilder that this is muon met
       m_met,                                  //filling this met container
-      m_MetMuons.asDataVector(),              //using these metMuons that accepted our cuts
+      m_MetMuon.asDataVector(),              //using these metMuons that accepted our cuts
       metMap);                              //and this association map
 
   // JET
@@ -11249,8 +11460,8 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //-------------------------
   // mT cut (Transverse Mass)
   //-------------------------
-  //if ( mT < m_mTCut ) return;
-  if ( mT < m_mTMin || mT > m_mTMax ) return;
+  if ( mT < m_mTCut ) return; // SM Analysis
+  //if ( mT < m_mTMin || mT > m_mTMax ) return; // Exotic Analysis
 
 
 
@@ -11270,11 +11481,22 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   if (!m_ele_trig_fire) return;
 
 
-
   //----------
   // MET cut
   //----------
   if ( MET < sm_metCut ) return;
+
+
+
+  /////////////////
+  // Emulate WpT //
+  /////////////////
+
+  float lepton_px = lepton_pt * TMath::Sin(lepton_phi);
+  float lepton_py = lepton_pt * TMath::Cos(lepton_phi);
+  float emul_WpT = TMath::Sqrt((real_mpx+lepton_px)*(real_mpx+lepton_px)+(real_mpy+lepton_py)*(real_mpy+lepton_py));
+  //std::cout << "Wenu MET = " << MET * 0.001 << " , emul_WpT = " << emul_WpT * 0.001 << std::endl;
+
 
 
 
@@ -11299,6 +11521,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
     if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wenu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
@@ -11317,6 +11540,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
     if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wenu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);

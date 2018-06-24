@@ -143,11 +143,15 @@ int main( int argc, char* argv[] ) {
 
 
   // MC16a
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a");
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a");
   // Derivation
   // EXOT5
   //SH::ScanDir().filePattern("DAOD_EXOT5.118692*").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
   //SH::ScanDir().filePattern("DAOD_EXOT5.1189234*").scan(sh,inputFilePath); // 364123.Sherpa_221_NNPDF30NNLO_Zee_MAXHTPTV280_500_CVetoBVeto
+  // Error test
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation/EXOT5/mc16_13TeV.364164.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV140_280_BFilter.deriv.DAOD_EXOT5.e5340_s3126_r9364_r9315_p3482");
+  //SH::ScanDir().filePattern("DAOD_EXOT5.13472077._000*").scan(sh,inputFilePath); // 1_364164.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV140_280_BFilter (Error test)
+  SH::ScanDir().filePattern("DAOD_EXOT5.13472080._000*").scan(sh,inputFilePath); // 2_364164.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV140_280_BFilter (Error test)
   // STDM4
   //SH::ScanDir().filePattern("DAOD_STDM4.127725*").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
   //SH::ScanDir().filePattern("DAOD_STDM4.127729*").scan(sh,inputFilePath); // 364123.Sherpa_221_NNPDF30NNLO_Zee_MAXHTPTV280_500_CVetoBVeto
@@ -159,7 +163,7 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14171859._0000*").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
   //SH::ScanDir().filePattern("user.hson.14195996._0000*").scan(sh,inputFilePath); // 364123.Sherpa_221_NNPDF30NNLO_Zee_MAXHTPTV280_500_CVetoBVeto
   // Data15
-  SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 
+  //SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // 
 
 
 
@@ -212,7 +216,7 @@ int main( int argc, char* argv[] ) {
 //  job.options()->setString(EL::Job::optSubmitFlags, slurmOptions);
 
   system("mkdir -p ~/bin/; ln -s /usr/bin/sbatch ~/bin/bsub; export PATH=$PATH:~/bin");
-  std::string slurmJobName = "data15";
+  std::string slurmJobName = "test";
   std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+2000 --exclude=m4lmem01,alpha018 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+1hour --exclude=m4lmem01,alpha018 -o stdout.%j -e stderr.%j --mail-type=END --mail-user=Hyungsuk.Son@tufts.edu --job-name="+slurmJobName;
   EL::LSFDriver driver; //batch
