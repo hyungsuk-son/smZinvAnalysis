@@ -1275,8 +1275,15 @@ EL::StatusCode smZInvAnalysis :: initialize ()
           for(int k=0; k < sm_monojet_n; k++) {
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met"+m_sysName, 130, 130., 1430.);
             // WpT Test (Emulation of WpT (realMET+Lepton))
-            if (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_") {
-              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"emul_Wpt"+m_sysName, 130, 130., 1430.);
+            if (m_sysName=="" && (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_")) {
+              if (sm_monojet[k] == "exclusive_") { // No jet cuts
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+"noJetCut_real_MET"+m_sysName, 143, 0., 1430.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+"noJetCut_emul_MET"+m_sysName, 143, 0., 1430.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+"noJetCut_emul_Wpt"+m_sysName, 143, 0., 1430.);
+              } // Exclusive and Inclusive jet cut
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"real_MET"+m_sysName, 143, 0., 1430.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"emul_MET"+m_sysName, 143, 0., 1430.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"emul_Wpt"+m_sysName, 143, 0., 1430.);
             }
             //  For publication binning (Exclusive)
             if (sm_monojet[k] == "exclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
@@ -10943,6 +10950,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   MET_phi = ((*m_met)["Final"]->phi());
 
 
+  float real_met = ((*m_met)["Final"]->met());
   float real_mpx = ((*m_met)["Final"]->mpx());
   float real_mpy = ((*m_met)["Final"]->mpy());
   
@@ -11126,6 +11134,45 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   } // No systematic
 
 
+  /////////////////
+  // Emulate WpT //
+  /////////////////
+
+  float lepton_px = lepton_pt * TMath::Sin(lepton_phi);
+  float lepton_py = lepton_pt * TMath::Cos(lepton_phi);
+  float emul_WpT = TMath::Sqrt((real_mpx+lepton_px)*(real_mpx+lepton_px)+(real_mpy+lepton_py)*(real_mpy+lepton_py));
+
+
+  ////////////////
+  // pT(W) test //
+  ////////////////
+  if (sysName=="") { // No systematic
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      // Pass No jet cut
+      hMap1D["SM_study_"+channel+"_reco_noJetCut_real_MET"+sysName]->Fill(real_met * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+"_reco_noJetCut_emul_MET"+sysName]->Fill(MET * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+"_reco_noJetCut_emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight);
+      // Pass exclusive jet cut
+      if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+        hMap1D["SM_study_"+channel+hist_prefix+"real_MET"+sysName]->Fill(real_met * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_MET"+sysName]->Fill(MET * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight);
+      }
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      // Pass inclusive jet cut
+      if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+        hMap1D["SM_study_"+channel+hist_prefix+"real_MET"+sysName]->Fill(real_met * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_MET"+sysName]->Fill(MET * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight);
+      }
+    }
+  } // No systematic
+
+
+
 
   //------------------
   // Pass MET Trigger
@@ -11144,15 +11191,6 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   //----------
   if ( MET < sm_metCut ) return;
 
-
-
-  /////////////////
-  // Emulate WpT //
-  /////////////////
-
-  float lepton_px = lepton_pt * TMath::Sin(lepton_phi);
-  float lepton_py = lepton_pt * TMath::Cos(lepton_phi);
-  float emul_WpT = TMath::Sqrt((real_mpx+lepton_px)*(real_mpx+lepton_px)+(real_mpy+lepton_py)*(real_mpy+lepton_py));
 
 
 
@@ -11180,7 +11218,6 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
     if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
-      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wmunu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
@@ -11199,7 +11236,6 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
     if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
-      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wmunu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
@@ -11328,6 +11364,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   MET_phi = ((*m_met)["Final"]->phi());
 
 
+  float real_met = ((*m_met)["Final"]->met());
   float real_mpx = ((*m_met)["Final"]->mpx());
   float real_mpy = ((*m_met)["Final"]->mpy());
   
@@ -11475,6 +11512,46 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //if ( m_goodTau->size() > 0  ) return;
 
 
+  /////////////////
+  // Emulate WpT //
+  /////////////////
+
+  float lepton_px = lepton_pt * TMath::Sin(lepton_phi);
+  float lepton_py = lepton_pt * TMath::Cos(lepton_phi);
+  float emul_WpT = TMath::Sqrt((real_mpx+lepton_px)*(real_mpx+lepton_px)+(real_mpy+lepton_py)*(real_mpy+lepton_py));
+  //std::cout << "Wenu MET = " << MET * 0.001 << " , emul_WpT = " << emul_WpT * 0.001 << std::endl;
+
+
+  ////////////////
+  // pT(W) test //
+  ////////////////
+  if (sysName=="") { // No systematic
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      // Pass No jet cut
+      hMap1D["SM_study_"+channel+"_reco_noJetCut_real_MET"+sysName]->Fill(real_met * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+"_reco_noJetCut_emul_MET"+sysName]->Fill(MET * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+"_reco_noJetCut_emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight);
+      // Pass exclusive jet cut
+      if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+        hMap1D["SM_study_"+channel+hist_prefix+"real_MET"+sysName]->Fill(real_met * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_MET"+sysName]->Fill(MET * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight);
+      }
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      // Pass inclusive jet cut
+      if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+        hMap1D["SM_study_"+channel+hist_prefix+"real_MET"+sysName]->Fill(real_met * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_MET"+sysName]->Fill(MET * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight);
+      }
+    }
+  } // No systematic
+
+
+
   //-------------------------------
   // Pass Single Electron Triggers
   //-------------------------------
@@ -11486,16 +11563,6 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //----------
   if ( MET < sm_metCut ) return;
 
-
-
-  /////////////////
-  // Emulate WpT //
-  /////////////////
-
-  float lepton_px = lepton_pt * TMath::Sin(lepton_phi);
-  float lepton_py = lepton_pt * TMath::Cos(lepton_phi);
-  float emul_WpT = TMath::Sqrt((real_mpx+lepton_px)*(real_mpx+lepton_px)+(real_mpy+lepton_py)*(real_mpy+lepton_py));
-  //std::cout << "Wenu MET = " << MET * 0.001 << " , emul_WpT = " << emul_WpT * 0.001 << std::endl;
 
 
 
@@ -11521,7 +11588,6 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
     if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
-      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wenu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
@@ -11540,7 +11606,6 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
     if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
-      hMap1D["SM_study_"+channel+hist_prefix+"emul_Wpt"+sysName]->Fill(emul_WpT * 0.001, mcEventWeight_Wenu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
