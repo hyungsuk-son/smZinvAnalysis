@@ -1326,10 +1326,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
       }
       // Trigger Efficiency plots (turn-on curve)
       if (m_sysName=="") { // No systematic
-        const int eff_channel_n = 2;
+        const int eff_channel_n = 3;
         const int eff_level_n = 1;
         const int eff_monojet_n = 2;
-        std::string eff_channel[eff_channel_n] = {"zmumu_","wmunu_"};
+        std::string eff_channel[eff_channel_n] = {"znunu_","zmumu_","wmunu_"};
         std::string eff_level[eff_level_n] = {"trig_eff_reco_"};
         std::string eff_monojet[eff_monojet_n] = {"exclusive_","inclusive_"};
         for(int i=0; i < eff_channel_n; i++) {
@@ -1494,6 +1494,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     }
 
     m_dataYear = "";
+    m_run2016Period = "";
     // 2015 Dataset
     if (m_runNumber >= 276262 && m_runNumber <= 284484) {
       m_dataYear = "2015";
@@ -1501,11 +1502,16 @@ EL::StatusCode smZInvAnalysis :: execute ()
     // 2016 Dataset
     else if (m_runNumber >= 297730 && m_runNumber <= 311481) {
       m_dataYear = "2016";
+      // Period A ~ D3 (297730~302872)
+      if (m_runNumber <= 302872) m_run2016Period = "AtoD3";
+      // Period D4 ~ L (302919~311481)
+      if (m_runNumber >= 302919) m_run2016Period = "D4toL";
     }
     // 2017 Dataset
     else if (m_runNumber >= 325713 && m_runNumber <= 340453 ) {
       m_dataYear = "2017";
     }
+
 
     //std::cout << "[execute] run Number = " << m_runNumber << endl;
     //std::cout << "[execute] m_dataYear = " << m_dataYear << endl;
@@ -1562,6 +1568,22 @@ EL::StatusCode smZInvAnalysis :: execute ()
   if (m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("LAr_Tile_Core");
 
 
+  // -----------------
+  // Batman Cleaning
+  // -----------------
+  // IsBadBatMan Event Flag and EMEC-IW Saturation Problem
+  // https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/HowToCleanJets2016#IsBadBatMan_Event_Flag_and_EMEC
+  // It has been observed that there were problems with saturation
+  // in the EMEC-IW cells in the high pile-up runs in 2015+2016.
+  // ---------------------------------------------------------------
+  // reject event if:
+  if(m_isData && (m_dataYear == "2015" || m_dataYear == "2016")){ // For only 2015 and 2016 data (do not apply with 2017 data)
+    if ((bool) eventInfo->auxdata<char>("DFCommonJets_isBadBatman") ) {
+      return EL::StatusCode::SUCCESS; // go to the next event
+    }
+  }
+  if (m_useBitsetCutflow) m_BitsetCutflow->FillCutflow("Batman Cleaning");
+
 
 /*
   // examine the HLT_xe80* chains, see if they passed/failed and their total prescale
@@ -1581,18 +1603,23 @@ EL::StatusCode smZInvAnalysis :: execute ()
   //-----------------------
   m_met_trig_fire = false;
   m_ele_trig_fire = false;
+  m_mu_trig_fire = false;
   // MET Triggers
   if (m_useArrayCutflow) { // For Exotic cutflow study
     m_met_trig_fire = ( (m_dataYear == "2015" && m_trigDecisionTool->isPassed("HLT_xe70")) ||
         (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_xe80_tc_lcw_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe90_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe100_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe110_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe130_mht_L1XE50") )) );
-  } else { // For SM sutdy
+  } else { // For SM study
     m_met_trig_fire = ( (m_dataYear == "2015" && m_trigDecisionTool->isPassed("HLT_xe70_mht")) ||
-        (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_xe90_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe100_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe110_mht_L1XE50") || m_trigDecisionTool->isPassed("HLT_xe130_mht_L1XE50") )) );
+        ( m_dataYear == "2016" && (m_run2016Period == "AtoD3" &&  m_trigDecisionTool->isPassed("HLT_xe90_mht_L1XE50")) || (m_run2016Period == "D4toL" && m_trigDecisionTool->isPassed("HLT_xe110_mht_L1XE50")) ) );
   }
 
   // Single Electron Triggers
   m_ele_trig_fire = ( (m_dataYear == "2015" && ( m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH") || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose") )) ||
                       (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_e26_lhtight_nod0_ivarloose") || m_trigDecisionTool->isPassed("HLT_e60_lhmedium_nod0") || m_trigDecisionTool->isPassed("HLT_e140_lhloose_nod0") )) );
+
+  // Single Muon Triggers
+  m_mu_trig_fire = ( (m_dataYear == "2015" && ( m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") || m_trigDecisionTool->isPassed("HLT_mu50") )) ||
+                     (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_mu26_ivarmedium") || m_trigDecisionTool->isPassed("HLT_mu50") )) );
 
 
   //-----------------------------------------------------------
@@ -10176,6 +10203,71 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   MET_phi = ((*m_met)["Final"]->phi());
 
 
+  //-------------
+  // Lepton veto
+  //-------------
+
+  // Muon veto
+  if (m_goodMuon->size() > 0 ) return;
+  // Electron veto
+  if ( m_goodElectron->size() > 0 ) return;
+  // Tau veto "ONLY" available in EXOT5 derivation
+  // because STDM4 derivation does not contain a aux data "trackLinks" in Tau container, I could not use tau selection tool
+  //if ( m_goodTau->size() > 0 ) return;
+
+
+
+
+
+  /////////////////////////////
+  // Trigger Efficiency plot //
+  /////////////////////////////
+  if (sysName=="") { // No systematic
+    // Pass single muon triggers to avoid bias
+    if ( m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") || m_trigDecisionTool->isPassed("HLT_mu50") ) {
+      // Exclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        // Pass exclusive jet cut
+        if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+          // Efficiency plot
+          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // Pass MET triggers
+          if ( m_trigDecisionTool->isPassed("HLT_xe70") ) {
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_pass_HLT_xe70"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          if ( m_trigDecisionTool->isPassed("HLT_xe70_tc_lcw") ) {
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_pass_HLT_xe70_tclcw"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          if ( m_trigDecisionTool->isPassed("HLT_xe70_mht") ) {
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_pass_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+        }
+      }
+      // Inclusive
+      if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+        // Pass inclusive jet cut
+        if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+          // Efficiency plot
+          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // Pass MET triggers
+          if ( m_trigDecisionTool->isPassed("HLT_xe70") ) {
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_pass_HLT_xe70"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          if ( m_trigDecisionTool->isPassed("HLT_xe70_tc_lcw") ) {
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_pass_HLT_xe70_tclcw"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          if ( m_trigDecisionTool->isPassed("HLT_xe70_mht") ) {
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_pass_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+        }
+      }
+    } // muon trigger
+  } // No systematic
+
+
+
+
+
 
   //------------------
   // Pass MET Trigger
@@ -10189,17 +10281,6 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   if ( MET < sm_metCut ) return;
 
 
-  //-------------
-  // Lepton veto
-  //-------------
-
-  // Muon veto
-  if (m_goodMuon->size() > 0 ) return;
-  // Electron veto
-  if ( m_goodElectron->size() > 0 ) return;
-  // Tau veto "ONLY" available in EXOT5 derivation
-  // because STDM4 derivation does not contain a aux data "trackLinks" in Tau container, I could not use tau selection tool
-  //if ( m_goodTau->size() > 0 ) return;
 
 
   //////////
@@ -10226,7 +10307,7 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
     if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight); // For publicatino binning
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight);
       // Leading jet pT distribution

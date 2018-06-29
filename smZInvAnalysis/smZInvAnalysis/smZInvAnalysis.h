@@ -143,6 +143,7 @@ public:
   std::string m_nameDerivation; //!
   std::string m_nameDataset; //!
   std::string m_dataYear; //!
+  std::string m_run2016Period; //!
   std::string m_ZtruthChannel; //!
   std::string m_generatorType; //!
   std::string m_input_filename; //!
@@ -177,6 +178,7 @@ public:
   // Trigger Decision
   bool m_met_trig_fire; //!
   bool m_ele_trig_fire; //!
+  bool m_mu_trig_fire; //!
 
 
   // Scale factor
