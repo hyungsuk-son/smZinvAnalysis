@@ -10224,7 +10224,7 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   /////////////////////////////
   if (sysName=="") { // No systematic
     // Pass single muon triggers to avoid bias
-    if ( m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") || m_trigDecisionTool->isPassed("HLT_mu50") ) {
+    if ( m_mu_trig_fire ) {
       // Exclusive
       if ( hist_prefix.find("exclusive")!=std::string::npos ) {
         // Pass exclusive jet cut
@@ -10510,7 +10510,7 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   /////////////////////////////
   if (sysName=="") { // No systematic
     // Pass single muon triggers to avoid bias
-    if ( m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") || m_trigDecisionTool->isPassed("HLT_mu50") ) {
+    if ( m_mu_trig_fire ) {
       // Exclusive
       if ( hist_prefix.find("exclusive")!=std::string::npos ) {
         // Pass exclusive jet cut
@@ -10562,7 +10562,7 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   //---------------------
   // Single muon trigger
   //---------------------
-  //if ( !m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") && !m_trigDecisionTool->isPassed("HLT_mu50") ) return;
+  //if (!m_mu_trig_fire) return;
 
 
   //----------
@@ -11174,7 +11174,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   // Trigger efficiency don't use scale factor
   if (sysName=="") { // No systematic
     // Pass single muon triggers to avoid bias
-    if ( m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") || m_trigDecisionTool->isPassed("HLT_mu50") ) {
+    if ( m_mu_trig_fire ) {
       // Exclusive
       if ( hist_prefix.find("exclusive")!=std::string::npos ) {
         // Pass exclusive jet cut
@@ -11264,7 +11264,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   //---------------------
   // Single muon trigger
   //---------------------
-  //if ( !m_trigDecisionTool->isPassed("HLT_mu20_iloose_L1MU15") && !m_trigDecisionTool->isPassed("HLT_mu50") ) return;
+  //if (!m_mu_trig_fire) return;
 
 
   //----------
@@ -11637,6 +11637,16 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   // Pass Single Electron Triggers
   //-------------------------------
   if (!m_ele_trig_fire) return;
+
+  //--------------
+  // Real MET cut
+  //--------------
+  // For 2015 data
+  if (m_dataYear == "2015" && met < 70000. ) return;
+  // For 2016 data Period A ~ D3 (297730~302872)
+  if (m_dataYear == "2016" && m_run2016Period == "AtoD3" && met < 90000. ) return;
+  // For 2016 data Period D4 ~ L (302919~311481)
+  if (m_dataYear == "2016" && m_run2016Period == "D4toL" && met < 110000. ) return;
 
 
   //----------
