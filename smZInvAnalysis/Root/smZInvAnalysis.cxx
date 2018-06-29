@@ -1335,7 +1335,11 @@ EL::StatusCode smZInvAnalysis :: initialize ()
         for(int i=0; i < eff_channel_n; i++) {
           for(int j=0; j < eff_level_n; j++) {
             for(int k=0; k < eff_monojet_n; k++) {
-              addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met"+m_sysName, 140, 0., 1400.);
+              // Before passing Trigger
+              addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met_for_HLT_xe70_mht"+m_sysName, 140, 0., 1400.);
+              addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met_for_HLT_xe90_mht_L1XE50"+m_sysName, 140, 0., 1400.);
+              addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met_for_HLT_xe110_mht_L1XE50"+m_sysName, 140, 0., 1400.);
+              // After passing Trigger
               addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met_pass_HLT_xe70_mht"+m_sysName, 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met_pass_HLT_xe90_mht_L1XE50"+m_sysName, 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+eff_channel[i]+eff_level[j]+eff_monojet[k]+"met_pass_HLT_xe110_mht_L1XE50"+m_sysName, 140, 0., 1400.);
@@ -10230,7 +10234,18 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
         // Pass exclusive jet cut
         if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
           // Efficiency plot
-          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // For 2015 Data
+          if (m_dataYear == "2015") { // for HLT_xe70_mht
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period A ~ D3 (297730~302872)
+          if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // for HLT_xe90_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe90_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period D4 ~ L  (302919~311481)
+          if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // for HLT_xe110_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe110_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
           // Pass MET triggers
           if (m_met_trig_fire) {
             // For 2015 Data
@@ -10253,7 +10268,18 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
         // Pass inclusive jet cut
         if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
           // Efficiency plot
-          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // For 2015 Data
+          if (m_dataYear == "2015") { // for HLT_xe70_mht
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period A ~ D3 (297730~302872)
+          if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // for HLT_xe90_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe90_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period D4 ~ L  (302919~311481)
+          if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // for HLT_xe110_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe110_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
           // Pass MET triggers
           if (m_met_trig_fire) {
             // For 2015 Data
@@ -10525,7 +10551,18 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
         // Pass exclusive jet cut
         if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
           // Efficiency plot
-          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // For 2015 Data
+          if (m_dataYear == "2015") { // for HLT_xe70_mht
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period A ~ D3 (297730~302872)
+          if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // for HLT_xe90_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe90_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period D4 ~ L  (302919~311481)
+          if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // for HLT_xe110_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe110_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
           // Pass MET triggers
           if (m_met_trig_fire) {
             // For 2015 Data
@@ -10548,7 +10585,18 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
         // Pass inclusive jet cut
         if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
           // Efficiency plot
-          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // For 2015 Data
+          if (m_dataYear == "2015") { // for HLT_xe70_mht
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period A ~ D3 (297730~302872)
+          if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // for HLT_xe90_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe90_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period D4 ~ L  (302919~311481)
+          if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // for HLT_xe110_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe110_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
           // Pass MET triggers
           if (m_met_trig_fire) {
             // For 2015 Data
@@ -10568,6 +10616,7 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
       }
     } // muon trigger
   } // No systematic
+
 
 
 
@@ -11188,6 +11237,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
+
   /////////////////////////////
   // Trigger Efficiency plot //
   /////////////////////////////
@@ -11199,7 +11249,18 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
         // Pass exclusive jet cut
         if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
           // Efficiency plot
-          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // For 2015 Data
+          if (m_dataYear == "2015") { // for HLT_xe70_mht
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period A ~ D3 (297730~302872)
+          if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // for HLT_xe90_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe90_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period D4 ~ L  (302919~311481)
+          if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // for HLT_xe110_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe110_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
           // Pass MET triggers
           if (m_met_trig_fire) {
             // For 2015 Data
@@ -11222,7 +11283,18 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
         // Pass inclusive jet cut
         if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
           // Efficiency plot
-          hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          // For 2015 Data
+          if (m_dataYear == "2015") { // for HLT_xe70_mht
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe70_mht"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period A ~ D3 (297730~302872)
+          if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // for HLT_xe90_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe90_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
+          // For 2016 Data Period D4 ~ L  (302919~311481)
+          if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // for HLT_xe110_mht_L1XE50
+            hMap1D["SM_study_"+channel+"_trig_eff"+hist_prefix+"met_for_HLT_xe110_mht_L1XE50"+sysName]->Fill(MET * 0.001, mcEventWeight);
+          }
           // Pass MET triggers
           if (m_met_trig_fire) {
             // For 2015 Data
@@ -11242,6 +11314,8 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
       }
     } // muon trigger
   } // No systematic
+
+
 
 
 
