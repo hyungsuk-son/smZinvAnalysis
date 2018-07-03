@@ -1618,7 +1618,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
   }
 
   // Single Electron Triggers
-  m_ele_trig_fire = ( (m_dataYear == "2015" && ( m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH") || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose") )) ||
+  m_ele_trig_fire = ( (m_dataYear == "2015" && ( ((!m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM18VH")) || (m_isData && m_trigDecisionTool->isPassed("HLT_e24_lhmedium_L1EM20VH")) ) || m_trigDecisionTool->isPassed("HLT_e60_lhmedium") || m_trigDecisionTool->isPassed("HLT_e120_lhloose") )) ||
                       (m_dataYear == "2016" && ( m_trigDecisionTool->isPassed("HLT_e26_lhtight_nod0_ivarloose") || m_trigDecisionTool->isPassed("HLT_e60_lhmedium_nod0") || m_trigDecisionTool->isPassed("HLT_e140_lhloose_nod0") )) );
 
   // Single Muon Triggers
