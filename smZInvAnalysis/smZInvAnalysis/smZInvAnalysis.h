@@ -386,6 +386,8 @@ public:
   xAOD::AuxContainerBase* m_goodMuonAux; //!
   xAOD::MuonContainer* m_goodMuonForZ; //!
   xAOD::AuxContainerBase* m_goodMuonForZAux; //!
+  xAOD::ElectronContainer* m_baselineElectron; //!
+  xAOD::AuxContainerBase* m_baselineElectronAux; //!
   xAOD::ElectronContainer* m_goodElectron; //!
   xAOD::AuxContainerBase* m_goodElectronAux; //!
   xAOD::PhotonContainer* m_goodPhoton; //!

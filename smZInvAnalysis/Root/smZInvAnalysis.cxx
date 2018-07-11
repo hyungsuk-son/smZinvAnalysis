@@ -5513,6 +5513,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
   m_goodMuonForZ->setStore( m_goodMuonForZAux ); //< Connect the two
 
   // Good electrons
+  m_baselineElectron = new xAOD::ElectronContainer();
+  m_baselineElectronAux = new xAOD::AuxContainerBase();
+  m_baselineElectron->setStore( m_baselineElectronAux ); //< Connect the two
+
+  // Good electrons
   m_goodElectron = new xAOD::ElectronContainer();
   m_goodElectronAux = new xAOD::AuxContainerBase();
   m_goodElectron->setStore( m_goodElectronAux ); //< Connect the two
@@ -5699,6 +5704,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     m_goodJetORTruthElEl->clear();
     m_goodMuon->clear();
     m_goodMuonForZ->clear();
+    m_baselineElectron->clear();
     m_goodElectron->clear();
     m_goodPhoton->clear();
     m_goodTau->clear();
@@ -5861,16 +5867,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
       // https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/EGammaIdentificationRun2#Object_quality_cut
       if( !electron->isGoodOQ(xAOD::EgammaParameters::BADCLUSELECTRON) ) continue;
 
-      // d0 / z0 cuts applied
-      // https://twiki.cern.ch/twiki/bin/view/AtlasProtected/EGammaIdentificationRun2#Electron_d0_and_z0_cut_definitio
-      // d0 significance (Transverse impact parameter)
-      const xAOD::TrackParticle *tp = electron->trackParticle() ; //your input track particle from the electron
-      double d0sig = xAOD::TrackingHelpers::d0significance( tp, eventInfo->beamPosSigmaX(), eventInfo->beamPosSigmaY(), eventInfo->beamPosSigmaXY() );
-      if (std::abs(d0sig) > 5.0) continue;
-      // zo cut
-      float z0sintheta = ( tp->z0() + tp->vz() - primVertex->z() ) * TMath::Sin( tp->theta() );
-      if (std::fabs(z0sintheta) > 0.5) continue;
-
       // Ambiguity tool
       if( m_egammaAmbiguityTool->accept(*electron)) {
         const static SG::AuxElement::Decorator<uint8_t> acc("ambiguityType");
@@ -5891,6 +5887,25 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
       //Info("execute()", "  Tight electron pt = %.2f GeV", electron->pt() * 0.001);  
 
+
+      // d0 / z0 cuts applied
+      // https://twiki.cern.ch/twiki/bin/view/AtlasProtected/EGammaIdentificationRun2#Electron_d0_and_z0_cut_definitio
+      const xAOD::TrackParticle *tp = electron->trackParticle() ; //your input track particle from the electron
+
+      // zo cut
+      float z0sintheta = ( tp->z0() + tp->vz() - primVertex->z() ) * TMath::Sin( tp->theta() );
+      if (std::fabs(z0sintheta) > 0.5) continue;
+
+      // Store baseline Electrons (For Multijet QCD background estimation, Reverse cuts (Failed d0, Failed Iso) )
+      xAOD::Electron* baselineElectron = new xAOD::Electron();
+      m_baselineElectron->push_back( baselineElectron );
+      *baselineElectron = *electron; // copies auxdata from one auxstore to the other
+
+      // d0 significance (Transverse impact parameter)
+      double d0sig = xAOD::TrackingHelpers::d0significance( tp, eventInfo->beamPosSigmaX(), eventInfo->beamPosSigmaY(), eventInfo->beamPosSigmaXY() );
+      if (std::abs(d0sig) > 5.0) continue;
+
+
       // Isolation requirement
       if (m_useArrayCutflow) { // LooseTrackOnly for Exotic analysis
         if (!m_isolationLooseTrackOnlySelectionTool->accept(*electron)) continue;
@@ -5910,6 +5925,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
       *goodElectron = *electron; // copies auxdata from one auxstore to the other
 
     } // end for loop over shallow copied electrons
+
+    // record your deep copied jet container (and aux container) to the store
+    ANA_CHECK(m_store->record( m_baselineElectron, "baselineElectron"+m_sysName ));
+    ANA_CHECK(m_store->record( m_baselineElectronAux, "baselineElectron"+m_sysName+"Aux." ));
 
     // record your deep copied jet container (and aux container) to the store
     ANA_CHECK(m_store->record( m_goodElectron, "goodElectron"+m_sysName ));
@@ -6109,6 +6128,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     /////////////////////////////////
     if (m_goodMuon->size() > 1) std::partial_sort(m_goodMuon->begin(), m_goodMuon->begin()+2, m_goodMuon->end(), DescendingPt());
     if (m_goodMuonForZ->size() > 1) std::partial_sort(m_goodMuonForZ->begin(), m_goodMuonForZ->begin()+2, m_goodMuonForZ->end(), DescendingPt());
+    if (m_baselineElectron->size() > 1) std::partial_sort(m_baselineElectron->begin(), m_baselineElectron->begin()+2, m_baselineElectron->end(), DescendingPt());
     if (m_goodElectron->size() > 1) std::partial_sort(m_goodElectron->begin(), m_goodElectron->begin()+2, m_goodElectron->end(), DescendingPt());
 
 
