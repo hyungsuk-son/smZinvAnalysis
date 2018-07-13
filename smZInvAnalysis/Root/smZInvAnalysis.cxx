@@ -11736,8 +11736,9 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //-------------------------
   // mT cut (Transverse Mass)
   //-------------------------
-  if ( mT < m_mTCut ) return; // SM Analysis
+  //if ( mT < m_mTCut ) return; // SM Analysis
   //if ( mT < m_mTMin || mT > m_mTMax ) return; // Exotic Analysis
+  if ( mT < 50000. || mT > 110000. ) return; // Our SM Analysis
 
 
 
@@ -11799,15 +11800,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //--------------
   // Real MET cut
   //--------------
-  /*
-  // For 2015 data
-  if (m_dataYear == "2015" && met < 70000. ) return;
-  // For 2016 data Period A ~ D3 (297730~302872)
-  if (m_dataYear == "2016" && m_run2016Period == "AtoD3" && met < 90000. ) return;
-  // For 2016 data Period D4 ~ L (302919~311481)
-  if (m_dataYear == "2016" && m_run2016Period == "D4toL" && met < 110000. ) return;
-  */
-  if (met < 30000. ) return;
+  if (met < 70000. ) return;
 
 
   //----------
