@@ -12,6 +12,7 @@
 #include <TH1.h>
 #include <TH2.h>
 #include <TH3.h>
+#include <TF1.h>
 #include <TTree.h>
 #include <TFile.h>
 #include <TString.h>
@@ -469,7 +470,7 @@ public:
   float GetGoodElectronSF(xAOD::Electron& elec, const bool recoSF, const bool idSF, const bool isoSF, const bool elecTrigSF);
   float GetTotalElectronSF(xAOD::ElectronContainer& electrons, bool recoSF, bool idSF, bool isoSF, bool elecTrigSF);
 
-
+  float GetMetTrigSF(const float& met, std::string jetCut, std::string channel);
 
 
   // this is needed to distribute the algorithm to the workers

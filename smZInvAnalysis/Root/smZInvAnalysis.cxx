@@ -10341,6 +10341,23 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
+  ////////////////////////////////////////
+  // Calculate MET Trigger SF for Znunu //
+  ////////////////////////////////////////
+  float mcEventWeight_Znunu = mcEventWeight;
+  if (!m_isData) {
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      mcEventWeight_Znunu = mcEventWeight_Znunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"exclusive","znunu");
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      mcEventWeight_Znunu = mcEventWeight_Znunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"inclusive","znunu");
+    }
+  }
+
+
+
 
   //////////
   // Plot //
@@ -10351,12 +10368,12 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
     // Common plots
     if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
       // MET distribution
-      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight); // For publication binning
+      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu); // For publication binning
       // Leading jet # distribution
-      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Znunu);
       // Leading jet pT distribution
-      hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Znunu);
     }
   }
 
@@ -10365,13 +10382,13 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
     // Common plots
     if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
       // MET distribution
-      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight); // For publication binning
+      hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu); // For publication binning
       // Leading jet # distribution
-      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Znunu);
       // Leading jet pT distribution
       for (const auto &jet : *m_goodJet) {
-        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight);
+        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Znunu);
       }
     }
   }
@@ -10380,23 +10397,23 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   if (sysName=="") { // No systematic
     // Exclusive
     if ( hist_prefix.find("exclusive")!=std::string::npos ) {
-      if (passExclusiveRecoJet(m_goodJet, 160000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt160"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passExclusiveRecoJet(m_goodJet, 170000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt170"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passExclusiveRecoJet(m_goodJet, 180000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt180"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passExclusiveRecoJet(m_goodJet, 190000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt190"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passExclusiveRecoJet(m_goodJet, 200000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt200"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passExclusiveRecoJet(m_goodJet, 210000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt210"+sysName]->Fill(MET * 0.001, mcEventWeight);
+      if (passExclusiveRecoJet(m_goodJet, 160000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt160"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passExclusiveRecoJet(m_goodJet, 170000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt170"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passExclusiveRecoJet(m_goodJet, 180000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt180"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passExclusiveRecoJet(m_goodJet, 190000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt190"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passExclusiveRecoJet(m_goodJet, 200000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt200"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passExclusiveRecoJet(m_goodJet, 210000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt210"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
     }
     // Inclusive
     if ( hist_prefix.find("inclusive")!=std::string::npos ) {
-      if (passInclusiveRecoJet(m_goodJet, 100000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt100"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 150000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt150"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 170000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt170"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 180000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt180"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 190000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt190"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 200000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt200"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 250000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt250"+sysName]->Fill(MET * 0.001, mcEventWeight);
-      if (passInclusiveRecoJet(m_goodJet, 300000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt300"+sysName]->Fill(MET * 0.001, mcEventWeight);
+      if (passInclusiveRecoJet(m_goodJet, 100000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt100"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 150000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt150"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 170000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt170"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 180000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt180"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 190000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt190"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 200000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt200"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 250000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt250"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
+      if (passInclusiveRecoJet(m_goodJet, 300000., MET_phi)) hMap1D["SM_study_"+channel+hist_prefix+"met_LeadjetPt300"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu);
     }
   }
 
@@ -10669,7 +10686,14 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   float mcEventWeight_Zmumu = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Zmumu original mcEventWeight = %.3f ", mcEventWeight);
-    mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"exclusive","zmumu");
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"inclusive","zmumu");
+    }
     //Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
   }
 
@@ -11408,7 +11432,14 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   float mcEventWeight_Wmunu = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Wmunu original mcEventWeight = %.3f ", mcEventWeight);
-    mcEventWeight_Wmunu = mcEventWeight_Wmunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      mcEventWeight_Wmunu = mcEventWeight_Wmunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"exclusive","wmunu");
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      mcEventWeight_Wmunu = mcEventWeight_Wmunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"inclusive","wmunu");
+    }
     //Info("execute()", " Wmunu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wmunu);
   }
 
@@ -12479,6 +12510,76 @@ float smZInvAnalysis::GetTotalElectronSF(xAOD::ElectronContainer& electrons,
   }
 
   //Info("execute()", "  GetTotalElectronSF: Total Electron SF = %.5f ", sf );
+  return sf;
+
+}
+
+
+float smZInvAnalysis::GetMetTrigSF(const float& met, std::string jetCut, std::string channel) {
+
+  float sf(1.);
+
+  TF1* m_SF = new TF1("SFfunc", "TMath::Erf((x-[0])/[1]) / 2 + 0.5", 100, 300);
+
+  std::string metTrigger = "";
+
+  // Apply MET trigger SF in MET (100GeV ~ 300GeV)
+  if (met > 100000. && met < 300000.) {
+    // Inclusive
+    if (jetCut == "inclusive") {
+
+      if (m_dataYear == "2015") { // HLT_xe70_mht
+        metTrigger = "HLT_xe70_mht";
+        // For Wmunu and Znunu
+        if (channel == "wmunu" || channel == "znunu") {
+          m_SF->FixParameter(0,3.64132e+01);
+          m_SF->FixParameter(1,6.74116e+01);
+        }
+        // For Zmumu
+        if (channel == "zmumu") {
+          m_SF->FixParameter(0,1.95810e+01);
+          m_SF->FixParameter(1,8.23972e+01);
+        }
+      } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
+        metTrigger = "HLT_xe90_mht_L1XE50";
+        // For Wmunu and Znunu
+        if (channel == "wmunu" || channel == "znunu") {
+          m_SF->FixParameter(0,3.25571e+01);
+          m_SF->FixParameter(1,7.21354e+01);
+        }
+        // For Zmumu
+        if (channel == "zmumu") {
+          m_SF->FixParameter(0,3.94999e+01);
+          m_SF->FixParameter(1,6.88153e+01);
+        }
+      } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
+        metTrigger = "HLT_xe110_mht_L1XE50";
+        // For Wmunu and Znunu
+        if (channel == "wmunu" || channel == "znunu") {
+          m_SF->FixParameter(0,5.40390e+01);
+          m_SF->FixParameter(1,6.39558e+01);
+        }
+        // For Zmumu
+        if (channel == "zmumu") {
+          m_SF->FixParameter(0,6.62926e+01);
+          m_SF->FixParameter(1,5.68857e+01);
+        }
+      }
+
+      sf = m_SF->Eval(met*0.001);
+
+      //std::cout << " GetMetTrigSF : Used Trigger = " << metTrigger << " in " << channel << " , MET = " << met*0.001 << "GeV , SF = " << sf << std::endl;
+
+    }
+    // Exclusive
+    else if (jetCut == "exclusive") {
+      sf = 1.;
+    }
+
+  } else {
+    sf = 1.;
+  } // Set Met range
+
   return sf;
 
 }
