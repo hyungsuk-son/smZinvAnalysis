@@ -10348,11 +10348,11 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   if (!m_isData) {
     // Exclusive
     if ( hist_prefix.find("exclusive")!=std::string::npos ) {
-      mcEventWeight_Znunu = mcEventWeight_Znunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"exclusive","znunu");
+      mcEventWeight_Znunu = mcEventWeight_Znunu * GetMetTrigSF(MET,"exclusive","znunu");
     }
     // Inclusive
     if ( hist_prefix.find("inclusive")!=std::string::npos ) {
-      mcEventWeight_Znunu = mcEventWeight_Znunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"inclusive","znunu");
+      mcEventWeight_Znunu = mcEventWeight_Znunu * GetMetTrigSF(MET,"inclusive","znunu");
     }
   }
 
