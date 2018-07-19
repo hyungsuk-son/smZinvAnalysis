@@ -415,7 +415,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = false;
+  m_doSys = true;
 
   // Scale factor
   m_recoSF = true;
