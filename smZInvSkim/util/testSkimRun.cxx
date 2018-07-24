@@ -74,12 +74,13 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("DAOD_EXOT5.11892347._000020.pool.root.1").scan(sh,inputFilePath); // 364123.Zee_MAXHTPTV280_500_CVetoBVeto
   //SH::ScanDir().filePattern("DAOD_EXOT5.11869241._000002.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
   // MC16c (STDM4)
-  //SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
   const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
+  //SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
+  SH::ScanDir().filePattern("DAOD_STDM4.13860139._000007.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3523, no-skim)
   //SH::ScanDir().filePattern("DAOD_EXOT5.13463081._000027.pool.root.1").scan(sh,inputFilePath); // Multijet
   //SH::ScanDir().filePattern("DAOD_EXOT5.13463907._000007.pool.root.1").scan(sh,inputFilePath); // Zmumu
   //SH::ScanDir().filePattern("DAOD_EXOT5.13461333._000007.pool.root.1").scan(sh,inputFilePath); // Zee
-  SH::ScanDir().filePattern("DAOD_EXOT5.13472375._000019.pool.root.1").scan(sh,inputFilePath); // Znunu
+  //SH::ScanDir().filePattern("DAOD_EXOT5.13472375._000019.pool.root.1").scan(sh,inputFilePath); // Znunu
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
@@ -94,7 +95,7 @@ int main( int argc, char* argv[] ) {
   job.sampleHandler( sh );
   // make sure we can read trigger decision
   job.options()->setString(EL::Job::optXaodAccessMode, EL::Job::optXaodAccessMode_class);
-  job.options()->setDouble (EL::Job::optMaxEvents, 1000); // for testing
+  //job.options()->setDouble (EL::Job::optMaxEvents, 1000); // for testing
 /*
   // For ntuple
   // define an output and an ntuple associated to that output (For ntuple)

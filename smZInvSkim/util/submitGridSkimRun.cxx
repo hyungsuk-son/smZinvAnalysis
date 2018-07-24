@@ -53,15 +53,18 @@ int main( int argc, char* argv[] ) {
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_EXOT5_"+myTagVer; // Zee
   //std::string myTagName = "mc16a_13TeV.Sherpa_Znunu_skim_EXOT5_"+myTagVer; // Znunu
   //std::string myTagName = "mc16a_13TeV.Sherpa_Ztautau_skim_EXOT5_"+myTagVer; // Ztautau
-  std::string myTagName = "mc16a_13TeV.Sherpa_Wmunu_skim_EXOT5_"+myTagVer; // Wmunu
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Wmunu_skim_EXOT5_"+myTagVer; // Wmunu
   //std::string myTagName = "mc16a_13TeV.Sherpa_Wenu_skim_EXOT5_"+myTagVer; // Wenu
   //std::string myTagName = "mc16a_13TeV.Sherpa_Wtaunu_skim_EXOT5_"+myTagVer; // Wtaunu
   //std::string myTagName = "mc16a_13TeV.Sherpa_Diboson_skim_EXOT5_"+myTagVer; // Diboson
   //std::string myTagName = "mc16a_13TeV.PowhegPythiaEvtGen_Top_skim_EXOT5_"+myTagVer; // Top
   //std::string myTagName = "mc16a_13TeV.Pythia8EvtGen_Multijet_skim_EXOT5_"+myTagVer; // Multijet
-  // STDM4
+  // STDM4 (skim tag p3371)
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_"+myTagVer; // Zee
+  // STDM4 (no-skim tag p3523)
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
+  std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_"+myTagVer; // Zee
   // Data
   //std::string myTagName = "data15_13TeV.skim_EXOT5_"+myTagVer; // Data 2015 (EXOT5 derivation)
   //std::string myTagName = "data16_13TeV.skim_EXOT5_"+myTagVer; // Data 2016 (EXOT5 derivation)
@@ -76,15 +79,18 @@ int main( int argc, char* argv[] ) {
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Zee_dataset.txt" ); // Zee
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Znunu_dataset.txt" ); // Znunu
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Ztautau_dataset.txt" ); // Ztautau
-  std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wmunu_dataset.txt" ); // Wmunu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wmunu_dataset.txt" ); // Wmunu
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wenu_dataset.txt" ); // Wenu
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Wtaunu_dataset.txt" ); // Wtaunu
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Diboson_dataset.txt" ); // Diboson
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Top_dataset.txt" ); // Top
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Multijet_dataset.txt" ); // Multijet
-  // STDM4
+  // STDM4 (skim tag p3371)
   //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_Zmumu_dataset.txt" ); // Zmumu
   //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_Zee_dataset.txt" ); // Zee
+  // STDM4 (no-skim tag p3523)
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_no-skim_Zmumu_dataset.txt" ); // Zmumu
+  std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_no-skim_Zee_dataset.txt" ); // Zee
   // Data
   //std::ifstream inFile( listFilePath+"data15_deriv_EXOT5.txt" ); // Data 2015 (EXOT5 derivation)
   //std::ifstream inFile( listFilePath+"data16_deriv_EXOT5.txt" ); // Data 2016 (EXOT5 derivation)
