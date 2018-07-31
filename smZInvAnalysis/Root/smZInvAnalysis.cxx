@@ -1274,6 +1274,14 @@ EL::StatusCode smZInvAnalysis :: initialize ()
         for(int j=0; j < sm_level_n; j++) {
           for(int k=0; k < sm_monojet_n; k++) {
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met"+m_sysName, 130, 130., 1430.);
+            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
+            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
+            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 100., 1100.);
+            // For unfolding (No MET trigger passed)
+            if (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_noMetTrig"+m_sysName, 130, 130., 1430.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_noMetTrig"+m_sysName, ex_nbinMET, ex_binsMET);
+            }
             // WpT Test (Emulation of WpT (realMET+Lepton))
             if (m_sysName=="" && (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_")) {
               if (sm_monojet[k] == "exclusive_") { // No jet cuts
@@ -1285,12 +1293,6 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"emul_MET"+m_sysName, 143, 0., 1430.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"emul_Wpt"+m_sysName, 143, 0., 1430.);
             }
-            //  For publication binning (Exclusive)
-            if (sm_monojet[k] == "exclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
-            //  For publication binning (Inclusive)
-            if (sm_monojet[k] == "inclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, in_nbinMET, in_binsMET);
-            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
-            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 100., 1100.);
             if (m_sysName=="" && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // No systematic
                 // Statistical Unc. Test for ratio (scanning leading jet cuts)
               if (sm_monojet[k] == "exclusive_") { // Exclusive
@@ -10339,16 +10341,44 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
+  //----------
+  // MET cut
+  //----------
+  if ( MET < sm_metCut ) return;
+
+
+
+  ////////////////////////////////////////////////
+  // Plot for Unfolding (No MET trigger passed) //
+  ////////////////////////////////////////////////
+
+  // Exclusive
+  if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+    // Common plots
+    if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight); // For publication binning
+    }
+  }
+
+  // Inclusive
+  if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+    // Common plots
+    if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight); // For publication binning
+    }
+  }
+
+
+
   //------------------
   // Pass MET Trigger
   //------------------
   if (!m_met_trig_fire) return;
 
-
-  //----------
-  // MET cut
-  //----------
-  if ( MET < sm_metCut ) return;
 
 
 
@@ -10679,21 +10709,6 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
-
-
-  //------------------
-  // Pass MET Trigger
-  //------------------
-  if (!m_met_trig_fire) return;
-
-
-
-  //---------------------
-  // Single muon trigger
-  //---------------------
-  //if (!m_mu_trig_fire) return;
-
-
   //----------
   // MET cut
   //----------
@@ -10706,16 +10721,61 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   float mcEventWeight_Zmumu = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Zmumu original mcEventWeight = %.3f ", mcEventWeight);
+    mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
+    //Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
+  }
+
+
+  ////////////////////////////////////////////////
+  // Plot for Unfolding (No MET trigger passed) //
+  ////////////////////////////////////////////////
+
+  // Exclusive
+  if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+    // Common plots
+    if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight_Zmumu); // For publication binning
+    }
+  }
+
+  // Inclusive
+  if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+    // Common plots
+    if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"met_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_noMetTrig"+sysName]->Fill(MET * 0.001, mcEventWeight_Zmumu); // For publication binning
+    }
+  }
+
+
+
+
+
+  //------------------
+  // Pass MET Trigger
+  //------------------
+  if (!m_met_trig_fire) return;
+
+
+
+  ////////////////////////////////////////
+  // Calculate MET Trigger SF for Zmumu //
+  ////////////////////////////////////////
+  if (!m_isData) {
     // Exclusive
     if ( hist_prefix.find("exclusive")!=std::string::npos ) {
-      mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"exclusive","zmumu");
+      mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetMetTrigSF(MET,"exclusive","zmumu");
     }
     // Inclusive
     if ( hist_prefix.find("inclusive")!=std::string::npos ) {
-      mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM) * GetMetTrigSF(MET,"inclusive","zmumu");
+      mcEventWeight_Zmumu = mcEventWeight_Zmumu * GetMetTrigSF(MET,"inclusive","zmumu");
     }
-    //Info("execute()", " Zmumu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Zmumu);
   }
+
+
 
 
 

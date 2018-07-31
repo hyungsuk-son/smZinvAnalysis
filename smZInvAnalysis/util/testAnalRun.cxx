@@ -234,8 +234,8 @@ int main( int argc, char* argv[] ) {
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_HtoJ");
   //SH::ScanDir().filePattern("user.hson.14248220._000011.mini-xAOD.root").scan(sh,inputFilePath); // data15_13TeV.00284484
   // data16
-  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL");
-  //SH::ScanDir().filePattern("user.hson.14307750._000032.mini-xAOD.root").scan(sh,inputFilePath); // data16_13TeV.00311481
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL");
+  SH::ScanDir().filePattern("user.hson.14307750._000032.mini-xAOD.root").scan(sh,inputFilePath); // data16_13TeV.00311481
 
 
 
@@ -244,8 +244,8 @@ int main( int argc, char* argv[] ) {
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_06142018_newTag_Zmumu/data-mini-xAOD");
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_06142018_newTag_Zee/data-mini-xAOD");
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_06142018_newTag_Znunu/data-mini-xAOD");
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_07232018_no-skim-Tag_Zmumu/data-mini-xAOD");
-  SH::ScanDir().filePattern("*.root").scan(sh,inputFilePath);
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_07232018_no-skim-Tag_Zmumu/data-mini-xAOD");
+  //SH::ScanDir().filePattern("*.root").scan(sh,inputFilePath);
 
   // Cutflow test
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
