@@ -210,11 +210,14 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14171858._000011.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3238, skim, EXOT5)
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim");
   //SH::ScanDir().filePattern("user.hson.14247336._000005.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim, STMD4)
-  //SH::ScanDir().filePattern("").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim, EXOT5)
 
-  // Skim_v1 (STDM4)
+  // Skim_v1 (STDM4, skim tag p3371)
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim");
-  //SH::ScanDir().filePattern("").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3480, skim, EXOT5)
+  //SH::ScanDir().filePattern("user.hson.14247336._000010.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim, STDM4)
+
+  // Skim_v3 (STDM4, no-skim tag p3523)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
+  //SH::ScanDir().filePattern("user.hson.14709707._000012.mini-xAOD.root").scan(sh,inputFilePath); //  364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3523, no-skim, STDM4)
 
   // Skim_v2 (EXOT5)
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v2");

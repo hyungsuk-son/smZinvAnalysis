@@ -192,6 +192,7 @@ public:
   bool m_muonTrigSFforExotic; //!
   bool m_muonTrigSFforSM; //!
   bool m_isoElectronSF; //!
+  bool m_metTrigSF; //!
 
 
   // Cutflow
