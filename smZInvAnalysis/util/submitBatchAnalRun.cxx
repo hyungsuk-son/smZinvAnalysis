@@ -306,6 +306,8 @@ int main( int argc, char* argv[] ) {
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/6");
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_DtoG/7");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
   // Period I ~ L (run 307126 ~ 311481) : 1569 files
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/1");
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
