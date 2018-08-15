@@ -426,7 +426,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_elecTrigSF = true; // for electron trigger
   m_muonTrigSFforExotic = false; // for muon trigger (muon trigger is not used for Zmumu channel)
   m_muonTrigSFforSM = false; // for muon trigger (If I use muon triggers for Zmumu channel)
-  m_metTrigSF = false; // for MET trigger
+  m_metTrigSF = true; // for MET trigger
   m_isoElectronSF = true; // for electron iso
 
 
@@ -1165,7 +1165,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"mll", 150, 0., 300.);
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"met", 130, 130., 1430.);
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_n", 40, 0., 40.);
-                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_pt", 100, 100., 1100.);
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_pt", 100, 0., 1000.);
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lep1_pt", 140, 0., 1400.);
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lep2_pt", 140, 0., 1400.);
               } 
@@ -1202,7 +1202,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               }
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"mll", 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_n", 40, 0., 40.);
-              addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_pt", 100, 100., 1100.);
+              addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_pt", 100, 0., 1000.);
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lep_pt", 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lep1_pt", 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lep2_pt", 140, 0., 1400.);
@@ -1242,7 +1242,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
             }
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_n", 40, 0., 40.);
-            addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_pt", 100, 100., 1100.);
+            addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_pt", 100, 0., 1000.);
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lep_pt", 140, 0., 1400.);
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lep1_pt", 140, 0., 1400.);
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lep2_pt", 140, 0., 1400.);
@@ -1318,7 +1318,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               }
             }
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
-            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 100., 1100.);
+            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 0., 1000.);
             // For unfolding (No MET trigger passed)
             if (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_noMetTrig"+m_sysName, 130, 130., 1430.);
@@ -5793,6 +5793,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
     // Pile-up reweighting
     //---------------------
     if (!m_isData) {
+
+      // Apply the prwTool first before calling the efficiency correction methods
+      m_prwTool->apply(*eventInfo, true); // If you specify the false option to getRandomRunNumber (or to apply), the tool will not use the mu-dependency. This is not recommended though!
+
       //float pu_weight = m_prwTool->getCombinedWeight(*eventInfo); // Get Pile-up weight
       float pu_weight = eventInfo->auxdecor<float>("PileupWeight"); // Get Pile-up weight
       print_puweight = pu_weight;
@@ -6325,7 +6329,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       jets->auxdata<bool>("RecoJet") = true; //add RecoJet variable to the jet container to distinguish from TruthJet later
 
       // Good Jet Selection
-      if (jets->pt() < 20000. || std::abs(jets->eta()) > 4.5 || std::abs(jets->rapidity()) > 4.4) badJet = true;
+      if (jets->pt() < sm_goodJetPtCut || std::abs(jets->eta()) > 4.5 || std::abs(jets->rapidity()) > 4.4) badJet = true;
       // Define Detector eta for Jvt cut
       // Variable JetEMScaleMomentum is not stored in STDM4 derivation, but EMScale is the same as ConstituentScale. So I can use ConstituentScale for STDM4.
       float jet_EMScale_eta = 0;
@@ -12949,37 +12953,37 @@ float smZInvAnalysis::GetMetTrigSF(const float& met, std::string jetCut, std::st
         metTrigger = "HLT_xe70_mht";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,3.64132e+01);
-          m_SF->FixParameter(1,6.74116e+01);
+          m_SF->FixParameter(0,-1.23113e+01);
+          m_SF->FixParameter(1,8.91966e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,1.95810e+01);
-          m_SF->FixParameter(1,8.23972e+01);
+          m_SF->FixParameter(0,-1.58614e+01);
+          m_SF->FixParameter(1,1.00609e+02);
         }
       } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
         metTrigger = "HLT_xe90_mht_L1XE50";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,3.25571e+01);
-          m_SF->FixParameter(1,7.21354e+01);
+          m_SF->FixParameter(0,4.00112e-01);
+          m_SF->FixParameter(1,8.58450e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,3.94999e+01);
-          m_SF->FixParameter(1,6.88153e+01);
+          m_SF->FixParameter(0,8.79774e+01);
+          m_SF->FixParameter(1,1.92738e+01);
         }
       } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
         metTrigger = "HLT_xe110_mht_L1XE50";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,5.40390e+01);
-          m_SF->FixParameter(1,6.39558e+01);
+          m_SF->FixParameter(0,3.94733e+01);
+          m_SF->FixParameter(1,6.75502e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,6.62926e+01);
-          m_SF->FixParameter(1,5.68857e+01);
+          m_SF->FixParameter(0,5.84702e+01);
+          m_SF->FixParameter(1,5.90058e+01);
         }
       }
 
