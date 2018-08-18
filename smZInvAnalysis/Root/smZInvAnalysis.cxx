@@ -415,7 +415,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = false;
+  m_doSys = true;
 
   // Scale factor
   m_recoSF = true;
@@ -469,7 +469,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   //////////////////////////////////
   // Common cut value
   // MET
-  sm_metCut = 130000.;
+  sm_metCut = 150000.;
   sm_ORJETdeltaR = 0.4;
   // Jet pT
   sm_goodJetPtCut = 25000.;
@@ -6429,8 +6429,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
       // selected jets in shallow copy loop
       if ( !(bool)jets->auxdecor<char>("selected") ) continue;
 
-      // pass fJVT
-      if ( !(bool)jets->auxdata<char>("passFJVT") ) continue;
+      // pass fJVT (pT < 60GeV , |eta| > 2.5) : pT < 60GeV is defined in the initial m_fJvtTool
+      if ( std::fabs(jets->eta()) > 2.5 && !(bool)jets->auxdata<char>("passFJVT") ) continue;
 
       // Store good Jets
       xAOD::Jet* goodJet = new xAOD::Jet();
