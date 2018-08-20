@@ -907,10 +907,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // For SM ratio analysis
   // Custom Binning
   // Exclusive
-  Float_t ex_binsMET[] = {130.,154.,178.,202.,226.,250.,300.,350.,400.,450.,550.,650.,1500.};
+  Float_t ex_binsMET[] = {150.,175.,200.,225.,250.,300.,350.,400.,450.,550.,650.,1500.};
   Int_t ex_nbinMET = sizeof(ex_binsMET)/sizeof(Float_t) - 1;
   // Inclusive
-  Float_t in_binsMET[] = {130.,154.,178.,202.,226.,250.,300.,350.,400.,450.,525.,600.,675.,750.,900.,1050.,1500.};
+  Float_t in_binsMET[] = {150.,175.,200.,225.,250.,300.,350.,400.,450.,525.,600.,675.,750.,900.,1050.,1500.};
   Int_t in_nbinMET = sizeof(in_binsMET)/sizeof(Float_t) - 1;
 
 
