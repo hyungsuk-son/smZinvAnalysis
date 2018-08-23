@@ -452,7 +452,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_CJVptCut = 25000.; ///MeV
   m_metCut = 200000.; ///MeV
   m_mjjCut = 200000.; ///MeV
-  m_ORJETdeltaR = 0.5;
+  m_ORJETdeltaR = 0.4;
 
   // EXOT5 derivation Skim cut
   // Enable EXOT5 derivation skim for STDM4 (no skim) sample
@@ -847,12 +847,11 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     // Get the recommended tool configuration
     ANA_CHECK(ORUtils::recommendedTools(orFlags,*m_toolBox));
     // Special settings
-    //ANA_CHECK(m_toolBox->muJetORT.setProperty("NumJetTrk",5));
-    ANA_CHECK(m_toolBox->muJetORT.setProperty("NumJetTrk",100000000));
-    ANA_CHECK(m_toolBox->muJetORT.setProperty("InnerDR",0.5));
-    ANA_CHECK(m_toolBox->muJetORT.setProperty("OuterDR",0.5));
-    ANA_CHECK(m_toolBox->eleJetORT.setProperty("InnerDR",0.5));
-    ANA_CHECK(m_toolBox->eleJetORT.setProperty("OuterDR",0.5));
+    //ANA_CHECK(m_toolBox->muJetORT.setProperty("NumJetTrk",100000000));
+    ANA_CHECK(m_toolBox->muJetORT.setProperty("InnerDR",sm_ORJETdeltaR));
+    ANA_CHECK(m_toolBox->muJetORT.setProperty("OuterDR",sm_ORJETdeltaR));
+    ANA_CHECK(m_toolBox->eleJetORT.setProperty("InnerDR",sm_ORJETdeltaR));
+    ANA_CHECK(m_toolBox->eleJetORT.setProperty("OuterDR",sm_ORJETdeltaR));
     // Set message level for all tools
     //m_toolBox->msg().setLevel( MSG::INFO );
     m_toolBox->msg().setLevel( MSG::DEBUG );
