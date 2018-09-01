@@ -319,6 +319,8 @@ int main( int argc, char* argv[] ) {
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/5");
 //  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL/6");
+//  SH::ScanDir().filePattern("user.hson.*").scan(sh,inputFilePath); 
 
 
 
