@@ -195,6 +195,7 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
   if ( m_nameDataset.find("MG")!=std::string::npos || m_input_filename.find("MG")!=std::string::npos) { // ex: user.hson.363156.MGPy8EG.custom.TRUTH1.test10112017_EXT0
     m_generatorType = "madgraph";
   }
+  std::cout << " Generator Type name = " <<  m_generatorType << std::endl;
 
   if (m_fileType == "DxAOD" || m_fileType == "skim") {
 
@@ -406,7 +407,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_isZemu = true;
 
   // Enable Reconstruction level analysis
-  m_doReco = true;
+  m_doReco = false;
 
   if (m_isData) m_doReco = true;
   if (m_fileType == "truth1") m_doReco = false;
@@ -3792,13 +3793,15 @@ EL::StatusCode smZInvAnalysis :: execute ()
           // Born leptons //
           //////////////////
           if (particle) {
-            if ( (fabs(pdgId)==11 || fabs(pdgId)==13) && ((is_Sherpa && status==11) || (is_MG && status==23)) ){
+            if ( (fabs(pdgId)==11 || fabs(pdgId)==13) && ((is_Sherpa && status==11) || (is_MG )) ){
               // Born in Sherpa: status = 11 (documentation particle (not necessarily physical), e.g. particles from the parton shower, intermediate states, helper particles, etc.)
               // Born in MG: status = 23
 
               // Find mother (to be used for Powheg, MG and Alpgen)
               bool isFromZ = false;
+              // Sherpa
               if (is_Sherpa) isFromZ = true;
+              // MadGraph
               if (is_MG) {
                 if (particle->hasProdVtx() && particle->prodVtx() && particle->prodVtx()->nIncomingParticles() != 0 ) {
                   const xAOD::TruthVertex * prodVtx = particle->prodVtx();
@@ -3814,24 +3817,27 @@ EL::StatusCode smZInvAnalysis :: execute ()
                 }
               } // MG
 
-              if (fabs(pdgId)==11) {
-                // born electron (from Z)
-                xAOD::TruthParticle* bornTruthElectronFromZ = new xAOD::TruthParticle();
-                bornTruthElectronFromZ->makePrivateStore(*particle);
-                m_truthBornElectron->push_back(bornTruthElectronFromZ);
-                hMap1D["SM_study_born_electron_pt_from_Z"]->Fill(ppt * 0.001, m_mcEventWeight);
-                //if (m_eventCounter<50) std::cout << "Born electron ID : " << pdgId << ", pt : " << ppt << std::endl;
-              } else if (fabs(pdgId)==13) {
-                // born muon (from Z)
-                xAOD::TruthParticle* bornTruthMuonFromZ = new xAOD::TruthParticle();
-                bornTruthMuonFromZ->makePrivateStore(*particle);
-                m_truthBornMuon->push_back(bornTruthMuonFromZ);
-                hMap1D["SM_study_born_muon_pt_from_Z"]->Fill(ppt * 0.001, m_mcEventWeight);
-                //if (m_eventCounter<50) std::cout << "Born muon ID : " << pdgId << ", pt : " << ppt << ", which is from Z? : " << isFromZ << std::endl;
+              // Store born leptons
+              if (isFromZ) {
+                if (fabs(pdgId)==11) {
+                  // born electron (from Z)
+                  xAOD::TruthParticle* bornTruthElectronFromZ = new xAOD::TruthParticle();
+                  bornTruthElectronFromZ->makePrivateStore(*particle);
+                  m_truthBornElectron->push_back(bornTruthElectronFromZ);
+                  hMap1D["SM_study_born_electron_pt_from_Z"]->Fill(ppt * 0.001, m_mcEventWeight);
+                  //if (m_eventCounter<50) std::cout << "Born electron ID : " << pdgId << ", pt : " << ppt << std::endl;
+                } else if (fabs(pdgId)==13) {
+                  // born muon (from Z)
+                  xAOD::TruthParticle* bornTruthMuonFromZ = new xAOD::TruthParticle();
+                  bornTruthMuonFromZ->makePrivateStore(*particle);
+                  m_truthBornMuon->push_back(bornTruthMuonFromZ);
+                  hMap1D["SM_study_born_muon_pt_from_Z"]->Fill(ppt * 0.001, m_mcEventWeight);
+                  //if (m_eventCounter<50) std::cout << "Born muon ID : " << pdgId << ", pt : " << ppt << ", which is from Z? : " << isFromZ << std::endl;
+                }
               }
 
             }
-          }
+          } // Born lepton loop end
 
         } // Particle loop end
 

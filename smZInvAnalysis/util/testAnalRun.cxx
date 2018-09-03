@@ -226,9 +226,9 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14316951._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
 
   // Skim_v3 (EXOT5)
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
   //SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
-  SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
+  //SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("user.hson.14408279._000007.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu
   //SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
   //SH::ScanDir().filePattern("user.hson.14408499._000048.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
@@ -243,6 +243,14 @@ int main( int argc, char* argv[] ) {
   // data16
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL");
   //SH::ScanDir().filePattern("user.hson.14307750._000032.mini-xAOD.root").scan(sh,inputFilePath); // data16_13TeV.00311481
+
+
+  // MadGraph + Pythia8 Derivation (STDM4)
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
+  SH::ScanDir().filePattern("DAOD_STDM4.14405032._000002.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto)
+
+
+
 
 
 
