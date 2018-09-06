@@ -384,6 +384,8 @@ public:
   xAOD::AuxContainerBase* m_goodJetORTruthMuMuAux; //!
   xAOD::JetContainer* m_goodJetORTruthElEl; //!
   xAOD::AuxContainerBase* m_goodJetORTruthElElAux; //!
+  xAOD::JetContainer* m_goodOSJet; //!
+  xAOD::AuxContainerBase* m_goodOSJetAux; //!
   xAOD::MuonContainer* m_goodMuon; //!
   xAOD::AuxContainerBase* m_goodMuonAux; //!
   xAOD::MuonContainer* m_goodMuonForZ; //!

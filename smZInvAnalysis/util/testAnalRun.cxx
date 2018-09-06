@@ -226,9 +226,9 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14316951._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
 
   // Skim_v3 (EXOT5)
-  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
   //SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
-  //SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
+  SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("user.hson.14408279._000007.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu
   //SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
   //SH::ScanDir().filePattern("user.hson.14408499._000048.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
@@ -246,10 +246,16 @@ int main( int argc, char* argv[] ) {
 
 
   // MadGraph + Pythia8 Derivation (STDM4)
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
-  SH::ScanDir().filePattern("DAOD_STDM4.14405032._000002.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
+  //SH::ScanDir().filePattern("DAOD_STDM4.14405032._000002.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3552
+  //SH::ScanDir().filePattern("DAOD_STDM4.13908568._000005.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3517
+  // Local Skim
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_09032018_MadGraph_Zmumu/data-mini-xAOD");
+  //SH::ScanDir().filePattern("*.root").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3552
 
-
+  // MadGraph + Pythia8 Derivation (my local custom EXOT5)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/custom/Deriv_test");
+  //SH::ScanDir().filePattern("DAOD_EXOT5.test.Np1.pool.root").scan(sh,inputFilePath); // Znunu (361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1)
 
 
 

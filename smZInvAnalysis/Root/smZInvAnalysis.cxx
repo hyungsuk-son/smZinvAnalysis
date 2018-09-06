@@ -192,7 +192,7 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
   if ( m_nameDataset.find("Sherpa")!=std::string::npos || m_input_filename.find("Sherpa")!=std::string::npos ) { // ex: mc15_13TeV.364151.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV280_500_CVetoBVeto.merge.DAOD_EXOT5.e5308_s2726_r7772_r7676_p2949
     m_generatorType = "sherpa";
   }
-  if ( m_nameDataset.find("MG")!=std::string::npos || m_input_filename.find("MG")!=std::string::npos) { // ex: user.hson.363156.MGPy8EG.custom.TRUTH1.test10112017_EXT0
+  if ( m_nameDataset.find("MG")!=std::string::npos || m_input_filename.find("MG")!=std::string::npos || m_nameDataset.find("MadGraph")!=std::string::npos) { // ex: user.hson.363156.MGPy8EG.custom.TRUTH1.test10112017_EXT0
     m_generatorType = "madgraph";
   }
   std::cout << " Generator Type name = " <<  m_generatorType << std::endl;
@@ -407,7 +407,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_isZemu = true;
 
   // Enable Reconstruction level analysis
-  m_doReco = false;
+  m_doReco = true;
 
   if (m_isData) m_doReco = true;
   if (m_fileType == "truth1") m_doReco = false;
@@ -1305,6 +1305,9 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             if (sm_monojet[k] == "exclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
+              if (sm_channel[i] == "zee_" || sm_channel[i] == "wenu_") {
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_OS"+m_sysName, ex_nbinMET, ex_binsMET);
+              }
               if (sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_") {
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"only66mll_MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"fullmll_MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
@@ -1312,6 +1315,9 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             if (sm_monojet[k] == "inclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, in_nbinMET, in_binsMET);
+              if (sm_channel[i] == "zee_" || sm_channel[i] == "wenu_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_OS"+m_sysName, in_nbinMET, in_binsMET);
+              }
               if (sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_") {
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"only66mll_MET_mono"+m_sysName, in_nbinMET, in_binsMET);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"fullmll_MET_mono"+m_sysName, in_nbinMET, in_binsMET);
@@ -1319,6 +1325,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 0., 1000.);
+            if (sm_channel[i] == "zee_" || sm_channel[i] == "wenu_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n_OS"+m_sysName, 40, 0., 40.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt_OS"+m_sysName, 100, 0., 1000.);
+            }
             // For unfolding (No MET trigger passed)
             if (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_noMetTrig"+m_sysName, 137, 130., 1500.);
@@ -5626,6 +5636,12 @@ EL::StatusCode smZInvAnalysis :: execute ()
   m_goodJetORTruthElElAux = new xAOD::AuxContainerBase();
   m_goodJetORTruthElEl->setStore( m_goodJetORTruthElElAux ); //< Connect the two
 
+  // Good jets (Overlap Subtracted)
+  m_goodOSJet = new xAOD::JetContainer();
+  m_goodOSJetAux = new xAOD::AuxContainerBase();
+  m_goodOSJet->setStore( m_goodOSJetAux ); //< Connect the two
+
+
   // Good muons
   m_goodMuon = new xAOD::MuonContainer();
   m_goodMuonAux = new xAOD::AuxContainerBase();
@@ -5830,6 +5846,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     m_goodJetORTruthNuNu->clear();
     m_goodJetORTruthMuMu->clear();
     m_goodJetORTruthElEl->clear();
+    m_goodOSJet->clear();
     m_goodMuon->clear();
     m_goodMuonForZ->clear();
     m_baselineElectron->clear();
@@ -6008,10 +6025,12 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
 
       // LH Electron identification(Tight)
-      if (m_useArrayCutflow) { // Loose for Exotic analysis
-        if (!m_LHToolLoose->accept(electron)) continue;
-      } else { // Tight for SM study
-        if (!m_LHToolTight->accept(electron)) continue;
+      if (m_generatorType != "madgraph") {
+        if (m_useArrayCutflow) { // Loose for Exotic analysis
+          if (!m_LHToolLoose->accept(electron)) continue;
+        } else { // Tight for SM study
+          if (!m_LHToolTight->accept(electron)) continue;
+        }
       }
       //Info("execute()", "  Tight electron pt = %.2f GeV", electron->pt() * 0.001);  
 
@@ -6098,7 +6117,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       //hMap1D["Uncalibrated_photon_pt"+m_sysName]->Fill(photon->pt() * 0.001);
 
       // MC fudge tool
-      if (!m_isData){
+      if (!m_isData && m_generatorType != "madgraph"){
         if(m_fudgeMCTool->applyCorrection(*photon) == CP::CorrectionCode::Error){ // apply correction and check return code
           Error("execute()", "ElectronPhotonShowerShapeFudgeTool returns Error CorrectionCode");
         }
@@ -6501,6 +6520,59 @@ EL::StatusCode smZInvAnalysis :: execute ()
     // record your deep copied jet container (and aux container) to the store
     ANA_CHECK(m_store->record( m_goodJetORTruthElEl, "goodJetORTruthElEl"+m_sysName ));
     ANA_CHECK(m_store->record( m_goodJetORTruthElElAux, "goodJetORTruthElEl"+m_sysName+"Aux." ));
+
+
+
+    //////////////////////////////////////
+    // Overlap subtracted Jet selection //
+    //////////////////////////////////////
+    for (const auto& jets : *m_goodJet) { // C++11 shortcut
+
+      //std::cout << "original jet pT = " << jets->pt() * 0.001 << " GeV" << std::endl;
+
+      // Subtract lepton 4 momentum from jets near the bare-level lepton (dR<0.4)
+      TLorentzVector nominal_jet = jets->p4();
+      auto subtracted_jet = nominal_jet;
+
+      for (const auto &elec : *m_goodElectron) {
+        float dR = deltaR(jets->eta(), elec->eta(), jets->phi(), elec->phi());
+        if ( dR < sm_ORJETdeltaR ) {
+          //std::cout << "overlapped electorn pT = " << elec->pt() * 0.001 << " GeV" << std::endl;
+          subtracted_jet = subtracted_jet - elec->p4();
+          //std::cout << "subtracted jet pT = " << subtracted_jet.Pt() * 0.001 << " GeV" << std::endl;
+        }
+      }
+
+      // Store subtracted Jets
+      xAOD::JetFourMom_t subtracedJetP4 (subtracted_jet.Pt(), subtracted_jet.Eta(), subtracted_jet.Phi(), subtracted_jet.M());
+      jets->setJetP4 (subtracedJetP4); // we've overwritten the 4-momentum
+
+      // Good Jet Selection
+      if (jets->pt() < sm_goodJetPtCut || std::abs(jets->eta()) > 4.5 || std::abs(jets->rapidity()) > 4.4) continue;
+
+      //std::cout << "OS good jet pT = " << jets->pt() * 0.001 << " GeV" << std::endl;
+
+      // Store good Jets
+      xAOD::Jet* goodOSJet = new xAOD::Jet();
+      m_goodOSJet->push_back( goodOSJet ); // jet acquires the m_goodOSJet auxstore
+      *goodOSJet = *jets; // copies auxdata from one auxstore to the other
+    }
+
+    // record your deep copied jet container (and aux container) to the store
+    ANA_CHECK(m_store->record( m_goodOSJet, "goodOSJet"+m_sysName ));
+    ANA_CHECK(m_store->record( m_goodOSJetAux, "goodOSJet"+m_sysName+"Aux." ));
+
+    ///////////////////////
+    // Sort Good OS Jets // 
+    ///////////////////////
+    if (m_goodOSJet->size() > 1) std::sort(m_goodOSJet->begin(), m_goodOSJet->end(), DescendingPt());
+
+
+
+
+
+
+
 
 
 
@@ -11344,6 +11416,39 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
     }
   }
 
+  ////////////////////////////////////////
+  // Plot using Overlap-subtracted Jets //
+  ////////////////////////////////////////
+
+  // Exclusive
+  if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+    // Common plots
+    if (passExclusiveRecoJet(m_goodOSJet, sm_exclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_OS"+sysName]->Fill(MET * 0.001, mcEventWeight_Zee); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n_OS"+sysName]->Fill(m_goodOSJet->size(), mcEventWeight_Zee);
+      // Leading jet pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_pt_OS"+sysName]->Fill(m_goodOSJet->at(0)->pt() * 0.001, mcEventWeight_Zee);
+    }
+  }
+
+  // Inclusive
+  if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+    // Common plots
+    if (passInclusiveRecoJet(m_goodOSJet, sm_inclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_OS"+sysName]->Fill(MET * 0.001, mcEventWeight_Zee); // For publication binngin
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n_OS"+sysName]->Fill(m_goodOSJet->size(), mcEventWeight_Zee);
+      // Leading jet pT distribution
+      for (const auto &jet : *m_goodOSJet) {
+        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt_OS"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zee);
+      }
+    }
+  }
+
+
 
   // Test Statistical uncertainty for ratio (using various leading jet cuts)
   if (sysName=="") { // No systematic
@@ -12225,6 +12330,40 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wenu);
     }
   }
+
+
+  /////////////////////////////////////////////////
+  // Analysis Plot using Overlap-subtracted jets //
+  /////////////////////////////////////////////////
+
+  // Exclusive
+  if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+    // Common plots
+    if (passExclusiveRecoJet(m_goodOSJet, sm_exclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_OS"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n_OS"+sysName]->Fill(m_goodOSJet->size(), mcEventWeight_Wenu);
+      // Leading jet pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_pt_OS"+sysName]->Fill(m_goodOSJet->at(0)->pt() * 0.001, mcEventWeight_Wenu);
+    }
+  }
+
+  // Inclusive
+  if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+    // Common plots
+    if (passInclusiveRecoJet(m_goodOSJet, sm_inclusiveJetPtCut, MET_phi)) {
+      // MET distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"MET_mono_OS"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
+      // Leading jet # distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_n_OS"+sysName]->Fill(m_goodOSJet->size(), mcEventWeight_Wenu);
+      // Leading jet pT distribution
+      for (const auto &jet : *m_goodOSJet) {
+        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt_OS"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wenu);
+      }
+    }
+  }
+
 
 
 
