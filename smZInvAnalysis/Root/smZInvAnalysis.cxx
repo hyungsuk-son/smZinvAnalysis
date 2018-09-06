@@ -13097,37 +13097,37 @@ float smZInvAnalysis::GetMetTrigSF(const float& met, std::string jetCut, std::st
         metTrigger = "HLT_xe70_mht";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,-1.23113e+01);
-          m_SF->FixParameter(1,8.91966e+01);
+          m_SF->FixParameter(0,3.87707e+01);
+          m_SF->FixParameter(1,6.33551e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,-1.58614e+01);
-          m_SF->FixParameter(1,1.00609e+02);
+          m_SF->FixParameter(0,5.02170e+00);
+          m_SF->FixParameter(1,8.87855e+01);
         }
       } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
         metTrigger = "HLT_xe90_mht_L1XE50";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,4.00112e-01);
-          m_SF->FixParameter(1,8.58450e+01);
+          m_SF->FixParameter(0,2.92830e+01);
+          m_SF->FixParameter(1,7.21986e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,8.79774e+01);
-          m_SF->FixParameter(1,1.92738e+01);
+          m_SF->FixParameter(0,1.69968e+01);
+          m_SF->FixParameter(1,8.27045e+01);
         }
       } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
         metTrigger = "HLT_xe110_mht_L1XE50";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,3.94733e+01);
-          m_SF->FixParameter(1,6.75502e+01);
+          m_SF->FixParameter(0,5.35033e+01);
+          m_SF->FixParameter(1,6.14483e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,5.84702e+01);
-          m_SF->FixParameter(1,5.90058e+01);
+          m_SF->FixParameter(0,6.40382e+01);
+          m_SF->FixParameter(1,5.67791e+01);
         }
       }
 
