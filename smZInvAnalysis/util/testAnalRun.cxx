@@ -237,6 +237,11 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14408486._000054.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu (364162.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV140_280_CVetoBVeto)
   //SH::ScanDir().filePattern("user.hson.14408366._000091.mini-xAOD.root").scan(sh,inputFilePath); // Znunu (364148.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV140_280_CVetoBVeto)
 
+  // Skim (STDM4)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim");
+  //SH::ScanDir().filePattern("user.hson.14247362._000009.mini-xAOD.root").scan(sh,inputFilePath); // Zee
+
+
   // data15
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_HtoJ");
   //SH::ScanDir().filePattern("user.hson.14248220._000011.mini-xAOD.root").scan(sh,inputFilePath); // data15_13TeV.00284484
@@ -253,9 +258,13 @@ int main( int argc, char* argv[] ) {
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/run/testSkimRun_09032018_MadGraph_Zmumu/data-mini-xAOD");
   //SH::ScanDir().filePattern("*.root").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3552
 
-  // MadGraph + Pythia8 Derivation (my local custom EXOT5)
+  // MadGraph + Pythia8 Derivation
+  // my local custom EXOT5
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/custom/Deriv_test");
   //SH::ScanDir().filePattern("DAOD_EXOT5.test.Np1.pool.root").scan(sh,inputFilePath); // Znunu (361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1)
+  // my grid test EXOT5
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/custom/user.hson.361515.MadGraphPythia8EvtGen.EXOT5.test_EXT0");
+  //SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // Znunu (361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1)
 
 
 

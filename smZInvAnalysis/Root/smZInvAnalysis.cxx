@@ -6523,40 +6523,94 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
 
 
-    //////////////////////////////////////
-    // Overlap subtracted Jet selection //
-    //////////////////////////////////////
-    for (const auto& jets : *m_goodJet) { // C++11 shortcut
 
-      //std::cout << "original jet pT = " << jets->pt() * 0.001 << " GeV" << std::endl;
 
+
+    //------------------------------------
+    // Overlap subtraction (OS) Reco-level
+    //------------------------------------
+    // AntiKt4EMTopoJets : Include all electrons and all photons
+    // --------------------------
+    // For good electorn
+
+    // Copy good Reco jet container to rewrite overlap-subracted jets
+    xAOD::JetContainer* m_copyGoodRecoJetForBareOS = new xAOD::JetContainer();
+    xAOD::AuxContainerBase* m_copyGoodRecoJetForBareOSAux = new xAOD::AuxContainerBase();
+    m_copyGoodRecoJetForBareOS->setStore( m_copyGoodRecoJetForBareOSAux ); //< Connect the two
+    // Nominal good jet
+    for (const auto &jet : *m_goodJet) {
+      //std::cout << "[OS bare loop] reco good Jet pT = " << jet->pt() * 0.001 << std::endl;
+      // Store in m_copyGoodRecoJetForBareOS
+      xAOD::Jet* copyGoodRecoJetForBareOS = new xAOD::Jet();
+      copyGoodRecoJetForBareOS->makePrivateStore(*jet);
+      m_copyGoodRecoJetForBareOS->push_back(copyGoodRecoJetForBareOS);
+    } // Nominal good jet
+
+    // Use good electrons
+    TLorentzVector goodElec1P4;
+    TLorentzVector goodElec2P4;
+    // Determine which jet is the most close to the lepton1
+    float minDRgoodElec1 = 1000.;
+    if (m_goodElectron->size() > 0) {
+      goodElec1P4 = m_goodElectron->at(0)->p4();
+      for (const auto &jet : *m_copyGoodRecoJetForBareOS) {
+        float dR = deltaR(jet->eta(), m_goodElectron->at(0)->eta(), jet->phi(), m_goodElectron->at(0)->phi());
+        if ( dR < minDRgoodElec1 ) minDRgoodElec1 = dR;
+        //std::cout << " dR = " << dR << " , min dR between jet and electron1 = " << minDRgoodElec1 << std::endl;
+      }
+    }
+    // Determine which jet is the most close to the lepton2
+    float minDRgoodElec2 = 1000.;
+    if (m_goodElectron->size() > 1) {
+      goodElec2P4 = m_goodElectron->at(1)->p4();
+      for (const auto &jet : *m_copyGoodRecoJetForBareOS) {
+        float dR = deltaR(jet->eta(), m_goodElectron->at(1)->eta(), jet->phi(), m_goodElectron->at(1)->phi());
+        if ( dR < minDRgoodElec2 ) minDRgoodElec2 = dR;
+        //std::cout << " dR = " << dR << " , min dR between jet and electron2 = " << minDRgoodElec2 << std::endl;
+      }
+    }
+
+    for (const auto &jet : *m_copyGoodRecoJetForBareOS) {
       // Subtract lepton 4 momentum from jets near the bare-level lepton (dR<0.4)
-      TLorentzVector nominal_jet = jets->p4();
+      TLorentzVector nominal_jet = jet->p4();
       auto subtracted_jet = nominal_jet;
-
-      for (const auto &elec : *m_goodElectron) {
-        float dR = deltaR(jets->eta(), elec->eta(), jets->phi(), elec->phi());
+      // Subtract electron1 from the jet if this jet is closest to the electron1
+      if (m_goodElectron->size() > 0) {
+        float dR = deltaR(jet->eta(), m_goodElectron->at(0)->eta(), jet->phi(), m_goodElectron->at(0)->phi());
+        //std::cout << " In the jet loop, dR = " << dR << " , min dR between jet and electron1 = " << minDRgoodElec1 << std::endl;
         if ( dR < sm_ORJETdeltaR ) {
-          //std::cout << "overlapped electorn pT = " << elec->pt() * 0.001 << " GeV" << std::endl;
-          subtracted_jet = subtracted_jet - elec->p4();
-          //std::cout << "subtracted jet pT = " << subtracted_jet.Pt() * 0.001 << " GeV" << std::endl;
+          if ( dR == minDRgoodElec1 ) {
+            // Implement subtraction
+            subtracted_jet = subtracted_jet - goodElec1P4;
+            //std::cout << " !! Found overlapped jet with electron 1 with dR = " << dR << std::endl;
+          }
         }
       }
-
-      // Store subtracted Jets
+      // Subtract electron2 from the jet if this jet is closest to the electron2
+      if (m_goodElectron->size() > 1) {
+        float dR = deltaR(jet->eta(), m_goodElectron->at(1)->eta(), jet->phi(), m_goodElectron->at(1)->phi());
+        //std::cout << " In the jet loop, dR = " << dR << " , min dR between jet and electron2 = " << minDRgoodElec2 << std::endl;
+        if ( dR < sm_ORJETdeltaR ) {
+          if ( dR == minDRgoodElec2 ) {
+            //std::cout << " !! Found overlapped jet with electron 2 with dR = " << dR << std::endl;
+            // Implement subtraction
+            subtracted_jet = subtracted_jet - goodElec2P4;
+          }
+        }
+      }
+      // Overwrite subtracted Jets
       xAOD::JetFourMom_t subtracedJetP4 (subtracted_jet.Pt(), subtracted_jet.Eta(), subtracted_jet.Phi(), subtracted_jet.M());
-      jets->setJetP4 (subtracedJetP4); // we've overwritten the 4-momentum
+      jet->setJetP4 (subtracedJetP4); // we've overwritten the 4-momentum
 
       // Good Jet Selection
-      if (jets->pt() < sm_goodJetPtCut || std::abs(jets->eta()) > 4.5 || std::abs(jets->rapidity()) > 4.4) continue;
+      if (jet->pt() < sm_goodJetPtCut || std::abs(jet->eta()) > 4.5 || std::abs(jet->rapidity()) > 4.4) continue;
 
-      //std::cout << "OS good jet pT = " << jets->pt() * 0.001 << " GeV" << std::endl;
-
-      // Store good Jets
+      // Store subrated Jets in the m_goodOSJet container
       xAOD::Jet* goodOSJet = new xAOD::Jet();
       m_goodOSJet->push_back( goodOSJet ); // jet acquires the m_goodOSJet auxstore
-      *goodOSJet = *jets; // copies auxdata from one auxstore to the other
-    }
+      *goodOSJet = *jet; // copies auxdata from one auxstore to the other
+
+    } // copied good reco jet
 
     // record your deep copied jet container (and aux container) to the store
     ANA_CHECK(m_store->record( m_goodOSJet, "goodOSJet"+m_sysName ));
@@ -6566,6 +6620,17 @@ EL::StatusCode smZInvAnalysis :: execute ()
     // Sort Good OS Jets // 
     ///////////////////////
     if (m_goodOSJet->size() > 1) std::sort(m_goodOSJet->begin(), m_goodOSJet->end(), DescendingPt());
+
+    delete m_copyGoodRecoJetForBareOS;
+    delete m_copyGoodRecoJetForBareOSAux;
+
+
+
+
+
+
+
+
 
 
 
