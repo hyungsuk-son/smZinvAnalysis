@@ -69,11 +69,11 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("DAOD_STDM4.10348687._000027.pool.root.1").scan(sh,inputFilePath); // 364123.Zee_MAXHTPTV280_500_CVetoBVeto
 
   // Rel. 21
-  // MC16c (EXOT5) Sherpa
+  // MC16a (EXOT5) Sherpa
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/atlas16/hson02/Dataset/Rel21/MC");
   //SH::ScanDir().filePattern("DAOD_EXOT5.11892347._000020.pool.root.1").scan(sh,inputFilePath); // 364123.Zee_MAXHTPTV280_500_CVetoBVeto
   //SH::ScanDir().filePattern("DAOD_EXOT5.11869241._000002.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto
-  // MC16c (STDM4) Sherpa
+  // MC16a (STDM4) Sherpa
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
   //SH::ScanDir().filePattern("DAOD_STDM4.12772535._000010.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3371, skim)
   //SH::ScanDir().filePattern("DAOD_STDM4.13860139._000007.pool.root.1").scan(sh,inputFilePath); // 364109.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV280_500_CVetoBVeto (p3523, no-skim)
@@ -81,9 +81,10 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("DAOD_EXOT5.13463907._000007.pool.root.1").scan(sh,inputFilePath); // Zmumu
   //SH::ScanDir().filePattern("DAOD_EXOT5.13461333._000007.pool.root.1").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("DAOD_EXOT5.13472375._000019.pool.root.1").scan(sh,inputFilePath); // Znunu
-  // MC16c (STDM4) MadGraph
+  // MC16a (STDM4) MadGraph+Pythia
   const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
-  SH::ScanDir().filePattern("DAOD_STDM4.14405032._000002.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3552
+  //SH::ScanDir().filePattern("DAOD_STDM4.14405032._000002.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3552
+  SH::ScanDir().filePattern("DAOD_STDM4.13908568._000005.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3517
 
   // Set the name of the input TTree. It's always "CollectionTree"
   // for xAOD files.

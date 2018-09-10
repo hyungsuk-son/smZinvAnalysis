@@ -47,7 +47,7 @@ int main( int argc, char* argv[] ) {
  
   // Create my output mini-xAOD dataset name
   std::string myTagVer = "v3.1";
-  // MC16a backgrounds
+  // MC16a backgrounds (Sherpa)
   // EXOT5
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_EXOT5_"+myTagVer; // Zmumu
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_EXOT5_"+myTagVer; // Zee
@@ -64,16 +64,20 @@ int main( int argc, char* argv[] ) {
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_"+myTagVer; // Zee
   // STDM4 (no-skim tag p3523)
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
-  std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_"+myTagVer; // Zee
+  //std::string myTagName = "mc16a_13TeV.Sherpa_Zee_skim_STDM4_"+myTagVer; // Zee
   // Data
   //std::string myTagName = "data15_13TeV.skim_EXOT5_"+myTagVer; // Data 2015 (EXOT5 derivation)
   //std::string myTagName = "data16_13TeV.skim_EXOT5_"+myTagVer; // Data 2016 (EXOT5 derivation)
+  // MC16a backgrounds (MadGraph+Pythia)
+  // STDM4 (skim tag p3517)
+  std::string myTagName = "mc16a_13TeV.MGPy8EG_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
+  //std::string myTagName = "mc16a_13TeV.MGPy8EG_Zee_skim_STDM4_"+myTagVer; // Zee
   std::string containerName;
   std::vector< std::string > outputContainerNames; //for grid only
 
   // List of input dataset
-  // MC16a backgrounds
   std::string listFilePath = "/cluster/home/h/s/hson02/beaucheminlabHome/Work/gitLab/smZinvAnalysis/smZInvSkim/util/";
+  // MC16a backgrounds (Sherpa)
   // EXOT5
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Zmumu_dataset.txt" ); // Zmumu
   //std::ifstream inFile( listFilePath+"mc16a_deriv_EXOT5_Zee_dataset.txt" ); // Zee
@@ -90,10 +94,14 @@ int main( int argc, char* argv[] ) {
   //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_Zee_dataset.txt" ); // Zee
   // STDM4 (no-skim tag p3523)
   //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_no-skim_Zmumu_dataset.txt" ); // Zmumu
-  std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_no-skim_Zee_dataset.txt" ); // Zee
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_STDM4_no-skim_Zee_dataset.txt" ); // Zee
   // Data
   //std::ifstream inFile( listFilePath+"data15_deriv_EXOT5.txt" ); // Data 2015 (EXOT5 derivation)
   //std::ifstream inFile( listFilePath+"data16_deriv_EXOT5.txt" ); // Data 2016 (EXOT5 derivation)
+  // MC16a backgrounds (MadGraph+Pythia)
+  // STDM4 (skim tag p3517)
+  std::ifstream inFile( listFilePath+"mc16a_deriv_MGPy8EG_STDM4_Zmumu_dataset.txt" ); // Zmumu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_MGPy8EG_STDM4_Zee_dataset.txt" ); // Zee
   while(std::getline(inFile, containerName) ){
     if (containerName.size() > 1 && containerName.find("#") != 0 ){
       std::cout << "Adding container : " << containerName << std::endl;
