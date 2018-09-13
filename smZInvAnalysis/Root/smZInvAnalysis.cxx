@@ -407,7 +407,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_isZemu = true;
 
   // Enable Reconstruction level analysis
-  m_doReco = false;
+  m_doReco = true;
 
   if (m_isData) m_doReco = true;
   if (m_fileType == "truth1") m_doReco = false;
@@ -416,7 +416,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = false;
+  m_doSys = true;
 
   // Scale factor
   m_recoSF = true;
