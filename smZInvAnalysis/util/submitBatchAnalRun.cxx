@@ -324,6 +324,68 @@ int main( int argc, char* argv[] ) {
 
 
 
+  // MadGraph + Pythia8
+  // EXOT5 for Znunu (My EXOT5 derivation tag, no my skim)
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3");
+//  SH::ScanDir().filePattern("user.hson.15343820.EXT0._000*").scan(sh,inputFilePath); // 361515.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np0
+//  SH::ScanDir().filePattern("user.hson.15343822.EXT0._000*").scan(sh,inputFilePath); // 361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1
+//  SH::ScanDir().filePattern("user.hson.15343838.EXT0._000*").scan(sh,inputFilePath); // 361517.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np2
+//  SH::ScanDir().filePattern("user.hson.15343860.EXT0._000*").scan(sh,inputFilePath); // 361518.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np3
+//  SH::ScanDir().filePattern("user.hson.15343888.EXT0._000*").scan(sh,inputFilePath); // 361519.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np4
+  // STDM4 for Zee (tag p3517, my skim)
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3");
+//  SH::ScanDir().filePattern("user.hson.15352187._000*").scan(sh,inputFilePath); // 363147.MGPy8EG_N30NLO_Zee_Ht0_70_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352188._000*").scan(sh,inputFilePath); // 363148.MGPy8EG_N30NLO_Zee_Ht0_70_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352189._000*").scan(sh,inputFilePath); // 363149.MGPy8EG_N30NLO_Zee_Ht0_70_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352190._000*").scan(sh,inputFilePath); // 363150.MGPy8EG_N30NLO_Zee_Ht70_140_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352192._000*").scan(sh,inputFilePath); // 363151.MGPy8EG_N30NLO_Zee_Ht70_140_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352193._000*").scan(sh,inputFilePath); // 363152.MGPy8EG_N30NLO_Zee_Ht70_140_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352194._000*").scan(sh,inputFilePath); // 363153.MGPy8EG_N30NLO_Zee_Ht140_280_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352195._000*").scan(sh,inputFilePath); // 363154.MGPy8EG_N30NLO_Zee_Ht140_280_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352196._000*").scan(sh,inputFilePath); // 363155.MGPy8EG_N30NLO_Zee_Ht140_280_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352199._000*").scan(sh,inputFilePath); // 363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352200._000*").scan(sh,inputFilePath); // 363157.MGPy8EG_N30NLO_Zee_Ht280_500_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352201._000*").scan(sh,inputFilePath); // 363158.MGPy8EG_N30NLO_Zee_Ht280_500_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352202._000*").scan(sh,inputFilePath); // 363159.MGPy8EG_N30NLO_Zee_Ht500_700_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352204._000*").scan(sh,inputFilePath); // 363160.MGPy8EG_N30NLO_Zee_Ht500_700_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352205._000*").scan(sh,inputFilePath); // 363161.MGPy8EG_N30NLO_Zee_Ht500_700_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352206._000*").scan(sh,inputFilePath); // 363162.MGPy8EG_N30NLO_Zee_Ht700_1000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352207._000*").scan(sh,inputFilePath); // 363163.MGPy8EG_N30NLO_Zee_Ht700_1000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352208._000*").scan(sh,inputFilePath); // 363164.MGPy8EG_N30NLO_Zee_Ht700_1000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352209._000*").scan(sh,inputFilePath); // 363165.MGPy8EG_N30NLO_Zee_Ht1000_2000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352210._000*").scan(sh,inputFilePath); // 363166.MGPy8EG_N30NLO_Zee_Ht1000_2000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352211._000*").scan(sh,inputFilePath); // 363167.MGPy8EG_N30NLO_Zee_Ht1000_2000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352212._000*").scan(sh,inputFilePath); // 363168.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352214._000*").scan(sh,inputFilePath); // 363169.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352217._000*").scan(sh,inputFilePath); // 363170.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_BFilter
+  // STDM4 for Zmumu (tag p3517, my skim)
+//  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3");
+//  SH::ScanDir().filePattern("user.hson.15352123._000*").scan(sh,inputFilePath); // 363123.MGPy8EG_N30NLO_Zmumu_Ht0_70_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352124._000*").scan(sh,inputFilePath); // 363124.MGPy8EG_N30NLO_Zmumu_Ht0_70_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352126._000*").scan(sh,inputFilePath); // 363125.MGPy8EG_N30NLO_Zmumu_Ht0_70_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352127._000*").scan(sh,inputFilePath); // 363126.MGPy8EG_N30NLO_Zmumu_Ht70_140_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352129._000*").scan(sh,inputFilePath); // 363127.MGPy8EG_N30NLO_Zmumu_Ht70_140_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352130._000*").scan(sh,inputFilePath); // 363128.MGPy8EG_N30NLO_Zmumu_Ht70_140_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352132._000*").scan(sh,inputFilePath); // 363129.MGPy8EG_N30NLO_Zmumu_Ht140_280_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352133._000*").scan(sh,inputFilePath); // 363130.MGPy8EG_N30NLO_Zmumu_Ht140_280_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352134._000*").scan(sh,inputFilePath); // 363131.MGPy8EG_N30NLO_Zmumu_Ht140_280_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352135._000*").scan(sh,inputFilePath); // 363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352136._000*").scan(sh,inputFilePath); // 363133.MGPy8EG_N30NLO_Zmumu_Ht280_500_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352138._000*").scan(sh,inputFilePath); // 363134.MGPy8EG_N30NLO_Zmumu_Ht280_500_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352139._000*").scan(sh,inputFilePath); // 363135.MGPy8EG_N30NLO_Zmumu_Ht500_700_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352140._000*").scan(sh,inputFilePath); // 363136.MGPy8EG_N30NLO_Zmumu_Ht500_700_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352141._000*").scan(sh,inputFilePath); // 363137.MGPy8EG_N30NLO_Zmumu_Ht500_700_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352142._000*").scan(sh,inputFilePath); // 363138.MGPy8EG_N30NLO_Zmumu_Ht700_1000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352144._000*").scan(sh,inputFilePath); // 363139.MGPy8EG_N30NLO_Zmumu_Ht700_1000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352145._000*").scan(sh,inputFilePath); // 363140.MGPy8EG_N30NLO_Zmumu_Ht700_1000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352146._000*").scan(sh,inputFilePath); // 363141.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352147._000*").scan(sh,inputFilePath); // 363142.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352149._000*").scan(sh,inputFilePath); // 363143.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15352151._000*").scan(sh,inputFilePath); // 363144.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15352152._000*").scan(sh,inputFilePath); // 363145.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15352153._000*").scan(sh,inputFilePath); // 363146.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_BFilter
+
+
   // Set the name of the input TTree. It's always "CollectionTree"
   // for xAOD files.
   sh.setMetaString( "nc_tree", "CollectionTree" );
