@@ -334,56 +334,56 @@ int main( int argc, char* argv[] ) {
 //  SH::ScanDir().filePattern("user.hson.15343888.EXT0._000*").scan(sh,inputFilePath); // 361519.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np4
   // STDM4 for Zee (tag p3517, my skim)
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3");
-//  SH::ScanDir().filePattern("user.hson.15352187._000*").scan(sh,inputFilePath); // 363147.MGPy8EG_N30NLO_Zee_Ht0_70_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352188._000*").scan(sh,inputFilePath); // 363148.MGPy8EG_N30NLO_Zee_Ht0_70_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352189._000*").scan(sh,inputFilePath); // 363149.MGPy8EG_N30NLO_Zee_Ht0_70_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352190._000*").scan(sh,inputFilePath); // 363150.MGPy8EG_N30NLO_Zee_Ht70_140_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352192._000*").scan(sh,inputFilePath); // 363151.MGPy8EG_N30NLO_Zee_Ht70_140_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352193._000*").scan(sh,inputFilePath); // 363152.MGPy8EG_N30NLO_Zee_Ht70_140_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352194._000*").scan(sh,inputFilePath); // 363153.MGPy8EG_N30NLO_Zee_Ht140_280_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352195._000*").scan(sh,inputFilePath); // 363154.MGPy8EG_N30NLO_Zee_Ht140_280_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352196._000*").scan(sh,inputFilePath); // 363155.MGPy8EG_N30NLO_Zee_Ht140_280_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352199._000*").scan(sh,inputFilePath); // 363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352200._000*").scan(sh,inputFilePath); // 363157.MGPy8EG_N30NLO_Zee_Ht280_500_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352201._000*").scan(sh,inputFilePath); // 363158.MGPy8EG_N30NLO_Zee_Ht280_500_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352202._000*").scan(sh,inputFilePath); // 363159.MGPy8EG_N30NLO_Zee_Ht500_700_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352204._000*").scan(sh,inputFilePath); // 363160.MGPy8EG_N30NLO_Zee_Ht500_700_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352205._000*").scan(sh,inputFilePath); // 363161.MGPy8EG_N30NLO_Zee_Ht500_700_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352206._000*").scan(sh,inputFilePath); // 363162.MGPy8EG_N30NLO_Zee_Ht700_1000_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352207._000*").scan(sh,inputFilePath); // 363163.MGPy8EG_N30NLO_Zee_Ht700_1000_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352208._000*").scan(sh,inputFilePath); // 363164.MGPy8EG_N30NLO_Zee_Ht700_1000_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352209._000*").scan(sh,inputFilePath); // 363165.MGPy8EG_N30NLO_Zee_Ht1000_2000_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352210._000*").scan(sh,inputFilePath); // 363166.MGPy8EG_N30NLO_Zee_Ht1000_2000_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352211._000*").scan(sh,inputFilePath); // 363167.MGPy8EG_N30NLO_Zee_Ht1000_2000_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352212._000*").scan(sh,inputFilePath); // 363168.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352214._000*").scan(sh,inputFilePath); // 363169.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352217._000*").scan(sh,inputFilePath); // 363170.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419045._000*").scan(sh,inputFilePath); // 363147.MGPy8EG_N30NLO_Zee_Ht0_70_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419047._000*").scan(sh,inputFilePath); // 363148.MGPy8EG_N30NLO_Zee_Ht0_70_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419051._000*").scan(sh,inputFilePath); // 363149.MGPy8EG_N30NLO_Zee_Ht0_70_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419054._000*").scan(sh,inputFilePath); // 363150.MGPy8EG_N30NLO_Zee_Ht70_140_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419058._000*").scan(sh,inputFilePath); // 363151.MGPy8EG_N30NLO_Zee_Ht70_140_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419060._000*").scan(sh,inputFilePath); // 363152.MGPy8EG_N30NLO_Zee_Ht70_140_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419064._000*").scan(sh,inputFilePath); // 363153.MGPy8EG_N30NLO_Zee_Ht140_280_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419067._000*").scan(sh,inputFilePath); // 363154.MGPy8EG_N30NLO_Zee_Ht140_280_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419070._000*").scan(sh,inputFilePath); // 363155.MGPy8EG_N30NLO_Zee_Ht140_280_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419073._000*").scan(sh,inputFilePath); // 363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419077._000*").scan(sh,inputFilePath); // 363157.MGPy8EG_N30NLO_Zee_Ht280_500_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419080._000*").scan(sh,inputFilePath); // 363158.MGPy8EG_N30NLO_Zee_Ht280_500_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419082._000*").scan(sh,inputFilePath); // 363159.MGPy8EG_N30NLO_Zee_Ht500_700_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419086._000*").scan(sh,inputFilePath); // 363160.MGPy8EG_N30NLO_Zee_Ht500_700_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419089._000*").scan(sh,inputFilePath); // 363161.MGPy8EG_N30NLO_Zee_Ht500_700_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419092._000*").scan(sh,inputFilePath); // 363162.MGPy8EG_N30NLO_Zee_Ht700_1000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419094._000*").scan(sh,inputFilePath); // 363163.MGPy8EG_N30NLO_Zee_Ht700_1000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419098._000*").scan(sh,inputFilePath); // 363164.MGPy8EG_N30NLO_Zee_Ht700_1000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419101._000*").scan(sh,inputFilePath); // 363165.MGPy8EG_N30NLO_Zee_Ht1000_2000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419104._000*").scan(sh,inputFilePath); // 363166.MGPy8EG_N30NLO_Zee_Ht1000_2000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419107._000*").scan(sh,inputFilePath); // 363167.MGPy8EG_N30NLO_Zee_Ht1000_2000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419110._000*").scan(sh,inputFilePath); // 363168.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419114._000*").scan(sh,inputFilePath); // 363169.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419117._000*").scan(sh,inputFilePath); // 363170.MGPy8EG_N30NLO_Zee_Ht2000_E_CMS_BFilter
   // STDM4 for Zmumu (tag p3517, my skim)
 //  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3");
-//  SH::ScanDir().filePattern("user.hson.15352123._000*").scan(sh,inputFilePath); // 363123.MGPy8EG_N30NLO_Zmumu_Ht0_70_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352124._000*").scan(sh,inputFilePath); // 363124.MGPy8EG_N30NLO_Zmumu_Ht0_70_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352126._000*").scan(sh,inputFilePath); // 363125.MGPy8EG_N30NLO_Zmumu_Ht0_70_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352127._000*").scan(sh,inputFilePath); // 363126.MGPy8EG_N30NLO_Zmumu_Ht70_140_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352129._000*").scan(sh,inputFilePath); // 363127.MGPy8EG_N30NLO_Zmumu_Ht70_140_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352130._000*").scan(sh,inputFilePath); // 363128.MGPy8EG_N30NLO_Zmumu_Ht70_140_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352132._000*").scan(sh,inputFilePath); // 363129.MGPy8EG_N30NLO_Zmumu_Ht140_280_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352133._000*").scan(sh,inputFilePath); // 363130.MGPy8EG_N30NLO_Zmumu_Ht140_280_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352134._000*").scan(sh,inputFilePath); // 363131.MGPy8EG_N30NLO_Zmumu_Ht140_280_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352135._000*").scan(sh,inputFilePath); // 363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352136._000*").scan(sh,inputFilePath); // 363133.MGPy8EG_N30NLO_Zmumu_Ht280_500_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352138._000*").scan(sh,inputFilePath); // 363134.MGPy8EG_N30NLO_Zmumu_Ht280_500_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352139._000*").scan(sh,inputFilePath); // 363135.MGPy8EG_N30NLO_Zmumu_Ht500_700_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352140._000*").scan(sh,inputFilePath); // 363136.MGPy8EG_N30NLO_Zmumu_Ht500_700_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352141._000*").scan(sh,inputFilePath); // 363137.MGPy8EG_N30NLO_Zmumu_Ht500_700_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352142._000*").scan(sh,inputFilePath); // 363138.MGPy8EG_N30NLO_Zmumu_Ht700_1000_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352144._000*").scan(sh,inputFilePath); // 363139.MGPy8EG_N30NLO_Zmumu_Ht700_1000_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352145._000*").scan(sh,inputFilePath); // 363140.MGPy8EG_N30NLO_Zmumu_Ht700_1000_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352146._000*").scan(sh,inputFilePath); // 363141.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352147._000*").scan(sh,inputFilePath); // 363142.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352149._000*").scan(sh,inputFilePath); // 363143.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_BFilter
-//  SH::ScanDir().filePattern("user.hson.15352151._000*").scan(sh,inputFilePath); // 363144.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_CVetoBVeto
-//  SH::ScanDir().filePattern("user.hson.15352152._000*").scan(sh,inputFilePath); // 363145.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_CFilterBVeto
-//  SH::ScanDir().filePattern("user.hson.15352153._000*").scan(sh,inputFilePath); // 363146.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419167._000*").scan(sh,inputFilePath); // 363123.MGPy8EG_N30NLO_Zmumu_Ht0_70_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419170._000*").scan(sh,inputFilePath); // 363124.MGPy8EG_N30NLO_Zmumu_Ht0_70_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419175._000*").scan(sh,inputFilePath); // 363125.MGPy8EG_N30NLO_Zmumu_Ht0_70_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419177._000*").scan(sh,inputFilePath); // 363126.MGPy8EG_N30NLO_Zmumu_Ht70_140_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419179._000*").scan(sh,inputFilePath); // 363127.MGPy8EG_N30NLO_Zmumu_Ht70_140_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419181._000*").scan(sh,inputFilePath); // 363128.MGPy8EG_N30NLO_Zmumu_Ht70_140_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419183._000*").scan(sh,inputFilePath); // 363129.MGPy8EG_N30NLO_Zmumu_Ht140_280_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419187._000*").scan(sh,inputFilePath); // 363130.MGPy8EG_N30NLO_Zmumu_Ht140_280_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419191._000*").scan(sh,inputFilePath); // 363131.MGPy8EG_N30NLO_Zmumu_Ht140_280_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419195._000*").scan(sh,inputFilePath); // 363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419204._000*").scan(sh,inputFilePath); // 363133.MGPy8EG_N30NLO_Zmumu_Ht280_500_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419206._000*").scan(sh,inputFilePath); // 363134.MGPy8EG_N30NLO_Zmumu_Ht280_500_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419209._000*").scan(sh,inputFilePath); // 363135.MGPy8EG_N30NLO_Zmumu_Ht500_700_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419212._000*").scan(sh,inputFilePath); // 363136.MGPy8EG_N30NLO_Zmumu_Ht500_700_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419215._000*").scan(sh,inputFilePath); // 363137.MGPy8EG_N30NLO_Zmumu_Ht500_700_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419219._000*").scan(sh,inputFilePath); // 363138.MGPy8EG_N30NLO_Zmumu_Ht700_1000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419221._000*").scan(sh,inputFilePath); // 363139.MGPy8EG_N30NLO_Zmumu_Ht700_1000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419223._000*").scan(sh,inputFilePath); // 363140.MGPy8EG_N30NLO_Zmumu_Ht700_1000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419225._000*").scan(sh,inputFilePath); // 363141.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419227._000*").scan(sh,inputFilePath); // 363142.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419229._000*").scan(sh,inputFilePath); // 363143.MGPy8EG_N30NLO_Zmumu_Ht1000_2000_BFilter
+//  SH::ScanDir().filePattern("user.hson.15419232._000*").scan(sh,inputFilePath); // 363144.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_CVetoBVeto
+//  SH::ScanDir().filePattern("user.hson.15419235._000*").scan(sh,inputFilePath); // 363145.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_CFilterBVeto
+//  SH::ScanDir().filePattern("user.hson.15419237._000*").scan(sh,inputFilePath); // 363146.MGPy8EG_N30NLO_Zmumu_Ht2000_E_CMS_BFilter
 
 
   // Set the name of the input TTree. It's always "CollectionTree"
@@ -435,12 +435,15 @@ int main( int argc, char* argv[] ) {
 //  job.options()->setString(EL::Job::optSubmitFlags, slurmOptions);
 
   system("mkdir -p ~/bin/; ln -s /usr/bin/sbatch ~/bin/bsub; export PATH=$PATH:~/bin");
-  std::string slurmJobName = "skim";
+  std::string slurmJobName = "atlas";
   // No delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021 -o stdout.%j -e stderr.%j --mail-type=END --mail-user=Hyungsuk.Son@tufts.edu --job-name="+slurmJobName;
   // Submit batch runs with 50min delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+3000 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
+  // For Systematics
   std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem-per-cpu=40000 -p batch --time=2-2:00:00 --begin=now+2400 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
+  // For no-systematics using ALTAS QOS (--account=atlas --qos=atlas)
+  //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem-per-cpu=32000 -p batch --time=2-2:00:00 --account=atlas --qos=atlas --begin=now+2400 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   // Submit batch runs with 1hour delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+1hour --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   EL::LSFDriver driver; //batch

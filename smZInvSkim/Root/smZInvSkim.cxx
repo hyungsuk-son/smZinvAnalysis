@@ -704,6 +704,7 @@ EL::StatusCode smZInvSkim :: execute ()
       ANA_CHECK(m_event->copy("STDMTruthPhotons"));
       ANA_CHECK(m_event->copy("STDMTruthTaus"));
       ANA_CHECK(m_event->copy("TruthParticles"));
+      ANA_CHECK(m_event->copy("TruthVertices"));
     }
   }
 

@@ -46,7 +46,7 @@ int main( int argc, char* argv[] ) {
   // https://atlaswww.hep.anl.gov/asc/WebSVN/filedetails.php?repname=dijets&path=%2Fcode%2Ftrunk%2Futil%2FrunDijetResonance.cxx
  
   // Create my output mini-xAOD dataset name
-  std::string myTagVer = "v3.1";
+  std::string myTagVer = "v3.2";
   // MC16a backgrounds (Sherpa)
   // EXOT5
   //std::string myTagName = "mc16a_13TeV.Sherpa_Zmumu_skim_EXOT5_"+myTagVer; // Zmumu
@@ -70,8 +70,8 @@ int main( int argc, char* argv[] ) {
   //std::string myTagName = "data16_13TeV.skim_EXOT5_"+myTagVer; // Data 2016 (EXOT5 derivation)
   // MC16a backgrounds (MadGraph+Pythia)
   // STDM4 (skim tag p3517)
-  //std::string myTagName = "mc16a_13TeV.MGPy8EG_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
-  std::string myTagName = "mc16a_13TeV.MGPy8EG_Zee_skim_STDM4_"+myTagVer; // Zee
+  std::string myTagName = "mc16a_13TeV.MGPy8EG_Zmumu_skim_STDM4_"+myTagVer; // Zmumu
+  //std::string myTagName = "mc16a_13TeV.MGPy8EG_Zee_skim_STDM4_"+myTagVer; // Zee
   std::string containerName;
   std::vector< std::string > outputContainerNames; //for grid only
 
@@ -100,8 +100,8 @@ int main( int argc, char* argv[] ) {
   //std::ifstream inFile( listFilePath+"data16_deriv_EXOT5.txt" ); // Data 2016 (EXOT5 derivation)
   // MC16a backgrounds (MadGraph+Pythia)
   // STDM4 (skim tag p3517)
-  //std::ifstream inFile( listFilePath+"mc16a_deriv_MGPy8EG_STDM4_Zmumu_dataset.txt" ); // Zmumu
-  std::ifstream inFile( listFilePath+"mc16a_deriv_MGPy8EG_STDM4_Zee_dataset.txt" ); // Zee
+  std::ifstream inFile( listFilePath+"mc16a_deriv_MGPy8EG_STDM4_Zmumu_dataset.txt" ); // Zmumu
+  //std::ifstream inFile( listFilePath+"mc16a_deriv_MGPy8EG_STDM4_Zee_dataset.txt" ); // Zee
   while(std::getline(inFile, containerName) ){
     if (containerName.size() > 1 && containerName.find("#") != 0 ){
       std::cout << "Adding container : " << containerName << std::endl;

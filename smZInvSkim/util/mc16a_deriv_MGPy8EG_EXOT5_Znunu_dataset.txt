@@ -1,0 +1,5 @@
+user.hson.mc16_13TeV.361515.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np0.deriv.DAOD_EXOT5.v1.3_EXT0
+user.hson.mc16_13TeV.361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1.deriv.DAOD_EXOT5.v1.3_EXT0
+user.hson.mc16_13TeV.361517.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np2.deriv.DAOD_EXOT5.v1.3_EXT0
+user.hson.mc16_13TeV.361518.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np3.deriv.DAOD_EXOT5.v1.3_EXT0
+user.hson.mc16_13TeV.361519.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np4.deriv.DAOD_EXOT5.v1.3_EXT0

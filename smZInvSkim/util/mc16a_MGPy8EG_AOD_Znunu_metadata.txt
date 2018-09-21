@@ -1,0 +1,9 @@
+dataset_number/I:crossSection/D:kFactor/D:genFiltEff/D
+361515  7.5212E+00  1.2283  1.0000E+00  
+361516  1.1999E+00  1.2283  1.0000E+00  
+361517  3.8710E-01  1.2283  1.0000E+00  
+361518  1.1008E-01  1.2283  1.0000E+00  
+361519  4.3469E-02  1.2283  1.0000E+00  
+
+#lsetup  "asetup AthAnalysis,21.2.44" pyAMI
+#getMetadata.py --timestamp="2018-09-14 20:36:15" --physicsGroups="PMG,MCGN" --fields="dataset_number,crossSection,kFactor,genFiltEff" --inDS="mc16_13TeV.361515.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np0.merge.AOD.e3898_e5984_s3126_r9364_r9315,mc16_13TeV.361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1.merge.AOD.e3898_e5984_s3126_r9364_r9315,mc16_13TeV.361517.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np2.merge.AOD.e3898_e5984_s3126_r9364_r9315,mc16_13TeV.361518.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np3.merge.AOD.e3898_e5984_s3126_r9364_r9315,mc16_13TeV.361519.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np4.merge.AOD.e3898_e5984_s3126_r9364_r9315"

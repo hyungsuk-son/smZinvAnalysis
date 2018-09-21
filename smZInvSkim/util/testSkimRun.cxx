@@ -84,7 +84,8 @@ int main( int argc, char* argv[] ) {
   // MC16a (STDM4) MadGraph+Pythia
   const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/derivation");
   //SH::ScanDir().filePattern("DAOD_STDM4.14405032._000002.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3552
-  SH::ScanDir().filePattern("DAOD_STDM4.13908568._000005.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3517
+  //SH::ScanDir().filePattern("DAOD_STDM4.13908568._000005.pool.root.1").scan(sh,inputFilePath); // Zmumu (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: p3517
+  SH::ScanDir().filePattern("DAOD_STDM4.13908382._000001.pool.root.1").scan(sh,inputFilePath); // Zee (363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto) tag: p3517
 
   // Set the name of the input TTree. It's always "CollectionTree"
   // for xAOD files.
