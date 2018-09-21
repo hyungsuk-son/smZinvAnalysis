@@ -441,7 +441,7 @@ int main( int argc, char* argv[] ) {
   // Submit batch runs with 50min delay
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem 32000 -p batch --time=2-2:00:00 --begin=now+3000 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   // For Systematics
-  std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem-per-cpu=40000 -p batch --time=2-2:00:00 --begin=now+2400 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
+  std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem-per-cpu=50000 -p batch --time=2-2:00:00 --begin=now+2400 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   // For no-systematics using ALTAS QOS (--account=atlas --qos=atlas)
   //std::string slurmOptions = "-n 1 --cpus-per-task 1 --mem-per-cpu=32000 -p batch --time=2-2:00:00 --account=atlas --qos=atlas --begin=now+2400 --exclude=m4lmem01,alpha018,pcomp18,pmem01,alpha012,pcomp30,pcomp26,omega021,alpha029,alpha028,pcomp01,pmem02 -o stdout.%j -e stderr.%j --mail-type=END --job-name="+slurmJobName;
   // Submit batch runs with 1hour delay
