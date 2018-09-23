@@ -416,7 +416,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = true;
+  m_doSys = false;
 
   // Scale factor
   m_recoSF = true;
@@ -7056,9 +7056,9 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
       if (m_isWenu) {
         // Exclusive
-        doWenuSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_mcEventWeight, "_reco_exclusive_", m_sysName);
+        doWenuSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_goodElectron, m_mcEventWeight, "_reco_exclusive_", m_sysName);
         // Inclusive
-        doWenuSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_mcEventWeight, "_reco_inclusive_", m_sysName);
+        doWenuSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_goodElectron, m_mcEventWeight, "_reco_inclusive_", m_sysName);
       }
 
 
@@ -12022,7 +12022,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
-void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& met, const float& metPhi, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName){
+void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& met, const float& metPhi, const xAOD::ElectronContainer* elecSC, xAOD::ElectronContainer* goodElectron ,const float& mcEventWeight, std::string hist_prefix, std::string sysName){
 
   std::string channel = "wenu";
 
@@ -12056,7 +12056,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   ConstDataVector<xAOD::ElectronContainer> m_MetElectron(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Electron>
 
   // iterate over our shallow copy
-  for (const auto& electron : *m_goodElectron) { // C++11 shortcut
+  for (const auto& electron : *goodElectron) { // C++11 shortcut
     // For MET rebuilding
     m_MetElectron.push_back( electron );
   } // end for loop over shallow copied electrons
@@ -12163,7 +12163,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   // Make a container for invisible electrons
   ConstDataVector<xAOD::ElectronContainer> m_invisibleElectrons(SG::VIEW_ELEMENTS);
   for (const auto& electron : *elecSC) { // C++11 shortcut
-    for (const auto& goodelectron : *m_goodElectron) { // C++11 shortcut
+    for (const auto& goodelectron : *goodElectron) { // C++11 shortcut
       // Check if electrons are matched to good electrons
       if (electron->pt() == goodelectron->pt() && electron->eta() == goodelectron->eta() && electron->phi() == goodelectron->phi()){
         // Put good electrons in
@@ -12240,14 +12240,14 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   //--------------------
   // Exact one electron
   //--------------------
-  if (m_goodElectron->size() != 1) return;
+  if (goodElectron->size() != 1) return;
 
 
   //----------------------
   // Define W Selection
   //----------------------
-  float lepton_pt = m_goodElectron->at(0)->pt();
-  float lepton_phi = m_goodElectron->at(0)->phi();
+  float lepton_pt = goodElectron->at(0)->pt();
+  float lepton_phi = goodElectron->at(0)->phi();
 
   // Transverse Mass
   float mT = TMath::Sqrt( 2. * lepton_pt * met * ( 1. - TMath::Cos(lepton_phi - metPhi) ) ); // where met and metPhi are from real MET
@@ -12349,7 +12349,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   float mcEventWeight_Wenu = mcEventWeight;
   if (!m_isData) {
     //Info("execute()", " Wenu original mcEventWeight = %.3f ", mcEventWeight);
-    mcEventWeight_Wenu = mcEventWeight_Wenu * GetTotalElectronSF(*m_goodElectron, m_recoSF, m_idSF, m_isoElectronSF, m_elecTrigSF);
+    mcEventWeight_Wenu = mcEventWeight_Wenu * GetTotalElectronSF(*goodElectron, m_recoSF, m_idSF, m_isoElectronSF, m_elecTrigSF);
     //Info("execute()", " Wenu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wenu);
   }
 
