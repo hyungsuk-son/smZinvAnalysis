@@ -227,10 +227,10 @@ int main( int argc, char* argv[] ) {
 
   // Skim_v3 (EXOT5)
   const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
-  //SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
+  SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
   //SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("user.hson.14408279._000007.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu
-  SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
+  //SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
   //SH::ScanDir().filePattern("user.hson.14408499._000048.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
   // For MET trigger SF test
   //SH::ScanDir().filePattern("user.hson.14408271._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu (364106.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV140_280_CVetoBVeto)
@@ -270,6 +270,11 @@ int main( int argc, char* argv[] ) {
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3/STDM4/MadGraph/Zee");
   //SH::ScanDir().filePattern("user.hson.15352199._000006.mini-xAOD.root").scan(sh,inputFilePath); // Zee (363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto) tag: p3517
 
+
+
+  // Custom Derivation for Multijet background study (EXOT5)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/derivation/custom_EXOT5");
+  //SH::ScanDir().filePattern("user.fkaya.15439235.EXT0._000*").scan(sh,inputFilePath); // run 284484
 
 
   // Skim test

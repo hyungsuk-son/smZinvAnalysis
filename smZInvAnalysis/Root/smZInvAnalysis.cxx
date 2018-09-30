@@ -5161,10 +5161,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         // Exclusive
         doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_exclusive_" );
-        doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_exclusive_fid_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_exclusive_fid_" );
         // Inclusive
         doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_" );
-        doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_fid_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_fid_" );
 
         // Overlap removal VS Overlap subtraction (dress-level electron and overlap-removed or subtracted AntiKt4TruthJets with dress-level electron)
         // Non fiducial
@@ -5173,10 +5173,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
         doZllEmulTruth(m_truthDressElectronFromZ, m_ORdressTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_inclusive_" );
         doZllEmulTruth(m_truthDressElectronFromZ, m_OSdressTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_OS_inclusive_" );
         // Fiducial
-        doZllEmulTruth(m_truthDressElectronFromZ, m_ORdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_exclusive_fid_" );
-        doZllEmulTruth(m_truthDressElectronFromZ, m_OSdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_OS_exclusive_fid_" );
-        doZllEmulTruth(m_truthDressElectronFromZ, m_ORdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_inclusive_fid_" );
-        doZllEmulTruth(m_truthDressElectronFromZ, m_OSdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_OS_inclusive_fid_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_ORdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_exclusive_fid_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_OSdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_OS_exclusive_fid_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_ORdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_inclusive_fid_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_OSdressTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_OS_inclusive_fid_" );
 
 
 
@@ -5185,9 +5185,9 @@ EL::StatusCode smZInvAnalysis :: execute ()
         if (is_customDerivation) {
 
           // Exclusive
-          doZllEmulTruth(m_truthDressElectronFromZ, m_goodCustomDressJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_custom_exclusive_" );
+          doZllEmulTruth(m_truthDressElectronFromZ, m_goodCustomDressJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_custom_exclusive_" );
           // Inclusive
-          doZllEmulTruth(m_truthDressElectronFromZ, m_goodCustomDressJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_custom_inclusive_" );
+          doZllEmulTruth(m_truthDressElectronFromZ, m_goodCustomDressJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_custom_inclusive_" );
 
         } // For custom derivation
 
@@ -5202,9 +5202,9 @@ EL::StatusCode smZInvAnalysis :: execute ()
         if (is_customDerivation) {
 
           // Exclusive
-          doZllEmulTruth(m_truthBareElectronFromZ, m_goodCustomBareJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_custom_exclusive_" );
+          doZllEmulTruth(m_truthBareElectronFromZ, m_goodCustomBareJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_custom_exclusive_" );
           // Inclusive
-          doZllEmulTruth(m_truthBareElectronFromZ, m_goodCustomBareJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_custom_inclusive_" );
+          doZllEmulTruth(m_truthBareElectronFromZ, m_goodCustomBareJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_custom_inclusive_" );
 
         } // For custom derivation
 
@@ -5213,10 +5213,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         // Exclusive
         doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_exclusive_" );
-        doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_exclusive_fid_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_exclusive_fid_" );
         // Inclusive
         doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_" );
-        doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_fid_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_fid_" );
 
         // Overlap removal VS Overlap subtraction (bare-level electron and overlap-removed or subtracted AntiKt4TruthJets with bare-level electron)
         // Non fiducial
@@ -5225,10 +5225,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
         doZllEmulTruth(m_truthBareElectronFromZ, m_ORbareTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_inclusive_" );
         doZllEmulTruth(m_truthBareElectronFromZ, m_OSbareTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_OS_inclusive_" );
         // Fiducial
-        doZllEmulTruth(m_truthBareElectronFromZ, m_ORbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_exclusive_fid_" );
-        doZllEmulTruth(m_truthBareElectronFromZ, m_OSbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_OS_exclusive_fid_" );
-        doZllEmulTruth(m_truthBareElectronFromZ, m_ORbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_inclusive_fid_" );
-        doZllEmulTruth(m_truthBareElectronFromZ, m_OSbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_OS_inclusive_fid_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_ORbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_exclusive_fid_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_OSbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_OS_exclusive_fid_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_ORbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_inclusive_fid_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_OSbareTruthNominalJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_OS_inclusive_fid_" );
 
 
         /////////////////////////
@@ -5240,9 +5240,9 @@ EL::StatusCode smZInvAnalysis :: execute ()
         if (is_customDerivation) {
 
           // Exclusive
-          doZllEmulTruth(m_truthBornElectron, m_goodCustomBornJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_born_custom_exclusive_" );
+          doZllEmulTruth(m_truthBornElectron, m_goodCustomBornJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_born_custom_exclusive_" );
           // Inclusive
-          doZllEmulTruth(m_truthBornElectron, m_goodCustomBornJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_born_custom_inclusive_" );
+          doZllEmulTruth(m_truthBornElectron, m_goodCustomBornJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_born_custom_inclusive_" );
 
         } // For custom derivation
 
@@ -5250,10 +5250,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         // Exclusive
         doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_exclusive_" );
-        doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_exclusive_fid_" );
+        doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_born_emul_exclusive_fid_" );
         // Inclusive
         doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_inclusive_" );
-        doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_inclusive_fid_" );
+        doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_born_emul_inclusive_fid_" );
 
 
       } //Zee
@@ -12508,8 +12508,24 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
   //---------------
   // Dilepton cut
   //---------------
+  // pT cut
   if ( lepton1.Perp() < lep1Pt || lepton2.Perp() < lep2Pt ) return;
-  if ( std::fabs(lepton1.Eta()) > lepEta || std::fabs(lepton2.Eta()) > lepEta ) return;
+  // Eta cut
+  // Electron
+  if (channel == "zee") {
+    // Fiducial
+    if ( hist_prefix.find("fid")!=std::string::npos ) {
+      if ( std::fabs(lepton1.Eta()) > lepEta || (std::fabs(lepton1.Eta()) > 1.37 && std::fabs(lepton1.Eta()) < 1.52)) return;
+      if ( std::fabs(lepton2.Eta()) > lepEta || (std::fabs(lepton2.Eta()) > 1.37 && std::fabs(lepton2.Eta()) < 1.52)) return;
+      // Non-fiducial
+    } else {
+      if ( std::fabs(lepton1.Eta()) > lepEta || std::fabs(lepton2.Eta()) > lepEta ) return;
+    }
+  }
+  // Muon
+  if (channel == "zmumu") {
+    if ( std::fabs(lepton1.Eta()) > lepEta || std::fabs(lepton2.Eta()) > lepEta ) return;
+  }
 
 
   //////////////////////////////
@@ -12962,7 +12978,10 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
     // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
     if (recoJet->at(0) == jet || recoJet->at(1) == jet || recoJet->at(2) == jet || recoJet->at(3) == jet){ // apply cut only to leading jet1, jet2, jet3 and jet4
       float dPhijetmet = deltaPhi(reco_jet_phi,metPhi);
-      if ( reco_jet_pt > 30000. && dPhijetmet < 0.4 ) pass_dPhijetmet = false;
+      if ( reco_jet_pt > 30000. && dPhijetmet < 0.4 ) {
+        pass_dPhijetmet = false;
+        //std::cout << "fake jet : " << "jet pT = " << reco_jet_pt * 0.001 << " GeV " << " dPhi(jet,MET) = " << dPhijetmet << std::endl;
+      }
     }
 
   }
