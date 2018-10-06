@@ -552,9 +552,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     // JES Calibration (https://twiki.cern.ch/twiki/bin/view/AtlasProtected/ApplyJetCalibrationR21)
     const std::string name_JetCalibTools = "JetCalibTools";
     std::string jetAlgo = "AntiKt4EMTopo"; //String describing your jet collection, for example AntiKt4EMTopo or AntiKt4LCTopo
-    std::string config = "JES_data2017_2016_2015_Recommendation_Feb2018_rel21.config"; //Path to global config used to initialize the tool
-    std::string calibSeq = "JetArea_Residual_Origin_EtaJES_GSC"; //String describing the calibration sequence to apply
-    if (m_isData) calibSeq += "_Insitu";
+    std::string config = "JES_data2017_2016_2015_Recommendation_Aug2018_rel21.config"; //Path to global config used to initialize the tool
+    std::string calibSeq = "JetArea_Residual_EtaJES_GSC"; //String describing the calibration sequence to apply
+    if (!m_isData) calibSeq += "_Smear"; // for MC
+    else calibSeq += "_Insitu"; // for Data
      std::string calibArea = "00-04-81"; //Calibration Area tag
     //Call the constructor. The default constructor can also be used if the arguments are set with python configuration instead
     //Initialize the tool
@@ -567,35 +568,17 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     ANA_CHECK(m_jetCalibration->initialize());
 
     // JES uncertainty (Jet Energy Scale)
+    // Twiki (https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetEtmissRecommendationsR21)
+    // Twiki (https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetUncertaintiesRel21Summer2018SmallR)
     m_jetUncertaintiesTool = new JetUncertaintiesTool("JESProvider");
     // Set the properties, note the use of the CHECK macro to ensure nothing failed
     ANA_CHECK(m_jetUncertaintiesTool->setProperty("JetDefinition", "AntiKt4EMTopo"));
     ANA_CHECK(m_jetUncertaintiesTool->setProperty("MCType", "MC16"));
-    ANA_CHECK(m_jetUncertaintiesTool->setProperty("ConfigFile", "rel21/Moriond2018/R4_StrongReduction_Scenario1.config"));
-    ANA_CHECK(m_jetUncertaintiesTool->setProperty("CalibArea", "CalibArea-03"));
+    ANA_CHECK(m_jetUncertaintiesTool->setProperty("ConfigFile", "rel21/Summer2018/R4_StrongReduction_Scenario1_SimpleJER.config"));
+    ANA_CHECK(m_jetUncertaintiesTool->setProperty("CalibArea", "CalibArea-05"));
+    ANA_CHECK(m_jetUncertaintiesTool->setProperty("IsData",m_isData));
     // Initialise jet uncertainty tool
     ANA_CHECK(m_jetUncertaintiesTool->initialize());
-
-    // JERTool (Jet Energy Resolution)
-    m_jerTool = new JERTool("JERTool");
-    // Configure the JERTool
-    //m_jerTool->msg().setLevel(MSG::DEBUG);
-    ANA_CHECK(m_jerTool->setProperty("PlotFileName", "JetResolution/Prerec2015_xCalib_2012JER_ReducedTo9NP_Plots_v2.root"));
-    ANA_CHECK(m_jerTool->setProperty("CollectionName", "AntiKt4EMTopoJets"));
-    // Initialize the tools
-    ANA_CHECK(m_jerTool->initialize());
-
-    // JERSmearingTool
-    m_jerSmearingTool = new JERSmearingTool("JERSmearingTool");
-    // Configure the JERSmearingTool
-    //m_jerSmearingTool->msg().setLevel(MSG::DEBUG);
-    ToolHandle<IJERTool> jerHandle(m_jerTool->name());
-    ANA_CHECK(m_jerSmearingTool->setProperty("JERTool", jerHandle));
-    ANA_CHECK(m_jerSmearingTool->setProperty("ApplyNominalSmearing", false));
-    ANA_CHECK(m_jerSmearingTool->setProperty("isMC", !m_isData));
-    ANA_CHECK(m_jerSmearingTool->setProperty("SystematicMode", "Simple")); //"Simple" provides one NP (smearing only in MC), "Full" provides 10NPs (smearing both on data and MC)
-    // Initialize the tools
-    ANA_CHECK(m_jerSmearingTool->initialize());
 
     // Initialize and configure the jet cleaning tool (LooseBad)
     m_jetCleaningLooseBad = new JetCleaningTool("JetCleaningLooseBad");
@@ -626,8 +609,17 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     // Initialise Jet JVT Efficiency Tool
     m_jvtefficiencyTool = new CP::JetJvtEfficiency("JvtEfficiencyTool");
     ANA_CHECK(m_jvtefficiencyTool->setProperty("WorkingPoint", "Medium"));
-    ANA_CHECK(m_jvtefficiencyTool->setProperty("SFFile","JetJvtEfficiency/Moriond2017/JvtSFFile_EM.root"));
+    ANA_CHECK(m_jvtefficiencyTool->setProperty("SFFile","JetJvtEfficiency/Moriond2018/JvtSFFile_EMTopoJets.root"));
     ANA_CHECK(m_jvtefficiencyTool->initialize());
+
+    // Initialise Jet fJVT Efficiency Tool
+    m_fjvtefficiencyTool = new CP::JetJvtEfficiency("fJvtEfficiencyTool");
+    //ANA_CHECK(m_fjvtefficiencyTool->setProperty("WorkingPoint", "Default"));
+    ANA_CHECK(m_fjvtefficiencyTool->setProperty("SFFile","JetJvtEfficiency/Moriond2018/fJvtSFFile.root"));
+    ANA_CHECK(m_fjvtefficiencyTool->setProperty("ScaleFactorDecorationName","fJVTSF"));
+    ANA_CHECK(m_fjvtefficiencyTool->initialize());
+
+
 
     // Muon calibration and smearing tool (For 2015 and 2016 dataset)
     m_muonCalibrationAndSmearingTool2016 = new CP::MuonCalibrationAndSmearingTool( "MuonCorrectionTool2016" );
@@ -5700,13 +5692,6 @@ EL::StatusCode smZInvAnalysis :: execute ()
     //if(m_sysName=="") std::cout << "Nominal (no syst) "  << std::endl;
     //else std::cout << "Systematic: " << m_sysName << std::endl;
 
-
-    // apply recommended systematic for JERSmearingTool
-    if (m_jerSmearingTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
-      Error("execute()", "Cannot configure JERSmearingTool for systematics");
-      continue; // go to next systematic
-    } // end check that systematic applied ok
-
     // apply recommended systematic for JetUncertaintiesTool
     if (m_jetUncertaintiesTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
       Error("execute()", "Cannot configure JetUncertaintiesTool for systematics");
@@ -5718,6 +5703,13 @@ EL::StatusCode smZInvAnalysis :: execute ()
       Error("execute()", "Cannot configure JvtEfficiencyTool for systematics");
       continue; // go to next systematic
     } // end check that systematic applied ok
+
+    // apply recommended systematic for fJvtEfficiencyTool
+    if (m_fjvtefficiencyTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure fJvtEfficiencyTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+
 
     // apply recommended systematic for MuonCalibrationAndSmearingTool (For 2015 and 2016 dataset)
     if (m_dataYear == "2015" || m_dataYear == "2016") {
@@ -6330,20 +6322,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
         *recoJet = *jets; // copies auxdata from one auxstore to the other
       }
 
-      // JES correction
-      if (!m_isData){
-        if ( m_jetUncertaintiesTool->applyCorrection(*jets) != CP::CorrectionCode::Ok){ // apply correction and check return code
-          Error("execute()", "Failed to apply JES correction to Jet objects. Exiting." );
-          return EL::StatusCode::FAILURE;
-        }
-      }
-
-      // JER smearing
-      if (!m_isData){
-        if ( m_jerSmearingTool->applyCorrection(*jets) != CP::CorrectionCode::Ok){ // apply correction and check return code
-          Error("execute()", "Failed to apply JER smearing. Exiting. ");
-          return EL::StatusCode::FAILURE;
-        }
+      // JES correction (Apply to both Data and MC, impacting on the JES uncertainties for MC, but also controling how the JER uncertainties are applied for Data)
+      if ( m_jetUncertaintiesTool->applyCorrection(*jets) != CP::CorrectionCode::Ok){ // apply correction and check return code
+        Error("execute()", "Failed to apply JES correction to Jet objects. Exiting." );
+        return EL::StatusCode::FAILURE;
       }
 
       // Update JVT (jet Vertex Taggger)
@@ -9051,18 +9033,6 @@ EL::StatusCode smZInvAnalysis :: finalize ()
       m_jetUncertaintiesTool = 0;
     }
 
-    // JER Tool
-    if(m_jerTool){
-      delete m_jerTool;
-      m_jerTool = 0;
-    }
-
-    //  JER Smearing Tool
-    if(m_jerSmearingTool){
-      delete m_jerSmearingTool;
-      m_jerSmearingTool = 0;
-    }
-
     // Jet Cleaning (LooseBad)
     if( m_jetCleaningLooseBad ) {
       delete m_jetCleaningLooseBad;
@@ -9079,6 +9049,12 @@ EL::StatusCode smZInvAnalysis :: finalize ()
     if( m_jvtefficiencyTool ) {
       delete m_jvtefficiencyTool;
       m_jvtefficiencyTool = 0;
+    }
+
+    // Jet fJVT Efficiency Tool
+    if( m_fjvtefficiencyTool ) {
+      delete m_fjvtefficiencyTool;
+      m_fjvtefficiencyTool = 0;
     }
 
     // Muon calibration and smearing

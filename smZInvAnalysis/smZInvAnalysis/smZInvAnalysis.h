@@ -291,13 +291,12 @@ public:
   // Jet
   JetCalibrationTool* m_jetCalibration; //!
   JetUncertaintiesTool* m_jetUncertaintiesTool; //!
-  JERTool* m_jerTool; //!
-  JERSmearingTool* m_jerSmearingTool; //!
   JetCleaningTool *m_jetCleaningLooseBad; //! 
   JetCleaningTool *m_jetCleaningTightBad; //!
   ToolHandle<IJetUpdateJvt> m_hjvtagup; //!
   asg::AnaToolHandle<IJetModifier> m_fJvtTool; //!
   CP::JetJvtEfficiency* m_jvtefficiencyTool; //!
+  CP::JetJvtEfficiency* m_fjvtefficiencyTool; //!
 
   // Muon
   CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool2016; //!
