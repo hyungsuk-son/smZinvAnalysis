@@ -621,6 +621,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
 
 
 
+    // Muon momentum corrections (https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisConsolidationMC16)
     // Muon calibration and smearing tool (For 2015 and 2016 dataset)
     m_muonCalibrationAndSmearingTool2016 = new CP::MuonCalibrationAndSmearingTool( "MuonCorrectionTool2016" );
     // For 2015 and 2016 datasets
@@ -630,6 +631,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     ANA_CHECK(m_muonCalibrationAndSmearingTool2016->setProperty("SagittaCorr",true));
     ANA_CHECK(m_muonCalibrationAndSmearingTool2016->setProperty("doSagittaMCDistortion",false));
     ANA_CHECK(m_muonCalibrationAndSmearingTool2016->setProperty("Release","Recs2017_08_02"));
+    ANA_CHECK(m_muonCalibrationAndSmearingTool2016->setProperty("SagittaCorrPhaseSpace",true));
     // Initialize the muon calibration and smearing tool
     m_muonCalibrationAndSmearingTool2016->msg().setLevel( MSG::INFO );
     ANA_CHECK(m_muonCalibrationAndSmearingTool2016->initialize());
@@ -639,10 +641,11 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     // For 2017 dataset
     ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("Year","Data17"));
     ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("StatComb",false));
-    ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("SagittaRelease","sagittaBiasDataAll_25_07_17"));
-    ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("SagittaCorr",false));
+    ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("SagittaRelease","sagittaBiasDataAll_30_07_18"));
+    ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("SagittaCorr",true));
     ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("doSagittaMCDistortion",false));
     ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("Release","Recs2017_08_02"));
+    ANA_CHECK(m_muonCalibrationAndSmearingTool2017->setProperty("SagittaCorrPhaseSpace",true));
     // Initialize the muon calibration and smearing tool
     m_muonCalibrationAndSmearingTool2017->msg().setLevel( MSG::INFO );
     ANA_CHECK(m_muonCalibrationAndSmearingTool2017->initialize());
@@ -671,24 +674,25 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     // Muon trigger efficiency scale factors tool
     m_muonTriggerSFTool = new CP::MuonTriggerScaleFactors( "MuonTriggerSFTool" );
     ANA_CHECK(m_muonTriggerSFTool->setProperty("MuonQuality", "Medium")); // if you are selecting loose offline muons
+    ANA_CHECK(m_muonTriggerSFTool->setProperty("CalibrationRelease", "180905_TriggerUpdate"));
     ANA_CHECK(m_muonTriggerSFTool->initialize() );
 
     // Muon reconstruction efficiency scale factors tool
     m_muonEfficiencySFTool = new CP::MuonEfficiencyScaleFactors( "MuonEfficiencySFTool" );
     ANA_CHECK(m_muonEfficiencySFTool->setProperty("WorkingPoint", "Medium") );
-    ANA_CHECK(m_muonEfficiencySFTool->setProperty("CalibrationRelease", "180312_TriggerUpdate"));
+    ANA_CHECK(m_muonEfficiencySFTool->setProperty("CalibrationRelease", "180808_SummerUpdate"));
     ANA_CHECK(m_muonEfficiencySFTool->initialize() );
 
     // Muon isolation scale factor tool
     m_muonIsolationSFTool = new CP::MuonEfficiencyScaleFactors( "MuonIsolationSFTool" );
     ANA_CHECK(m_muonIsolationSFTool->setProperty("WorkingPoint", "FixedCutTightIso") );
-    ANA_CHECK(m_muonIsolationSFTool->setProperty("CalibrationRelease", "180312_TriggerUpdate"));
+    ANA_CHECK(m_muonIsolationSFTool->setProperty("CalibrationRelease", "180808_SummerUpdate"));
     ANA_CHECK(m_muonIsolationSFTool->initialize() );
 
     // Muon track-to-vertex-association (TTVA) scale factors tool
     m_muonTTVAEfficiencySFTool = new CP::MuonEfficiencyScaleFactors( "MuonTTVAEfficiencySFTool" );
     ANA_CHECK(m_muonTTVAEfficiencySFTool->setProperty("WorkingPoint", "TTVA") );
-    ANA_CHECK(m_muonTTVAEfficiencySFTool->setProperty("CalibrationRelease", "180312_TriggerUpdate"));
+    ANA_CHECK(m_muonTTVAEfficiencySFTool->setProperty("CalibrationRelease", "180808_SummerUpdate"));
     ANA_CHECK(m_muonTTVAEfficiencySFTool->initialize() );
 
 
@@ -731,7 +735,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     // Initialise Electron Efficiency Tool
     m_elecEfficiencySFTool_reco = new AsgElectronEfficiencyCorrectionTool("AsgElectronEfficiencyCorrectionTool_reco");
     std::vector< std::string > corrFileNameList_reco;
-    corrFileNameList_reco.push_back("ElectronEfficiencyCorrection/2015_2017/rel21.2/Moriond_February2018_v1/offline/efficiencySF.offline.RecoTrk.root");
+    corrFileNameList_reco.push_back("ElectronEfficiencyCorrection/2015_2017/rel21.2/Moriond_February2018_v2/offline/efficiencySF.offline.RecoTrk.root");
     ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("CorrectionFileNameList", corrFileNameList_reco) );
     ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("ForceDataType", 1) );
     ANA_CHECK(m_elecEfficiencySFTool_reco->setProperty("CorrelationModel", "TOTAL") );
