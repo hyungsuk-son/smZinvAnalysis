@@ -416,7 +416,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = false;
+  m_doSys = true;
 
   // Scale factor
   m_recoSF = true;
@@ -13152,8 +13152,8 @@ float smZInvAnalysis::GetMetTrigSF(const float& met, std::string jetCut, std::st
 
   std::string metTrigger = "";
 
-  // Apply MET trigger SF in MET (100GeV ~ 300GeV)
-  if (met > 100000. && met < 300000.) {
+  // Apply MET trigger SF in MET (130GeV ~ 200GeV)
+  if (met > 130000. && met < 200000.) {
     // Inclusive
     if (jetCut == "inclusive") {
 
@@ -13161,37 +13161,37 @@ float smZInvAnalysis::GetMetTrigSF(const float& met, std::string jetCut, std::st
         metTrigger = "HLT_xe70_mht";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,3.87707e+01);
-          m_SF->FixParameter(1,6.33551e+01);
+          m_SF->FixParameter(0,3.87840e+01);
+          m_SF->FixParameter(1,5.44155e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,5.02170e+00);
-          m_SF->FixParameter(1,8.87855e+01);
+          m_SF->FixParameter(0,-7.77707e+00);
+          m_SF->FixParameter(1,8.46828e+01);
         }
       } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
         metTrigger = "HLT_xe90_mht_L1XE50";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,2.92830e+01);
-          m_SF->FixParameter(1,7.21986e+01);
+          m_SF->FixParameter(0,4.64496e+01);
+          m_SF->FixParameter(1,4.76320e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,1.69968e+01);
-          m_SF->FixParameter(1,8.27045e+01);
+          m_SF->FixParameter(0,7.29544e+01);
+          m_SF->FixParameter(1,2.63631e+01);
         }
       } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
         metTrigger = "HLT_xe110_mht_L1XE50";
         // For Wmunu and Znunu
         if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,5.35033e+01);
-          m_SF->FixParameter(1,6.14483e+01);
+          m_SF->FixParameter(0,7.11684e+01);
+          m_SF->FixParameter(1,3.86691e+01);
         }
         // For Zmumu
         if (channel == "zmumu") {
-          m_SF->FixParameter(0,6.40382e+01);
-          m_SF->FixParameter(1,5.67791e+01);
+          m_SF->FixParameter(0,8.01843e+01);
+          m_SF->FixParameter(1,3.27954e+01);
         }
       }
 
