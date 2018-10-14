@@ -204,6 +204,8 @@ public:
 
   // Cut values for SM study
   float sm_metCut; //!
+  bool sm_doPhoton_MET; //!
+  bool sm_doTau_MET; //!
   float sm_ORJETdeltaR; //!
   // Jet pT
   float sm_goodJetPtCut; //!

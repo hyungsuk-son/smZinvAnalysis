@@ -416,7 +416,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = true;
+  m_doSys = false;
 
   // Scale factor
   m_recoSF = true;
@@ -471,6 +471,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Common cut value
   // MET
   sm_metCut = 130000.;
+  sm_doPhoton_MET = true;
+  sm_doTau_MET = true;
   sm_ORJETdeltaR = 0.4;
   // Jet pT
   sm_goodJetPtCut = 25000.;
@@ -6875,52 +6877,52 @@ EL::StatusCode smZInvAnalysis :: execute ()
         m_metMap);                                  //and this association map
 
 
-    /*
-    // Photon
-    //-----------------
-    /// Creat New Hard Object Containers
-    // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
-    ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
+    if (sm_doPhoton_MET) {
+      // Photon
+      //-----------------
+      /// Creat New Hard Object Containers
+      // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
+      ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
 
-    // iterate over our shallow copy
-    for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
-    // For MET rebuilding
-    m_MetPhotons.push_back( photon );
-    } // end for loop over shallow copied photons
+      // iterate over our shallow copy
+      for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
+        // For MET rebuilding
+        m_MetPhotons.push_back( photon );
+      } // end for loop over shallow copied photons
 
-    // For real MET
-    m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
-    xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
-    m_met,                                    //filling this met container
-    m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
-    m_metMap);                                //and this association map
-    */
+      // For real MET
+      m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
+          xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
+          m_met,                                    //filling this met container
+          m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
+          m_metMap);                                //and this association map
+    }
 
 
     // Only implement at EXOT5 derivation
     // METRebuilder will use "trackLinks" aux data in Tau container
     // However STDM4 derivation does not contain a aux data "trackLinks" in Tau container
     // So one cannot build the real MET using Tau objects
-    /*
-    // TAUS
-    //-----------------
-    /// Creat New Hard Object Containers
-    // [For MET building] filter the TauJet container m_taus, placing selected taus into m_MetTaus
-    ConstDataVector<xAOD::TauJetContainer> m_MetTaus(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::TauJet>
+    if ( sm_doTau_MET && m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
+      // TAUS
+      //-----------------
+      /// Creat New Hard Object Containers
+      // [For MET building] filter the TauJet container m_taus, placing selected taus into m_MetTaus
+      ConstDataVector<xAOD::TauJetContainer> m_MetTaus(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::TauJet>
 
-    // iterate over our shallow copy
-    for (const auto& taujet : *m_goodTau) { // C++11 shortcut
-    // For MET rebuilding
-    m_MetTaus.push_back( taujet );
-    } // end for loop over shallow copied taus
+      // iterate over our shallow copy
+      for (const auto& taujet : *m_goodTau) { // C++11 shortcut
+        // For MET rebuilding
+        m_MetTaus.push_back( taujet );
+      } // end for loop over shallow copied taus
 
-    // For real MET
-    m_metMaker->rebuildMET("RefTau",           //name of metTaus in metContainer
-    xAOD::Type::Tau,                       //telling the rebuilder that this is tau met
-    m_met,                                 //filling this met container
-    m_MetTaus.asDataVector(),              //using these metTaus that accepted our cuts
-    m_metMap);                             //and this association map
-    */
+      // For real MET
+      m_metMaker->rebuildMET("RefTau",           //name of metTaus in metContainer
+          xAOD::Type::Tau,                       //telling the rebuilder that this is tau met
+          m_met,                                 //filling this met container
+          m_MetTaus.asDataVector(),              //using these metTaus that accepted our cuts
+          m_metMap);                             //and this association map
+    }
 
     // Muon
     //-----------------
@@ -10365,35 +10367,34 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
       metMap);                                  //and this association map
 
 
-  /*
-  // Photon
-  //-----------------
-  /// Creat New Hard Object Containers
-  // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
-  ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
+  if (sm_doPhoton_MET) {
+    // Photon
+    //-----------------
+    /// Creat New Hard Object Containers
+    // [For MET building] filter the Photon container m_photons, placing selected photons into m_MetPhotons
+    ConstDataVector<xAOD::PhotonContainer> m_MetPhotons(SG::VIEW_ELEMENTS); // This is really a DataVector<xAOD::Photon>
 
-  // iterate over our shallow copy
-  for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
-  // For MET rebuilding
-  m_MetPhotons.push_back( photon );
-  } // end for loop over shallow copied photons
+    // iterate over our shallow copy
+    for (const auto& photon : *m_goodPhoton) { // C++11 shortcut
+      // For MET rebuilding
+      m_MetPhotons.push_back( photon );
+    } // end for loop over shallow copied photons
 
-  // For real MET
-  m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
-  xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
-  m_met,                                    //filling this met container
-  m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
-  metMap);                                //and this association map
+    // For real MET
+    m_metMaker->rebuildMET("RefPhoton",           //name of metPhotons in metContainer
+        xAOD::Type::Photon,                       //telling the rebuilder that this is photon met
+        m_met,                                    //filling this met container
+        m_MetPhotons.asDataVector(),              //using these metPhotons that accepted our cuts
+        metMap);                                //and this association map
+  }
 
-*/
 
 
-  /*
   // Only implement at EXOT5 derivation
   // METRebuilder will use "trackLinks" aux data in Tau container
   // However STDM4 derivation does not contain a aux data "trackLinks" in Tau container
   // So one cannot build the real MET using Tau objects
-  if ( m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
+  if ( sm_doTau_MET && m_dataType.find("EXOT")!=std::string::npos ) { // EXOT Derivation
 
     // TAUS
     //-----------------
@@ -10415,7 +10416,6 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
         metMap);                             //and this association map
 
   } // Only using EXOT5 derivation
-  */
 
 
   // Muon
