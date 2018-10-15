@@ -471,8 +471,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Common cut value
   // MET
   sm_metCut = 130000.;
-  sm_doPhoton_MET = true;
-  sm_doTau_MET = true;
+  sm_doPhoton_MET = false; // Add photon objects into real MET definition
+  sm_doTau_MET = false; // Add tau objects into real MET definition
   sm_ORJETdeltaR = 0.4;
   // Jet pT
   sm_goodJetPtCut = 25000.;
@@ -6371,6 +6371,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
       // decorate selected objects for overlap removal tool
       if (!badJet) {
         jets->auxdecor<char>("selected") = true;
+      } else {
+        jets->auxdata<bool>("badjet") = true; // Add variable to the container
       }
 
       // Store all calibrated Jets for MET building
@@ -6436,10 +6438,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
     ////////////////////////
     // Good Jet selection //
     ////////////////////////
+    // all jets (calibrated) in shallow copy loop
     for (const auto& jets : *m_allJet) { // C++11 shortcut
 
-      // selected jets in shallow copy loop
-      if ( !(bool)jets->auxdecor<char>("selected") ) continue;
+      // Good Jet selection
+      if ( jets->auxdata<bool>("badjet")  ) continue;
 
       // pass fJVT (pT < 60GeV , |eta| > 2.5) : pT < 60GeV is defined in the initial m_fJvtTool
       if ( std::fabs(jets->eta()) > 2.5 && !(bool)jets->auxdata<char>("passFJVT") ) continue;
@@ -12925,6 +12928,7 @@ bool smZInvAnalysis::passExclusiveRecoJet(const xAOD::JetContainer* recoJet, con
   float dPhijetmet = deltaPhi(monojet_phi,metPhi);
   if ( dPhijetmet < 0.4 ) pass_dPhijetmet = false;
 
+  // Multijet Suppression
   if ( !pass_dPhijetmet ) return false;
 
   // Pass exclusive jet phasespace
@@ -12955,17 +12959,25 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
     float reco_jet_pt = jet->pt();
     float reco_jet_phi = jet->phi();
 
+    /*
+    // Remove jet1, jet2, jet3 and jet4 if Phi(Jet_i,MET) < 0.4
     // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
     if (recoJet->at(0) == jet || recoJet->at(1) == jet || recoJet->at(2) == jet || recoJet->at(3) == jet){ // apply cut only to leading jet1, jet2, jet3 and jet4
       float dPhijetmet = deltaPhi(reco_jet_phi,metPhi);
-      if ( reco_jet_pt > 30000. && dPhijetmet < 0.4 ) {
+      if ( dPhijetmet < 0.4 ) {
         pass_dPhijetmet = false;
         //std::cout << "fake jet : " << "jet pT = " << reco_jet_pt * 0.001 << " GeV " << " dPhi(jet,MET) = " << dPhijetmet << std::endl;
       }
     }
+    */
 
+    // Remove any jet if Phi(Jet_i,MET) < 0.4
+    // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
+    float dPhijetmet = deltaPhi(reco_jet_phi,metPhi);
+    if ( dPhijetmet < 0.4 ) pass_dPhijetmet = false;
   }
 
+  // Multijet suppression
   if ( !pass_dPhijetmet ) return false;
 
   // Pass Monojet phasespace

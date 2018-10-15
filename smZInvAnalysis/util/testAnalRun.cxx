@@ -226,7 +226,7 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14316951._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
 
   // Skim_v3 (EXOT5)
-  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
   //SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
   //SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("user.hson.14408279._000007.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu
@@ -235,7 +235,7 @@ int main( int argc, char* argv[] ) {
   // For MET trigger SF test
   //SH::ScanDir().filePattern("user.hson.14408271._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu (364106.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV140_280_CVetoBVeto)
   //SH::ScanDir().filePattern("user.hson.14408486._000054.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu (364162.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV140_280_CVetoBVeto)
-  //SH::ScanDir().filePattern("user.hson.14408366._000091.mini-xAOD.root").scan(sh,inputFilePath); // Znunu (364148.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV140_280_CVetoBVeto)
+  SH::ScanDir().filePattern("user.hson.14408366._000091.mini-xAOD.root").scan(sh,inputFilePath); // Znunu (364148.Sherpa_221_NNPDF30NNLO_Znunu_MAXHTPTV140_280_CVetoBVeto)
 
   // Skim (STDM4)
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim");
@@ -246,8 +246,8 @@ int main( int argc, char* argv[] ) {
   //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data15/Data15_Period_HtoJ");
   //SH::ScanDir().filePattern("user.hson.14248220._000011.mini-xAOD.root").scan(sh,inputFilePath); // data15_13TeV.00284484
   // data16
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL");
-  SH::ScanDir().filePattern("user.hson.14307750._000032.mini-xAOD.root").scan(sh,inputFilePath); // data16_13TeV.00311481
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/Data/skim/data16/Data16_Period_ItoL");
+  //SH::ScanDir().filePattern("user.hson.14307750._000032.mini-xAOD.root").scan(sh,inputFilePath); // data16_13TeV.00311481
 
 
   // MadGraph + Pythia8 Derivation (STDM4)
