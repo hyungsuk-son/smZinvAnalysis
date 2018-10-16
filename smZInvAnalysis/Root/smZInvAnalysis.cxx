@@ -1322,7 +1322,24 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               }
             }
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
-            addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 100, 0., 1000.);
+            if (sm_monojet[k] == "exclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dPhiJetMet"+m_sysName, 20, 0, 3.2);
+            if (sm_monojet[k] == "inclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dPhiMinJetMet"+m_sysName, 20, 0, 3.2);
+            if (sm_monojet[k] == "exclusive_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 150, 0., 1500.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_phi"+m_sysName, 20, -3.2, 3.2);
+            }
+            if (sm_monojet[k] == "inclusive_") {
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet1_pt"+m_sysName, 150, 0., 1500.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet2_pt"+m_sysName, 150, 0., 1500.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet3_pt"+m_sysName, 150, 0., 1500.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet1_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet2_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet3_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet1_phi"+m_sysName, 20, -3.2, 3.2);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet2_phi"+m_sysName, 20, -3.2, 3.2);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet3_phi"+m_sysName, 20, -3.2, 3.2);
+            }
             if (sm_channel[i] == "zee_" || sm_channel[i] == "wenu_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n_OS"+m_sysName, 40, 0., 40.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt_OS"+m_sysName, 100, 0., 1000.);
@@ -1385,10 +1402,19 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"mll"+m_sysName, 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_pt"+m_sysName, 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_pt"+m_sysName, 140, 0., 1400.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep3_pt"+m_sysName, 140, 0., 1400.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep3_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_phi"+m_sysName, 20, -3.2, 3.2);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_phi"+m_sysName, 20, -3.2, 3.2);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep3_phi"+m_sysName, 20, -3.2, 3.2);
             }
             if (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"mT"+m_sysName, 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep_pt"+m_sysName, 140, 0., 1400.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep_eta"+m_sysName, 25, -5., 5.);
+              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep_phi"+m_sysName, 20, -3.2, 3.2);
             }
           }
         }
@@ -10660,8 +10686,13 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Znunu);
-      // Leading jet pT distribution
+      // Leading jet distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Znunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_eta"+sysName]->Fill(m_goodJet->at(0)->eta(), mcEventWeight_Znunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_phi"+sysName]->Fill(m_goodJet->at(0)->phi(), mcEventWeight_Znunu);
+      // dPhi(jet,MET)
+      float dPhijetmet = deltaPhi(m_goodJet->at(0)->phi(),MET_phi);
+      hMap1D["SM_study_"+channel+hist_prefix+"dPhiJetMet"+sysName]->Fill(dPhijetmet, mcEventWeight_Znunu);
     }
   }
 
@@ -10674,9 +10705,32 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Znunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Znunu);
-      // Leading jet pT distribution
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
-        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Znunu);
+        if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
+          // 1st Leading jet distribution
+          if (m_goodJet->at(0) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Znunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Znunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Znunu);
+          }
+          // 2nd leading jet distribution
+          if (m_goodJet->size() > 1 && m_goodJet->at(1) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Znunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Znunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Znunu);
+          }
+          // 3rd leading jet distribution
+          if (m_goodJet->size() > 2 && m_goodJet->at(2) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Znunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Znunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Znunu);
+          }
+          // dPhi(jet,MET)
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Znunu);
+        }
       }
     }
   }
@@ -11131,14 +11185,23 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Zmumu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Zmumu);
-      // Leading jet pT distribution
+      // Leading jet distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_eta"+sysName]->Fill(m_goodJet->at(0)->eta(), mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_phi"+sysName]->Fill(m_goodJet->at(0)->phi(), mcEventWeight_Zmumu);
       // Leading lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep1_pt"+sysName]->Fill(lepton1.Perp() * 0.001, mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_eta"+sysName]->Fill(lepton1.Eta(), mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_phi"+sysName]->Fill(lepton1.Phi(), mcEventWeight_Zmumu);
       // 2nd leading lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep2_pt"+sysName]->Fill(lepton2.Perp() * 0.001, mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_eta"+sysName]->Fill(lepton2.Eta(), mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_phi"+sysName]->Fill(lepton2.Phi(), mcEventWeight_Zmumu);
       // mll distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mll"+sysName]->Fill(mll * 0.001, mcEventWeight_Zmumu);
+      // dPhi(jet,MET)
+      float dPhijetmet = deltaPhi(m_goodJet->at(0)->phi(),MET_phi);
+      hMap1D["SM_study_"+channel+hist_prefix+"dPhiJetMet"+sysName]->Fill(dPhijetmet, mcEventWeight_Zmumu);
     }
   }
 
@@ -11151,14 +11214,41 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Zmumu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Zmumu);
-      // Leading jet pT distribution
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
-        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zmumu);
+        if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
+          // 1st Leading jet distribution
+          if (m_goodJet->at(0) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zmumu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zmumu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zmumu);
+          }
+          // 2nd leading jet distribution
+          if (m_goodJet->size() > 1 && m_goodJet->at(1) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zmumu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zmumu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zmumu);
+          }
+          // 3rd leading jet distribution
+          if (m_goodJet->size() > 2 && m_goodJet->at(2) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zmumu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zmumu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zmumu);
+          }
+          // dPhi(jet,MET)
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Zmumu);
+        }
       }
-      // Leading lepton pT distribution
+      // Leading lepton distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep1_pt"+sysName]->Fill(lepton1.Perp() * 0.001, mcEventWeight_Zmumu);
-      // 2nd leading lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_eta"+sysName]->Fill(lepton1.Eta(), mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_phi"+sysName]->Fill(lepton1.Phi(), mcEventWeight_Zmumu);
+      // 2nd leading lepton distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep2_pt"+sysName]->Fill(lepton2.Perp() * 0.001, mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_eta"+sysName]->Fill(lepton2.Eta(), mcEventWeight_Zmumu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_phi"+sysName]->Fill(lepton2.Phi(), mcEventWeight_Zmumu);
       // mll distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mll"+sysName]->Fill(mll * 0.001, mcEventWeight_Zmumu);
     }
@@ -11431,14 +11521,23 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Zee); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Zee);
-      // Leading jet pT distribution
+      // Leading jet distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Zee);
-      // Leading lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_eta"+sysName]->Fill(m_goodJet->at(0)->eta(), mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_phi"+sysName]->Fill(m_goodJet->at(0)->phi(), mcEventWeight_Zee);
+      // Leading lepton distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep1_pt"+sysName]->Fill(lepton1.Perp() * 0.001, mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_eta"+sysName]->Fill(lepton1.Eta(), mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_phi"+sysName]->Fill(lepton1.Phi(), mcEventWeight_Zee);
       // 2nd leading lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep2_pt"+sysName]->Fill(lepton2.Perp() * 0.001, mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_eta"+sysName]->Fill(lepton2.Eta(), mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_phi"+sysName]->Fill(lepton2.Phi(), mcEventWeight_Zee);
       // mll distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mll"+sysName]->Fill(mll * 0.001, mcEventWeight_Zee);
+      // dPhi(jet,MET)
+      float dPhijetmet = deltaPhi(m_goodJet->at(0)->phi(),MET_phi);
+      hMap1D["SM_study_"+channel+hist_prefix+"dPhiJetMet"+sysName]->Fill(dPhijetmet, mcEventWeight_Zee);
     }
   }
 
@@ -11451,14 +11550,42 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Zee); // For publication binngin
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Zee);
-      // Leading jet pT distribution
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
-        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zee);
+        if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
+          // 1st Leading jet distribution
+          if (m_goodJet->at(0) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zee);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zee);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zee);
+          }
+          // 2nd leading jet distribution
+          if (m_goodJet->size() > 1 && m_goodJet->at(1) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zee);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zee);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zee);
+          }
+          // 3rd leading jet distribution
+          if (m_goodJet->size() > 2 && m_goodJet->at(2) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Zee);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zee);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zee);
+          }
+          // dPhi(jet,MET)
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Zee);
+        }
       }
+
       // Leading lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep1_pt"+sysName]->Fill(lepton1.Perp() * 0.001, mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_eta"+sysName]->Fill(lepton1.Eta(), mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep1_phi"+sysName]->Fill(lepton1.Phi(), mcEventWeight_Zee);
       // 2nd leading lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep2_pt"+sysName]->Fill(lepton2.Perp() * 0.001, mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_eta"+sysName]->Fill(lepton2.Eta(), mcEventWeight_Zee);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep2_phi"+sysName]->Fill(lepton2.Phi(), mcEventWeight_Zee);
       // mll distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mll"+sysName]->Fill(mll * 0.001, mcEventWeight_Zee);
     }
@@ -11741,6 +11868,7 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   // Define W Selection
   //----------------------
   float lepton_pt = m_goodMuon->at(0)->pt();
+  float lepton_eta = m_goodMuon->at(0)->eta();
   float lepton_phi = m_goodMuon->at(0)->phi();
 
   // Transverse Mass
@@ -11969,12 +12097,19 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
-      // Leading jet pT distribution
+      // Leading jet distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Wmunu);
-      // Lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_eta"+sysName]->Fill(m_goodJet->at(0)->eta(), mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_phi"+sysName]->Fill(m_goodJet->at(0)->phi(), mcEventWeight_Wmunu);
+      // Lepton distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_eta"+sysName]->Fill(lepton_eta, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_phi"+sysName]->Fill(lepton_phi, mcEventWeight_Wmunu);
       // mT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wmunu);
+      // dPhi(jet,MET)
+      float dPhijetmet = deltaPhi(m_goodJet->at(0)->phi(),MET_phi);
+      hMap1D["SM_study_"+channel+hist_prefix+"dPhiJetMet"+sysName]->Fill(dPhijetmet, mcEventWeight_Wmunu);
     }
   }
 
@@ -11987,12 +12122,38 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
-      // Leading jet pT distribution
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
-        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wmunu);
+        if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
+          // 1st Leading jet distribution
+          if (m_goodJet->at(0) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wmunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wmunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wmunu);
+          }
+          // 2nd leading jet distribution
+          if (m_goodJet->size() > 1 && m_goodJet->at(1) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wmunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wmunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wmunu);
+          }
+          // 3rd leading jet distribution
+          if (m_goodJet->size() > 2 && m_goodJet->at(2) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wmunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wmunu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wmunu);
+          }
+          // dPhi(jet,MET)
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Wmunu);
+        }
       }
+
       // Lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_eta"+sysName]->Fill(lepton_eta, mcEventWeight_Wmunu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_phi"+sysName]->Fill(lepton_phi, mcEventWeight_Wmunu);
       // mT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wmunu);
     }
@@ -12230,6 +12391,7 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   // Define W Selection
   //----------------------
   float lepton_pt = goodElectron->at(0)->pt();
+  float lepton_eta = goodElectron->at(0)->eta();
   float lepton_phi = goodElectron->at(0)->phi();
 
   // Transverse Mass
@@ -12352,10 +12514,17 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
       // Leading jet pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(m_goodJet->at(0)->pt() * 0.001, mcEventWeight_Wenu);
-      // Lepton pT distribution
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_eta"+sysName]->Fill(m_goodJet->at(0)->eta(), mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"jet_phi"+sysName]->Fill(m_goodJet->at(0)->phi(), mcEventWeight_Wenu);
+      // Lepton distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_eta"+sysName]->Fill(lepton_eta, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_phi"+sysName]->Fill(lepton_phi, mcEventWeight_Wenu);
       // mT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wenu);
+      // dPhi(jet,MET)
+      float dPhijetmet = deltaPhi(m_goodJet->at(0)->phi(),MET_phi);
+      hMap1D["SM_study_"+channel+hist_prefix+"dPhiJetMet"+sysName]->Fill(dPhijetmet, mcEventWeight_Wenu);
     }
   }
 
@@ -12368,12 +12537,38 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
-      // Leading jet pT distribution
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
-        hMap1D["SM_study_"+channel+hist_prefix+"jet_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wenu);
+        if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
+          // 1st Leading jet distribution
+          if (m_goodJet->at(0) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wenu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wenu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet1_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wenu);
+          }
+          // 2nd leading jet distribution
+          if (m_goodJet->size() > 1 && m_goodJet->at(1) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wenu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wenu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet2_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wenu);
+          }
+          // 3rd leading jet distribution
+          if (m_goodJet->size() > 2 && m_goodJet->at(2) == jet) {
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_pt"+sysName]->Fill(jet->pt() * 0.001, mcEventWeight_Wenu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wenu);
+            hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wenu);
+          }
+          // dPhi(jet,MET)
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Wenu);
+        }
       }
+
       // Lepton pT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"lep_pt"+sysName]->Fill(lepton_pt * 0.001, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_eta"+sysName]->Fill(lepton_eta, mcEventWeight_Wenu);
+      hMap1D["SM_study_"+channel+hist_prefix+"lep_phi"+sysName]->Fill(lepton_phi, mcEventWeight_Wenu);
       // mT distribution
       hMap1D["SM_study_"+channel+hist_prefix+"mT"+sysName]->Fill(mT * 0.001, mcEventWeight_Wenu);
     }
