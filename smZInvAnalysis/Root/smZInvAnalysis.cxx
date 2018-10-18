@@ -4774,7 +4774,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
     // Nominal jet
     for (const auto &jet : *m_truthNominalJet) {
 
-      if (jet->pt() < sm_goodJetPtCut) continue;
+      if (jet->pt() < sm_goodJetPtCut || std::abs(jet->rapidity()) > 4.4) continue;
 
       hMap1D["SM_study_nominal_good_jet_pt"]->Fill(jet->pt() * 0.001, m_mcEventWeight);
       // Store in m_goodTruthNominalJet
@@ -5096,7 +5096,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       // WZ jet
       for (const auto &jet : *m_truthWZJet) {
 
-        if (jet->pt() < sm_goodJetPtCut) continue;
+        if (jet->pt() < sm_goodJetPtCut || std::abs(jet->rapidity()) > 4.4) continue;
 
         hMap1D["SM_study_wz_good_jet_pt"]->Fill(jet->pt() * 0.001, m_mcEventWeight);
 
@@ -5114,7 +5114,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         hMap1D["SM_study_emulated_bare_jet_pt"]->Fill(jet->pt() * 0.001, m_mcEventWeight);
 
-        if (jet->pt() < sm_goodJetPtCut) continue;
+        if (jet->pt() < sm_goodJetPtCut || std::abs(jet->rapidity()) > 4.4) continue;
 
         hMap1D["SM_study_emulated_bare_good_jet_pt"]->Fill(jet->pt() * 0.001, m_mcEventWeight);
 
@@ -5133,7 +5133,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         hMap1D["SM_study_emulated_born_jet_pt"]->Fill(jet->pt() * 0.001, m_mcEventWeight);
 
-        if (jet->pt() < sm_goodJetPtCut) continue;
+        if (jet->pt() < sm_goodJetPtCut || std::abs(jet->rapidity()) > 4.4) continue;
 
         hMap1D["SM_study_emulated_born_good_jet_pt"]->Fill(jet->pt() * 0.001, m_mcEventWeight);
 
@@ -12689,6 +12689,9 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
   // pT cut
   if ( lepton1.Perp() < lep1Pt || lepton2.Perp() < lep2Pt ) return;
   // Eta cut
+  if ( std::fabs(lepton1.Eta()) > lepEta || std::fabs(lepton2.Eta()) > lepEta ) return;
+  /*
+  /////// Apply crack
   // Electron
   if (channel == "zee") {
     // Fiducial
@@ -12704,6 +12707,7 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
   if (channel == "zmumu") {
     if ( std::fabs(lepton1.Eta()) > lepEta || std::fabs(lepton2.Eta()) > lepEta ) return;
   }
+  */
 
 
   //////////////////////////////
