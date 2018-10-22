@@ -1402,13 +1402,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"mll"+m_sysName, 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_pt"+m_sysName, 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_pt"+m_sysName, 140, 0., 1400.);
-              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep3_pt"+m_sysName, 140, 0., 1400.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_eta"+m_sysName, 25, -5., 5.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_eta"+m_sysName, 25, -5., 5.);
-              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep3_eta"+m_sysName, 25, -5., 5.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep1_phi"+m_sysName, 20, -3.2, 3.2);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep2_phi"+m_sysName, 20, -3.2, 3.2);
-              addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep3_phi"+m_sysName, 20, -3.2, 3.2);
             }
             if (sm_channel[i] == "wmunu_" || sm_channel[i] == "wenu_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"mT"+m_sysName, 150, 0., 300.);
@@ -10517,7 +10514,7 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   if ( m_goodElectron->size() > 0 ) return;
   // Tau veto "ONLY" available in EXOT5 derivation
   // because STDM4 derivation does not contain a aux data "trackLinks" in Tau container, I could not use tau selection tool
-  //if ( m_goodTau->size() > 0 ) return;
+  if ( m_goodTau->size() > 0 ) return;
 
 
 
