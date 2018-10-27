@@ -486,6 +486,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Inclusive
   sm_inclusiveJetPtCut = 110000.;
   sm_inclusiveJetEtaCut = 2.4;
+  // dPhi(Met,Jet) cut
+  sm_dPhiJetMetCut = 0.5;
   // SM study lepton cuts
   sm_lep1PtCut = 50000.;
   sm_lep2PtCut = 7000.;
@@ -1396,6 +1398,23 @@ EL::StatusCode smZInvAnalysis :: initialize ()
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_LeadjetPt150"+m_sysName, 137, 130., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_LeadjetPt160"+m_sysName, 137, 130., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"met_LeadjetPt170"+m_sysName, 137, 130., 1500.);
+              }
+              // Multijet Background Estimation (Multijet enriched control region)
+              if (sm_channel[i] == "znunu_" && sm_monojet[k] == "exclusive_") { // Exclusive
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin1"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin2"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin3"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin4"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin5"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin6"+m_sysName, 300, 0., 1500.);
+              }
+              if (sm_channel[i] == "znunu_" && sm_monojet[k] == "inclusive_") { // Exclusive
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin1"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin2"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin3"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin4"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin5"+m_sysName, 300, 0., 1500.);
+                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin6"+m_sysName, 300, 0., 1500.);
               }
             }
             if (sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_") {
@@ -10514,7 +10533,7 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   if ( m_goodElectron->size() > 0 ) return;
   // Tau veto "ONLY" available in EXOT5 derivation
   // because STDM4 derivation does not contain a aux data "trackLinks" in Tau container, I could not use tau selection tool
-  if ( m_goodTau->size() > 0 ) return;
+  //if ( m_goodTau->size() > 0 ) return;
 
 
 
@@ -10704,6 +10723,10 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Znunu);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
+        // dPhi(jet,MET)
+        float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+        dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+        hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Znunu);
         if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
           // 1st Leading jet distribution
           if (m_goodJet->at(0) == jet) {
@@ -10723,10 +10746,6 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Znunu);
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Znunu);
           }
-          // dPhi(jet,MET)
-          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
-          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
-          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Znunu);
         }
       }
     }
@@ -10757,6 +10776,48 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   }
 
 
+  // Multijet Background estimation
+  if (sysName=="") { // No systematic
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      if (passExclusiveMultijetCR(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+         if ( MET > 130000. && MET < 150000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin1"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+         if ( MET > 150000. && MET < 175000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin2"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+         if ( MET > 175000. && MET < 200000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin3"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+         if ( MET > 200000. && MET < 225000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin4"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+         if ( MET > 225000. && MET < 250000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin5"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+         if ( MET > 250000. && MET < 300000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin6"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+      }
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      if (passInclusiveMultijetCR(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+        float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
+        //int jet_num = 0;
+        for (const auto &jet : *m_goodJet) {
+          // dPhi(jet,MET)
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+          //std::cout << "jet # = " << jet_num << ", dPhijetmet = " << dPhijetmet << std::endl;
+          //jet_num ++;
+        }
+        //std::cout << "dPhiMinjetmet = " << dPhiMinjetmet << std::endl;
+        int badjet_num = 0;
+        for (const auto &jet : *m_goodJet) {
+          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+          if (dPhiMinjetmet != dPhijetmet) badjet_num++;
+          else break;
+        }
+        //std::cout << "badjet_num = " << badjet_num << std::endl;
+        if ( MET > 130000. && MET < 150000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin1"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+        if ( MET > 150000. && MET < 175000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin2"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+        if ( MET > 175000. && MET < 200000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin3"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+        if ( MET > 200000. && MET < 225000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin4"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+        if ( MET > 225000. && MET < 250000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin5"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+        if ( MET > 250000. && MET < 300000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin6"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+      }
+    }
+  }
 
 
 
@@ -11213,6 +11274,10 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Zmumu);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
+        // dPhi(jet,MET)
+        float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+        dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+        hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Zmumu);
         if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
           // 1st Leading jet distribution
           if (m_goodJet->at(0) == jet) {
@@ -11232,10 +11297,6 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zmumu);
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zmumu);
           }
-          // dPhi(jet,MET)
-          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
-          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
-          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Zmumu);
         }
       }
       // Leading lepton distribution
@@ -11549,6 +11610,10 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Zee);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
+        // dPhi(jet,MET)
+        float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+        dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+        hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Zee);
         if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
           // 1st Leading jet distribution
           if (m_goodJet->at(0) == jet) {
@@ -11568,10 +11633,6 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Zee);
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Zee);
           }
-          // dPhi(jet,MET)
-          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
-          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
-          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Zee);
         }
       }
 
@@ -12121,6 +12182,10 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
+        // dPhi(jet,MET)
+        float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+        dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+        hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Wmunu);
         if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
           // 1st Leading jet distribution
           if (m_goodJet->at(0) == jet) {
@@ -12140,10 +12205,6 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wmunu);
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wmunu);
           }
-          // dPhi(jet,MET)
-          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
-          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
-          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Wmunu);
         }
       }
 
@@ -12536,6 +12597,10 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
       for (const auto &jet : *m_goodJet) {
+        // dPhi(jet,MET)
+        float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+        dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+        hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Wenu);
         if (m_goodJet->at(0) == jet || m_goodJet->at(1) == jet || m_goodJet->at(2) == jet){
           // 1st Leading jet distribution
           if (m_goodJet->at(0) == jet) {
@@ -12555,10 +12620,6 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_eta"+sysName]->Fill(jet->eta(), mcEventWeight_Wenu);
             hMap1D["SM_study_"+channel+hist_prefix+"jet3_phi"+sysName]->Fill(jet->phi(), mcEventWeight_Wenu);
           }
-          // dPhi(jet,MET)
-          float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
-          dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
-          hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMet"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Wenu);
         }
       }
 
@@ -13122,7 +13183,7 @@ bool smZInvAnalysis::passExclusiveRecoJet(const xAOD::JetContainer* recoJet, con
   bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
   // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
   float dPhijetmet = deltaPhi(monojet_phi,metPhi);
-  if ( dPhijetmet < 0.4 ) pass_dPhijetmet = false;
+  if ( dPhijetmet < sm_dPhiJetMetCut ) pass_dPhijetmet = false;
 
   // Multijet Suppression
   if ( !pass_dPhijetmet ) return false;
@@ -13170,7 +13231,7 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
     // Remove any jet if Phi(Jet_i,MET) < 0.4
     // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
     float dPhijetmet = deltaPhi(reco_jet_phi,metPhi);
-    if ( dPhijetmet < 0.4 ) pass_dPhijetmet = false;
+    if ( dPhijetmet < sm_dPhiJetMetCut ) pass_dPhijetmet = false;
   }
 
   // Multijet suppression
@@ -13180,6 +13241,76 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
   return true;
 
 }
+
+
+
+bool smZInvAnalysis::passExclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi){
+
+  if (recoJet->size() != 2) return false;
+
+  // Monojet Selection
+  float monojet_pt = recoJet->at(0)->pt();
+  float monojet_eta = recoJet->at(0)->eta();
+  float monojet_phi = recoJet->at(0)->phi();
+  // Second-leading jet
+  float secondjet_phi = recoJet->at(1)->phi();
+
+  // Define Monojet
+  if ( recoJet->at(0)->auxdata<bool>("RecoJet") && !m_jetCleaningTightBad->accept( *recoJet->at(0) ) ) return false; // Apply TightBad only to "Reco" jet
+  if ( monojet_pt < leadJetPt || fabs(monojet_eta) > sm_exclusiveJetEtaCut ) return false;
+
+  // Define dPhi(jet,MET) for leading jet
+  bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
+  // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
+  float dPhijetmet = deltaPhi(secondjet_phi,metPhi);
+  if ( dPhijetmet < sm_dPhiJetMetCut ) pass_dPhijetmet = false;
+
+  // Reverse cut (require second-leading jet pointing towards the MET)
+  if ( pass_dPhijetmet ) return false;
+
+  // Pass Multijet enrich Control region
+  return true;
+
+}
+
+
+
+bool smZInvAnalysis::passInclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi){
+
+   if (recoJet->size() < 1) return false;
+
+  //---------------------------
+  // Define Monojet Properties
+  //---------------------------
+
+  // Monojet Selection
+  float monojet_pt = recoJet->at(0)->pt();
+  float monojet_eta = recoJet->at(0)->eta();
+
+  // Define Monojet
+  if ( recoJet->at(0)->auxdata<bool>("RecoJet") && !m_jetCleaningTightBad->accept( *recoJet->at(0) ) ) return false; // Apply TightBad only to "Reco" jet
+  if ( monojet_pt < leadJetPt || fabs(monojet_eta) > sm_inclusiveJetEtaCut ) return false;
+  
+  // Define dPhi(jet,MET) for leading jet1, jet2, jet3 and jet4
+  bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
+  for (const auto& jet : *recoJet) {
+    float reco_jet_pt = jet->pt();
+    float reco_jet_phi = jet->phi();
+  
+    // Remove any jet if Phi(Jet_i,MET) < 0.5
+    // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
+    float dPhijetmet = deltaPhi(reco_jet_phi,metPhi);
+    if ( dPhijetmet < sm_dPhiJetMetCut ) pass_dPhijetmet = false;
+  }
+
+  // Reverse cut (require at least one jet pointing towards the MET)
+  if ( pass_dPhijetmet ) return false;
+
+  // Pass Multijet enrich Control region
+  return true;
+
+}
+
 
 
 float smZInvAnalysis::GetGoodMuonSF(xAOD::Muon& mu,

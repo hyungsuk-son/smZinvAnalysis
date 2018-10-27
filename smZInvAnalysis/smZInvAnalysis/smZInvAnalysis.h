@@ -219,6 +219,8 @@ public:
   // Inclusive
   float sm_inclusiveJetPtCut; //!
   float sm_inclusiveJetEtaCut; //!
+  // dPhi(Jet,MET) cut
+  float sm_dPhiJetMetCut; //!
   // SM lepton cuts
   float sm_lep1PtCut; //!
   float sm_lep2PtCut; //!
@@ -467,6 +469,8 @@ public:
   bool passInclusiveTruthJet(const xAOD::JetContainer* truthJet, const float& leadJetPt, const float& metPhi);
   bool passExclusiveRecoJet(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
   bool passInclusiveRecoJet(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
+  bool passExclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
+  bool passInclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
 
   float GetGoodMuonSF(xAOD::Muon& mu, const bool recoSF, const bool isoSF, const bool ttvaSF, const bool muonTrigSF);
   double GetTotalMuonSF(xAOD::MuonContainer& muons, bool recoSF, bool isoSF, bool ttvaSF, bool muonTrigSF);
