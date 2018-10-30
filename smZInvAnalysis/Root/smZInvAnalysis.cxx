@@ -475,7 +475,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   sm_doTau_MET = false; // Add tau objects into real MET definition
   sm_ORJETdeltaR = 0.4;
   // Jet pT
-  sm_goodJetPtCut = 25000.;
+  sm_goodJetPtCut = 30000.;
   // No fiducial cut
   sm_noLep1PtCut = 0.;
   sm_noLep2PtCut = 0.;
