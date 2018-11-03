@@ -487,7 +487,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   sm_inclusiveJetPtCut = 110000.;
   sm_inclusiveJetEtaCut = 2.4;
   // dPhi(Met,Jet) cut
-  sm_dPhiJetMetCut = 0.5;
+  sm_dPhiJetMetCut = 0.4;
   // SM study lepton cuts
   sm_lep1PtCut = 50000.;
   sm_lep2PtCut = 7000.;
