@@ -416,7 +416,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = true;
+  m_doSys = false;
 
   // Scale factor
   m_recoSF = true;
@@ -6065,12 +6065,14 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
 
       // LH Electron identification(Tight)
-      if (m_generatorType != "madgraph") {
+      if (m_generatorType != "madgraph") { // Sherpa
         if (m_useArrayCutflow) { // Loose for Exotic analysis
           if (!m_LHToolLoose->accept(electron)) continue;
         } else { // Tight for SM study
           if (!m_LHToolTight->accept(electron)) continue;
         }
+      } else { // MadGraph
+        if (!(bool)electron->auxdata<char>("Tight")) continue;
       }
       //Info("execute()", "  Tight electron pt = %.2f GeV", electron->pt() * 0.001);  
 
