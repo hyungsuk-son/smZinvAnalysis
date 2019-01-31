@@ -834,7 +834,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     orFlags.outputPassValue = outputPassValue; // overlap objects are 'true'
     // specify which objects to configure tools
     orFlags.doElectrons = true;
-    orFlags.doMuons = true;
+    orFlags.doMuons = false;
     orFlags.doJets = true;
     orFlags.doTaus = false;
     if ( m_dataType.find("EXOT")!=std::string::npos ) { //EXOT5 derivation

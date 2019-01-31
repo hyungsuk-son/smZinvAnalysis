@@ -226,8 +226,8 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14316951._000016.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
 
   // Skim_v3 (EXOT5)
-  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
-  //SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
+  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/tufts/beaucheminlab/hson02/Dataset/MC/MC16a/skim_v3");
+  SH::ScanDir().filePattern("user.hson.14408372._000029.mini-xAOD.root").scan(sh,inputFilePath); // Znunu
   //SH::ScanDir().filePattern("user.hson.14408326._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zee
   //SH::ScanDir().filePattern("user.hson.14408279._000007.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu
   //SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
@@ -267,8 +267,13 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("*").scan(sh,inputFilePath); // Znunu (361516.MadGraphPythia8EvtGen_A14NNPDF23LO_Znunu_Np1)
 
   // MadGraph + Pythia8 Derivation (STDM4, my skim)
-  const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3/STDM4/MadGraph/Zee");
-  SH::ScanDir().filePattern("user.hson.15419073._000006.mini-xAOD.root").scan(sh,inputFilePath); // Zee (363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto) tag: p3517
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3/STDM4/MadGraph/Zee");
+  //SH::ScanDir().filePattern("user.hson.15419073._000006.mini-xAOD.root").scan(sh,inputFilePath); // Zee (363156.MGPy8EG_N30NLO_Zee_Ht280_500_CVetoBVeto) tag: p3517
+
+  // MadGraph + Pythia8 Derivation (STDM4, derivation)
+  //const char* inputFilePath = gSystem->ExpandPathName ("/cluster/home/h/s/hson02/beaucheminlabHome/Dataset/MC/MC16a/skim_v3/STDM4/MadGraph");
+  //SH::ScanDir().filePattern("DAOD_STDM4.14405034._000013.pool.root.1").scan(sh,inputFilePath); // Zee (363132.MGPy8EG_N30NLO_Zmumu_Ht280_500_CVetoBVeto) tag: e4649_s3126_r10201_p3552
+
 
 
 
