@@ -416,7 +416,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   m_doTruth = true;
 
   // Enable Systematics
-  m_doSys = true;
+  m_doSys = false;
 
   // Scale factor
   m_recoSF = true;
@@ -469,6 +469,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Event Selection for SM study //
   //////////////////////////////////
   // Common cut value
+  // Overlap Removal
+  sm_doORMuon = false;
   // MET
   sm_metCut = 130000.;
   sm_doPhoton_MET = false; // Add photon objects into real MET definition
@@ -623,6 +625,26 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     ANA_CHECK(m_fjvtefficiencyTool->setProperty("ScaleFactorDecorationName","fJVTSF"));
     ANA_CHECK(m_fjvtefficiencyTool->initialize());
 
+
+    // Initialize the BJet tools
+    std::string taggerName = "MV2c10";
+    std::string workingPointName = "FixedCutBEff_70";
+    // Initialize the BJetSelectionTool
+    m_BJetSelectTool = new BTaggingSelectionTool("BJetSelectionTool");
+    ANA_CHECK(m_BJetSelectTool->setProperty("MaxEta", 2.5));
+    ANA_CHECK(m_BJetSelectTool->setProperty("MinPt", 30000.));
+    ANA_CHECK(m_BJetSelectTool->setProperty("JetAuthor", "AntiKt4EMTopoJets"));
+    ANA_CHECK(m_BJetSelectTool->setProperty("TaggerName", taggerName));
+    ANA_CHECK(m_BJetSelectTool->setProperty("FlvTagCutDefinitionsFileName", "xAODBTaggingEfficiency/13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root"));
+    ANA_CHECK(m_BJetSelectTool->setProperty("OperatingPoint", workingPointName));
+    ANA_CHECK(m_BJetSelectTool->initialize()); 
+    // Initialize the BJetEfficiencyTool
+    m_BJetEfficiencyTool = new BTaggingEfficiencyTool("BJetEfficiencyTool");
+    ANA_CHECK(m_BJetEfficiencyTool->setProperty("JetAuthor", "AntiKt4EMTopoJets"));
+    ANA_CHECK(m_BJetEfficiencyTool->setProperty("TaggerName", taggerName));
+    ANA_CHECK(m_BJetEfficiencyTool->setProperty("ScaleFactorFileName", "13TeV/2017-21-13TeV-MC16-CDI-2018-02-09_v1.root"));
+    ANA_CHECK(m_BJetEfficiencyTool->setProperty("OperatingPoint", workingPointName));
+    ANA_CHECK(m_BJetEfficiencyTool->initialize()); 
 
 
     // Muon momentum corrections (https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisConsolidationMC16)
@@ -834,7 +856,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     orFlags.outputPassValue = outputPassValue; // overlap objects are 'true'
     // specify which objects to configure tools
     orFlags.doElectrons = true;
-    orFlags.doMuons = false;
+    orFlags.doMuons = sm_doORMuon;
     orFlags.doJets = true;
     orFlags.doTaus = false;
     if ( m_dataType.find("EXOT")!=std::string::npos ) { //EXOT5 derivation
@@ -849,8 +871,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
     ANA_CHECK(ORUtils::recommendedTools(orFlags,*m_toolBox));
     // Special settings
     //ANA_CHECK(m_toolBox->muJetORT.setProperty("NumJetTrk",100000000));
-    ANA_CHECK(m_toolBox->muJetORT.setProperty("InnerDR",sm_ORJETdeltaR));
-    ANA_CHECK(m_toolBox->muJetORT.setProperty("OuterDR",sm_ORJETdeltaR));
+    if (sm_doORMuon) {
+      ANA_CHECK(m_toolBox->muJetORT.setProperty("InnerDR",sm_ORJETdeltaR));
+      ANA_CHECK(m_toolBox->muJetORT.setProperty("OuterDR",sm_ORJETdeltaR));
+    }
     ANA_CHECK(m_toolBox->eleJetORT.setProperty("InnerDR",sm_ORJETdeltaR));
     ANA_CHECK(m_toolBox->eleJetORT.setProperty("OuterDR",sm_ORJETdeltaR));
     // Set message level for all tools
@@ -5758,6 +5782,13 @@ EL::StatusCode smZInvAnalysis :: execute ()
       continue; // go to next systematic
     } // end check that systematic applied ok
 
+    /*
+    // apply recommended systematic for BJetEfficiencyTool
+    if (m_BJetEfficiencyTool->applySystematicVariation(sysList) != CP::SystematicCode::Ok) {
+      Error("execute()", "Cannot configure BJetEfficiencyTool for systematics");
+      continue; // go to next systematic
+    } // end check that systematic applied ok
+    */
 
     // apply recommended systematic for MuonCalibrationAndSmearingTool (For 2015 and 2016 dataset)
     if (m_dataYear == "2015" || m_dataYear == "2016") {
@@ -6846,6 +6877,29 @@ EL::StatusCode smZInvAnalysis :: execute ()
       if (isBadJet) continue; // go to the next systematic
 
     }
+
+
+    //---------------
+    // b-jet Veto
+    // --------------
+    // b-jet counting
+    int n_bJet = 0;
+    if (m_goodJet->size() > 0) {
+      // loop over the jets in the Good Jets Container
+      for (const auto& jets : *m_goodJet) {
+        // Find BTagged jets
+        if (m_BJetSelectTool->accept(*jets)) {
+          n_bJet ++;
+        }
+      }
+    }
+    // Veto b-jet event
+    if (n_bJet > 0) continue; // go to the next systematic
+
+
+
+
+
 
 
     // Sort Good Jets
@@ -9110,6 +9164,18 @@ EL::StatusCode smZInvAnalysis :: finalize ()
       m_fjvtefficiencyTool = 0;
     }
 
+    // b-tag selection Tool
+    if(m_BJetSelectTool){
+      delete m_BJetSelectTool;
+      m_BJetSelectTool = 0;
+    }
+
+    // b-tag efficiency Tool
+    if(m_BJetEfficiencyTool){
+      delete m_BJetEfficiencyTool;
+      m_BJetEfficiencyTool = 0;
+    }
+
     // Muon calibration and smearing
     if(m_muonCalibrationAndSmearingTool2016){
       delete m_muonCalibrationAndSmearingTool2016;
@@ -9153,7 +9219,6 @@ EL::StatusCode smZInvAnalysis :: finalize ()
       delete m_muonTTVAEfficiencySFTool;
       m_muonTTVAEfficiencySFTool = 0;
     }
-
 
     // Egamma calibration and smearing
     if(m_egammaCalibrationAndSmearingTool){

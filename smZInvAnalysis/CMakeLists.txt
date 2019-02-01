@@ -100,7 +100,7 @@ atlas_add_library( smZInvAnalysisLib
    JetResolutionLib JetUncertaintiesLib JetSelectorToolsLib JetMomentToolsLib MuonSelectorToolsLib
    MuonEfficiencyCorrectionsLib ElectronPhotonFourMomentumCorrectionLib ElectronPhotonShowerShapeFudgeToolLib
    AssociationUtilsLib METInterface METUtilitiesLib egammaLayerRecalibTool egammaMVACalibLib TrigConfxAODLib
-   JetJvtEfficiencyLib InDetTrackSystematicsToolsLib
+   JetJvtEfficiencyLib InDetTrackSystematicsToolsLib xAODBTaggingEfficiencyLib
 )
 
 

@@ -65,6 +65,10 @@
 #include "JetMomentTools/JetForwardJvtTool.h"
 #include "JetJvtEfficiency/JetJvtEfficiency.h"
 
+// b-jet tools
+#include "xAODBTaggingEfficiency/BTaggingSelectionTool.h"
+#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"
+
 // Muon tools
 #include "MuonMomentumCorrections/MuonCalibrationAndSmearingTool.h"
 #include "MuonSelectorTools/MuonSelectionTool.h"
@@ -203,6 +207,7 @@ public:
   bool m_useBitsetCutflow; //!
 
   // Cut values for SM study
+  bool sm_doORMuon; //!
   float sm_metCut; //!
   bool sm_doPhoton_MET; //!
   bool sm_doTau_MET; //!
@@ -301,6 +306,10 @@ public:
   asg::AnaToolHandle<IJetModifier> m_fJvtTool; //!
   CP::JetJvtEfficiency* m_jvtefficiencyTool; //!
   CP::JetJvtEfficiency* m_fjvtefficiencyTool; //!
+
+  // b-jet
+  BTaggingSelectionTool *m_BJetSelectTool; //!
+  BTaggingEfficiencyTool *m_BJetEfficiencyTool; //!
 
   // Muon
   CP::MuonCalibrationAndSmearingTool *m_muonCalibrationAndSmearingTool2016; //!
