@@ -1350,6 +1350,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_n"+m_sysName, 40, 0., 40.);
             if (sm_monojet[k] == "exclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dPhiJetMet"+m_sysName, 20, 0, 3.2);
             if (sm_monojet[k] == "inclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dPhiMinJetMet"+m_sysName, 20, 0, 3.2);
+            if (sm_channel[i] == "znunu_" && sm_monojet[k] == "inclusive_") addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dPhiMinJetMetNoCut"+m_sysName, 20, 0, 3.2);
             if (sm_monojet[k] == "exclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_pt"+m_sysName, 150, 0., 1500.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"jet_eta"+m_sysName, 25, -5., 5.);
@@ -10816,6 +10817,16 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
         }
       }
     }
+    // dPhiMin(jet,met) distribution without dPhi(jet,met) cut
+    if (passInclusiveRecoJetNoDPhiJetMET(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+      float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
+      for (const auto &jet : *m_goodJet) {
+        // dPhi(jet,MET)
+        float dPhijetmet = deltaPhi(jet->phi(),MET_phi);
+        dPhiMinjetmet = std::min(dPhiMinjetmet, dPhijetmet);
+        hMap1D["SM_study_"+channel+hist_prefix+"dPhiMinJetMetNoCut"+sysName]->Fill(dPhiMinjetmet, mcEventWeight_Znunu);
+      }
+    }
   }
 
   // Test Statistical uncertainty for ratio (using various leading jet cuts)
@@ -13308,6 +13319,46 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
   return true;
 
 }
+
+
+bool smZInvAnalysis::passInclusiveRecoJetNoDPhiJetMET(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi){
+
+   if (recoJet->size() < 1) return false;
+
+  //---------------------------
+  // Define Monojet Properties
+  //---------------------------
+
+  // Monojet Selection
+  float monojet_pt = recoJet->at(0)->pt();
+  float monojet_eta = recoJet->at(0)->eta();
+
+  // Define Monojet
+  if ( recoJet->at(0)->auxdata<bool>("RecoJet") && !m_jetCleaningTightBad->accept( *recoJet->at(0) ) ) return false; // Apply TightBad only to "Reco" jet
+  if ( monojet_pt < leadJetPt || fabs(monojet_eta) > sm_inclusiveJetEtaCut ) return false;
+  
+  /*
+  // Define dPhi(jet,MET) for leading jet1, jet2, jet3 and jet4
+  bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
+  for (const auto& jet : *recoJet) {
+    float reco_jet_pt = jet->pt();
+    float reco_jet_phi = jet->phi();
+
+  // Remove any jet if Phi(Jet_i,MET) < 0.4
+    // Calculate dPhi(Jet_i,MET) and dPhi_min(Jet_i,MET)
+    float dPhijetmet = deltaPhi(reco_jet_phi,metPhi);
+    if ( dPhijetmet < sm_dPhiJetMetCut ) pass_dPhijetmet = false;
+  }
+
+  // Multijet suppression
+  if ( !pass_dPhijetmet ) return false;
+  */
+
+  // Pass Monojet phasespace
+  return true;
+
+}
+
 
 
 

@@ -478,6 +478,7 @@ public:
   bool passInclusiveTruthJet(const xAOD::JetContainer* truthJet, const float& leadJetPt, const float& metPhi);
   bool passExclusiveRecoJet(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
   bool passInclusiveRecoJet(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
+  bool passInclusiveRecoJetNoDPhiJetMET(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
   bool passExclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
   bool passInclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi);
 
