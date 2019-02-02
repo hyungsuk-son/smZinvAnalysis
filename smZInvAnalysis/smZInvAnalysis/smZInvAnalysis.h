@@ -230,6 +230,9 @@ public:
   float sm_lep1PtCut; //!
   float sm_lep2PtCut; //!
   float sm_lepEtaCut; //!
+  // BTagged jets (b-jet)
+  bool sm_bJetVetoInclusive; //!
+  int n_bJet; //!
 
   // Cut values
   float m_LeadLepPtCut; //!

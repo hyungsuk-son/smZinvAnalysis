@@ -471,6 +471,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Common cut value
   // Overlap Removal
   sm_doORMuon = false;
+  // b-Jet veto
+  sm_bJetVetoInclusive = true; // Enable b-Jet veto for inclusive
   // MET
   sm_metCut = 130000.;
   sm_doPhoton_MET = false; // Add photon objects into real MET definition
@@ -6880,11 +6882,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
     }
 
 
-    //---------------
-    // b-jet Veto
-    // --------------
+    //-------------------------
+    // b-jet Veto (Event-based)
+    //-------------------------
     // b-jet counting
-    int n_bJet = 0;
+    n_bJet = 0;
     if (m_goodJet->size() > 0) {
       // loop over the jets in the Good Jets Container
       for (const auto& jets : *m_goodJet) {
@@ -6895,7 +6897,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
     }
     // Veto b-jet event
-    if (n_bJet > 0) continue; // go to the next systematic
+    //if (n_bJet > 0) continue; // go to the next systematic
 
 
 
@@ -13315,6 +13317,9 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
   // Multijet suppression
   if ( !pass_dPhijetmet ) return false;
 
+  // b-Jet event veto
+  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
+
   // Pass Monojet phasespace
   return true;
 
@@ -13353,6 +13358,9 @@ bool smZInvAnalysis::passInclusiveRecoJetNoDPhiJetMET(const xAOD::JetContainer* 
   // Multijet suppression
   if ( !pass_dPhijetmet ) return false;
   */
+
+  // b-Jet event veto
+  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
 
   // Pass Monojet phasespace
   return true;
@@ -13423,6 +13431,9 @@ bool smZInvAnalysis::passInclusiveMultijetCR(const xAOD::JetContainer* recoJet, 
 
   // Reverse cut (require at least one jet pointing towards the MET)
   if ( pass_dPhijetmet ) return false;
+
+  // b-Jet event veto
+  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
 
   // Pass Multijet enrich Control region
   return true;
