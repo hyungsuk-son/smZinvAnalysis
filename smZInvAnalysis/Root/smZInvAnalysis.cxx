@@ -1216,12 +1216,18 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
               if (monojet[k] == "exclusive_" || monojet[k] == "exclusive_fid_") {
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lowZPt_mll", 150, 0., 300.);
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"midZPt_mll", 150, 0., 300.);
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"highZPt_mll", 150, 0., 300.);
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono", ex_nbinMET, ex_binsMET); // mll cut (66 < mll < 116 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono", ex_nbinMET, ex_binsMET); // No mll cut
 
               }
               if (monojet[k] == "inclusive_" || monojet[k] == "inclusive_fid_") {
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lowZPt_mll", 150, 0., 300.);
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"midZPt_mll", 150, 0., 300.);
+                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"highZPt_mll", 150, 0., 300.);
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono", in_nbinMET, in_binsMET); // mll cut (66 < mll < 116 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
@@ -1258,11 +1264,17 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
             if (monojet[j] == "exclusive_") {
+              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lowZPt_mll", 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"midZPt_mll", 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"highZPt_mll", 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono", ex_nbinMET, ex_binsMET);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono", ex_nbinMET, ex_binsMET); // No mll cut
             }
             if (monojet[j] == "inclusive_") {
+              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lowZPt_mll", 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"midZPt_mll", 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"highZPt_mll", 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono", in_nbinMET, in_binsMET);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
@@ -12856,6 +12868,16 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
     // Exclusive
     if ( hist_prefix.find("exclusive")!=std::string::npos ) {
       if (passExclusiveTruthJet(truthJet, sm_exclusiveJetPtCut, ZPhi)) {
+        // Mll distribution
+        if ( ZPt > 130000. && ZPt < 250000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"lowZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+        if ( ZPt > 250000. && ZPt < 400000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"midZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+        if ( ZPt > 400000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"highZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
@@ -12864,6 +12886,16 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
     // Inclusive
     if ( hist_prefix.find("inclusive")!=std::string::npos ) {
       if (passInclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+        // Mll distribution
+        if ( ZPt > 130000. && ZPt < 250000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"lowZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+        if ( ZPt > 250000. && ZPt < 400000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"midZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+        if ( ZPt > 400000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"highZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
@@ -13047,6 +13079,16 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
   // Exclusive
   if ( hist_prefix.find("exclusive")!=std::string::npos ) {
     if (passExclusiveTruthJet(truthJet, sm_exclusiveJetPtCut, ZPhi)) {
+      // ZMass distribution
+      if ( ZPt > 130000. && ZPt < 250000.) {
+        hMap1D["SM_study_"+channel+hist_prefix+"lowZPt_mll"]->Fill(Zmass * 0.001, mcEventWeight);
+      }
+      if ( ZPt > 250000. && ZPt < 400000.) {
+        hMap1D["SM_study_"+channel+hist_prefix+"midZPt_mll"]->Fill(Zmass * 0.001, mcEventWeight);
+      }
+      if ( ZPt > 400000.) {
+        hMap1D["SM_study_"+channel+hist_prefix+"highZPt_mll"]->Fill(Zmass * 0.001, mcEventWeight);
+      }
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
@@ -13055,6 +13097,16 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
   // Inclusive
   if ( hist_prefix.find("inclusive")!=std::string::npos ) {
     if (passInclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+      // ZMass distribution
+      if ( ZPt > 130000. && ZPt < 250000.) {
+        hMap1D["SM_study_"+channel+hist_prefix+"lowZPt_mll"]->Fill(Zmass * 0.001, mcEventWeight);
+      }
+      if ( ZPt > 250000. && ZPt < 400000.) {
+        hMap1D["SM_study_"+channel+hist_prefix+"midZPt_mll"]->Fill(Zmass * 0.001, mcEventWeight);
+      }
+      if ( ZPt > 400000.) {
+        hMap1D["SM_study_"+channel+hist_prefix+"highZPt_mll"]->Fill(Zmass * 0.001, mcEventWeight);
+      }
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
@@ -13079,6 +13131,8 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
       }
     }
   } // Mll cut
+
+
 
 
 
