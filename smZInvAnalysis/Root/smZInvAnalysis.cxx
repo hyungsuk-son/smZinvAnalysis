@@ -630,7 +630,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
 
     // Initialize the BJet tools
     std::string taggerName = "MV2c10";
-    std::string workingPointName = "FixedCutBEff_70";
+    std::string workingPointName = "FixedCutBEff_60";
     // Initialize the BJetSelectionTool
     m_BJetSelectTool = new BTaggingSelectionTool("BJetSelectionTool");
     ANA_CHECK(m_BJetSelectTool->setProperty("MaxEta", 2.5));
