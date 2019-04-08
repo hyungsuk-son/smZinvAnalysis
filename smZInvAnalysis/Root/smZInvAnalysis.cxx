@@ -630,7 +630,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
 
     // Initialize the BJet tools
     std::string taggerName = "MV2c10";
-    std::string workingPointName = "FixedCutBEff_60";
+    std::string workingPointName = "FixedCutBEff_85";
     // Initialize the BJetSelectionTool
     m_BJetSelectTool = new BTaggingSelectionTool("BJetSelectionTool");
     ANA_CHECK(m_BJetSelectTool->setProperty("MaxEta", 2.5));
@@ -1204,10 +1204,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
         // Analysis using emulated jets (using STDM4 derivation)
         const int channel_n = 2;
         const int level_n = 7;
-        const int monojet_n = 5;
+        const int monojet_n = 6;
         std::string channel[channel_n] = {"zee_","zmumu_"};
         std::string level[level_n] = {"dress_wz_","dress_OR_","dress_OS_","bare_emul_","bare_OR_","bare_OS_","born_emul_"};
-        std::string monojet[monojet_n] = {"exclusive_","exclusive_fid_","inclusive_","inclusive_fid_","noJetSelection_"};
+        std::string monojet[monojet_n] = {"exclusive_","exclusive_fid_","inclusive_","inclusive_fid_","noJetSelection_","noJetSelection_fid_"};
         for(int i=0; i < channel_n; i++) {
           for(int j=0; j < level_n; j++) {
             // Overlap removal and Overlap Subtraction study is not implemented in Z->mumu
@@ -1215,6 +1215,9 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"met", 137, 130., 1500.); // mll cut (66 < mll < 116 GeV)
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
+              addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lowZPt_mll", 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"midZPt_mll", 150, 0., 300.);
+              addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"highZPt_mll", 150, 0., 300.);
               if (monojet[k] == "exclusive_" || monojet[k] == "exclusive_fid_") {
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono", ex_nbinMET, ex_binsMET); // mll cut (66 < mll < 116 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
@@ -1225,11 +1228,6 @@ EL::StatusCode smZInvAnalysis :: initialize ()
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono", in_nbinMET, in_binsMET); // mll cut (66 < mll < 116 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
-              }
-              if (level[j] == "born_emul_" && (monojet[k] == "inclusive_" || monojet[k] == "inclusive_fid_" || monojet[k] == "noJetSelection_")) { // Gamma* effect test
-                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"lowZPt_mll", 150, 0., 300.);
-                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"midZPt_mll", 150, 0., 300.);
-                addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"highZPt_mll", 150, 0., 300.);
               }
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"mll", 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_n", 40, 0., 40.);
@@ -1262,6 +1260,9 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"met", 137, 130., 1500.);
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_met", 137, 130., 1500.); // mll cut ( mll > 66 GeV)
+            addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lowZPt_mll", 150, 0., 300.);
+            addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"midZPt_mll", 150, 0., 300.);
+            addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"highZPt_mll", 150, 0., 300.);
             if (monojet[j] == "exclusive_") {
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono", ex_nbinMET, ex_binsMET);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
@@ -1271,11 +1272,6 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono", in_nbinMET, in_binsMET);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
-            }
-            if (monojet[j] == "inclusive_" || monojet[j] == "noJetSelection_") {
-              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"lowZPt_mll", 150, 0., 300.);
-              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"midZPt_mll", 150, 0., 300.);
-              addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"highZPt_mll", 150, 0., 300.);
             }
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_n", 40, 0., 40.);
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_pt", 100, 0., 1000.);
@@ -5243,6 +5239,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
         doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_" );
         doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_fid_" );
 
+        // No Jet selection applied
+        doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_noJetSelection_" );
+        doZllEmulTruth(m_truthDressElectronFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_noJetSelection_fid_" );
+
+
         // Overlap removal VS Overlap subtraction (dress-level electron and overlap-removed or subtracted AntiKt4TruthJets with dress-level electron)
         // Non fiducial
         doZllEmulTruth(m_truthDressElectronFromZ, m_ORdressTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_exclusive_" );
@@ -5295,6 +5296,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
         doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_" );
         doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_fid_" );
 
+        // No Jet selection applied
+        doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_noJetSelection_" );
+        doZllEmulTruth(m_truthBareElectronFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_noJetSelection_fid_" );
+        
+        
         // Overlap removal VS Overlap subtraction (bare-level electron and overlap-removed or subtracted AntiKt4TruthJets with bare-level electron)
         // Non fiducial
         doZllEmulTruth(m_truthBareElectronFromZ, m_ORbareTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_exclusive_" );
@@ -5334,6 +5340,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         // No Jet selection applied
         doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_noJetSelection_" );
+        doZllEmulTruth(m_truthBornElectron, m_goodEmulBornJet, sm_lep1PtCut, sm_lep2PtCut, m_elecEtaCut , m_mcEventWeight, sm_channel, "_born_emul_noJetSelection_fid_" );
 
       } //Zee
 
@@ -5351,6 +5358,11 @@ EL::StatusCode smZInvAnalysis :: execute ()
         doZllEmulTruth(m_truthDressMuonFromZ, m_goodTruthWZJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_" );
         doZllEmulTruth(m_truthDressMuonFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_inclusive_fid_" );
 
+        // No Jet selection applied
+        doZllEmulTruth(m_truthDressMuonFromZ, m_goodTruthWZJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_noJetSelection_" );
+        doZllEmulTruth(m_truthDressMuonFromZ, m_goodTruthWZJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_dress_wz_noJetSelection_fid_" );
+        
+        
         // Overlap removal VS Overlap subtraction (dress-level electron and overlap-removed or subtracted AntiKt4TruthJets with dress-level electron)
         // Non fiducial
         doZllEmulTruth(m_truthDressMuonFromZ, m_ORdressTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_dress_OR_exclusive_" );
@@ -5402,6 +5414,10 @@ EL::StatusCode smZInvAnalysis :: execute ()
         doZllEmulTruth(m_truthBareMuonFromZ, m_goodEmulBareJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_" );
         doZllEmulTruth(m_truthBareMuonFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_inclusive_fid_" );
 
+        // No Jet selection applied
+        doZllEmulTruth(m_truthBareMuonFromZ, m_goodEmulBareJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_noJetSelection_" );
+        doZllEmulTruth(m_truthBareMuonFromZ, m_goodEmulBareJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_bare_emul_noJetSelection_fid_" );
+
         // Overlap removal VS Overlap subtraction (bare-level electron and overlap-removed or subtracted AntiKt4TruthJets with bare-level electron)
         // Non fiducial
         doZllEmulTruth(m_truthBareMuonFromZ, m_ORbareTruthNominalJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_bare_OR_exclusive_" );
@@ -5443,6 +5459,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
         // No Jet selection applied
         doZllEmulTruth(m_truthBornMuon, m_goodEmulBornJet, sm_noLep1PtCut, sm_noLep2PtCut, sm_noLepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_noJetSelection_" );
+        doZllEmulTruth(m_truthBornMuon, m_goodEmulBornJet, sm_lep1PtCut, sm_lep2PtCut, sm_lepEtaCut , m_mcEventWeight, sm_channel, "_born_emul_noJetSelection_fid_" );
 
       } // Zmumu
 
@@ -12913,8 +12930,7 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
   // Gamma* effect test //
   ////////////////////////
 
-  // ONLY Born-level
-  if ( hist_prefix.find("born_emul")!=std::string::npos ) {
+  if (!is_customDerivation) {
 
     // No Jet Selection applied
     if ( hist_prefix.find("noJetSelection")!=std::string::npos ) {
@@ -12929,6 +12945,23 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
         hMap1D["SM_study_"+channel+hist_prefix+"highZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
       }
     }
+
+    // Exclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      if (passExclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+        // Mll distribution
+        if ( ZPt > 130000. && ZPt < 250000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"lowZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+        if ( ZPt > 250000. && ZPt < 400000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"midZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+        if ( ZPt > 400000.) {
+          hMap1D["SM_study_"+channel+hist_prefix+"highZPt_mll"]->Fill(mll * 0.001, mcEventWeight);
+        }
+      }
+    } // Exclusive
+
 
     // Inclusive
     if ( hist_prefix.find("inclusive")!=std::string::npos ) {
@@ -12946,7 +12979,7 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
       }
     } // Inclusive
 
-  } // Born-level
+  }
 
 
 
