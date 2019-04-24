@@ -472,7 +472,8 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // Overlap Removal
   sm_doORMuon = false;
   // b-Jet veto
-  sm_bJetVetoInclusive = true; // Enable b-Jet veto for inclusive
+  sm_bJetVetoInclusive = false; // Enable b-Jet veto for inclusive
+  sm_bJetVeto_W_CR = false; // Enable b-Jet veto for W Control Region
   // MET
   sm_metCut = 130000.;
   sm_doPhoton_MET = false; // Add photon objects into real MET definition
@@ -11834,6 +11835,8 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
 
   std::string channel = "wmunu";
 
+  // b-Jet event veto
+  if (sm_bJetVeto_W_CR && n_bJet > 0) return;
 
   //==============//
   // MET building //
@@ -12343,6 +12346,8 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
 
   std::string channel = "wenu";
 
+  // b-Jet event veto
+  if (sm_bJetVeto_W_CR && n_bJet > 0) return;
 
   //==============//
   // MET building //
@@ -13407,7 +13412,10 @@ bool smZInvAnalysis::passExclusiveRecoJet(const xAOD::JetContainer* recoJet, con
 
 bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi){
 
-   if (recoJet->size() < 1) return false;
+  // b-Jet event veto
+  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
+
+  if (recoJet->size() < 1) return false;
 
   //---------------------------
   // Define Monojet Properties
@@ -13448,9 +13456,6 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
   // Multijet suppression
   if ( !pass_dPhijetmet ) return false;
 
-  // b-Jet event veto
-  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
-
   // Pass Monojet phasespace
   return true;
 
@@ -13459,7 +13464,10 @@ bool smZInvAnalysis::passInclusiveRecoJet(const xAOD::JetContainer* recoJet, con
 
 bool smZInvAnalysis::passInclusiveRecoJetNoDPhiJetMET(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi){
 
-   if (recoJet->size() < 1) return false;
+  // b-Jet event veto
+  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
+
+  if (recoJet->size() < 1) return false;
 
   //---------------------------
   // Define Monojet Properties
@@ -13490,8 +13498,6 @@ bool smZInvAnalysis::passInclusiveRecoJetNoDPhiJetMET(const xAOD::JetContainer* 
   if ( !pass_dPhijetmet ) return false;
   */
 
-  // b-Jet event veto
-  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
 
   // Pass Monojet phasespace
   return true;
@@ -13534,7 +13540,10 @@ bool smZInvAnalysis::passExclusiveMultijetCR(const xAOD::JetContainer* recoJet, 
 
 bool smZInvAnalysis::passInclusiveMultijetCR(const xAOD::JetContainer* recoJet, const float& leadJetPt, const float& metPhi){
 
-   if (recoJet->size() < 1) return false;
+  // b-Jet event veto
+  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
+
+  if (recoJet->size() < 1) return false;
 
   //---------------------------
   // Define Monojet Properties
@@ -13562,9 +13571,6 @@ bool smZInvAnalysis::passInclusiveMultijetCR(const xAOD::JetContainer* recoJet, 
 
   // Reverse cut (require at least one jet pointing towards the MET)
   if ( pass_dPhijetmet ) return false;
-
-  // b-Jet event veto
-  if (sm_bJetVetoInclusive && n_bJet > 0) return false;
 
   // Pass Multijet enrich Control region
   return true;

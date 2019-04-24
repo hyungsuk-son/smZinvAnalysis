@@ -232,6 +232,7 @@ public:
   float sm_lepEtaCut; //!
   // BTagged jets (b-jet)
   bool sm_bJetVetoInclusive; //!
+  bool sm_bJetVeto_W_CR; //!
   int n_bJet; //!
 
   // Cut values
