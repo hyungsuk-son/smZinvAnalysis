@@ -473,7 +473,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   sm_doORMuon = false;
   // b-Jet veto
   sm_bJetVetoInclusive = false; // Enable b-Jet veto for inclusive
-  sm_bJetVeto_W_CR = false; // Enable b-Jet veto for W Control Region
+  sm_bJetVeto_W_CR = true; // Enable b-Jet veto for W Control Region
   // MET
   sm_metCut = 130000.;
   sm_doPhoton_MET = false; // Add photon objects into real MET definition
