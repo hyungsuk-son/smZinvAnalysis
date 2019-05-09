@@ -1472,6 +1472,28 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep_eta"+m_sysName, 25, -5., 5.);
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"lep_phi"+m_sysName, 20, -3.2, 3.2);
             }
+            // Unfold Matrix (Reco vs Truth ZPt) for Zmumu and Zee
+            if (m_sysName=="" && !(m_dataType.find("EXOT")!=std::string::npos) && (sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If not EXOT
+              if (sm_monojet[k] == "exclusive_") { // Exclusive
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dress_matrix"+m_sysName, ex_nbinMET, ex_binsMET, ex_nbinMET, ex_binsMET);
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"bare_matrix"+m_sysName, ex_nbinMET, ex_binsMET, ex_nbinMET, ex_binsMET);
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"born_matrix"+m_sysName, ex_nbinMET, ex_binsMET, ex_nbinMET, ex_binsMET);
+              }
+              if (sm_monojet[k] == "inclusive_") { // Exclusive
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"dress_matrix"+m_sysName, in_nbinMET, in_binsMET, in_nbinMET, in_binsMET);
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"bare_matrix"+m_sysName, in_nbinMET, in_binsMET, in_nbinMET, in_binsMET);
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"born_matrix"+m_sysName, in_nbinMET, in_binsMET, in_nbinMET, in_binsMET);
+              }
+            }
+            // Unfold Matrix (Reco vs Truth ZPt) for Znunu
+            if (m_sysName=="" && sm_channel[i] == "znunu_") { // If not EXOT
+              if (sm_monojet[k] == "exclusive_") { // Exclusive
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"matrix"+m_sysName, ex_nbinMET, ex_binsMET, ex_nbinMET, ex_binsMET);
+              }
+              if (sm_monojet[k] == "inclusive_") { // Exclusive
+                addHist(hMap2D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"matrix"+m_sysName, in_nbinMET, in_binsMET, in_nbinMET, in_binsMET);
+              }
+            }
           }
         }
       }
@@ -10648,6 +10670,25 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
   //if ( m_goodTau->size() > 0 ) return;
 
 
+  ////////////////////////////////////////////
+  // Unfold Matrix plot (Reco vs Truth ZPt) //
+  ////////////////////////////////////////////
+  if (sysName=="") { // No systematic
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      // Pass exclusive jet cut
+      if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi) && sm_passExclusiveTruthJet) {
+        hMap2D["SM_study_"+channel+hist_prefix+"matrix"+sysName]->Fill(sm_znunu_truth_ZPt*0.001, MET*0.001, mcEventWeight);
+      }
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      // Pass inclusive jet cut
+      if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi) && sm_passInclusiveTruthJet) {
+        hMap2D["SM_study_"+channel+hist_prefix+"matrix"+sysName]->Fill(sm_znunu_truth_ZPt*0.001, MET*0.001, mcEventWeight);
+      }
+    }
+  }
 
 
 
@@ -11092,6 +11133,54 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
   // Exact 2 muons
   //-----------------
   if (m_goodMuon->size() > 2) return;
+
+
+
+  ////////////////////////////////////////////
+  // Unfold Matrix plot (Reco vs Truth ZPt) //
+  ////////////////////////////////////////////
+  if ( !(m_dataType.find("EXOT")!=std::string::npos) ) { // If not EXOT
+    if (sysName=="") { // No systematic
+      if ( mll > m_mllMin && mll < m_mllMax ) {
+        // Exclusive
+        if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+          if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+            // Pass dress-level exclusive jet cut
+            if (sm_passExclusiveDressJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"dress_matrix"+sysName]->Fill(sm_zmumu_dress_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass bare-level exclusive jet cut
+            if (sm_passExclusiveBareJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"bare_matrix"+sysName]->Fill(sm_zmumu_bare_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass born-level exclusive jet cut
+            if (sm_passExclusiveBornJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"born_matrix"+sysName]->Fill(sm_zmumu_born_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+          }
+        }
+        // Inclusive
+        if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+          if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+            // Pass dress-level inclusive jet cut
+            if (sm_passInclusiveDressJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"dress_matrix"+sysName]->Fill(sm_zmumu_dress_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass bare-level inclusive jet cut
+            if (sm_passInclusiveBareJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"bare_matrix"+sysName]->Fill(sm_zmumu_bare_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass born-level inclusive jet cut
+            if (sm_passInclusiveBornJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"born_matrix"+sysName]->Fill(sm_zmumu_born_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+          }
+        }
+      }
+    }
+  }
+
+
 
 
 
@@ -11599,13 +11688,6 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   //-------------------------------
   if (!m_ele_trig_fire) return;
 
-
-  //----------
-  // MET cut
-  //----------
-  if ( MET < sm_metCut ) return;
-
-
   //------------------------
   // Additional lepton Veto 
   //------------------------
@@ -11627,6 +11709,58 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   //-----------------
   if (m_goodElectron->size() > 2) return;
 
+
+
+  ////////////////////////////////////////////
+  // Unfold Matrix plot (Reco vs Truth ZPt) //
+  ////////////////////////////////////////////
+  if ( !(m_dataType.find("EXOT")!=std::string::npos) ) { // If not EXOT
+    if (sysName=="") { // No systematic
+      if ( mll > m_mllMin && mll < m_mllMax ) {
+        // Exclusive
+        if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+          if (passExclusiveRecoJet(m_goodJet, sm_exclusiveJetPtCut, MET_phi)) {
+            // Pass dress-level exclusive jet cut
+            if (sm_passExclusiveDressJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"dress_matrix"+sysName]->Fill(sm_zee_dress_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass bare-level exclusive jet cut
+            if (sm_passExclusiveBareJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"bare_matrix"+sysName]->Fill(sm_zee_bare_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass born-level exclusive jet cut
+            if (sm_passExclusiveBornJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"born_matrix"+sysName]->Fill(sm_zee_born_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+          }
+        }
+        // Inclusive
+        if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+          if (passInclusiveRecoJet(m_goodJet, sm_inclusiveJetPtCut, MET_phi)) {
+            // Pass dress-level inclusive jet cut
+            if (sm_passInclusiveDressJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"dress_matrix"+sysName]->Fill(sm_zee_dress_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass bare-level inclusive jet cut
+            if (sm_passInclusiveBareJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"bare_matrix"+sysName]->Fill(sm_zee_bare_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+            // Pass born-level inclusive jet cut
+            if (sm_passInclusiveBornJet) {
+              hMap2D["SM_study_"+channel+hist_prefix+"born_matrix"+sysName]->Fill(sm_zee_born_ZPt*0.001, MET*0.001, mcEventWeight);
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
+  //----------
+  // MET cut
+  //----------
+  if ( MET < sm_metCut ) return;
 
 
 
@@ -12823,6 +12957,69 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
   float ZPt = Zll.Pt();
   float ZPhi = Zll.Phi();
 
+  //---------------------------------------------------------
+  // Store Truth-level ZPt for Unfold Matrix (Reco vs Truth) 
+  //---------------------------------------------------------
+  if (channel == "zee") {
+    // Dress-level
+    if (hist_prefix == "_dress_wz_exclusive_") {
+      sm_zee_dress_ZPt = ZPt;
+      // Exclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        if (passExclusiveTruthJet(truthJet, sm_exclusiveJetPtCut, ZPhi)) {
+          sm_passExclusiveDressJet = true;
+        }
+      }
+      // Inclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        if (passInclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+          sm_passInclusiveDressJet = true;
+        }
+      }
+    }
+    // Bare-level
+    if (hist_prefix == "_bare_emul_exclusive_") {
+      sm_zee_bare_ZPt = ZPt;
+      // Exclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        if (passExclusiveTruthJet(truthJet, sm_exclusiveJetPtCut, ZPhi)) {
+          sm_passExclusiveBareJet = true;
+        }
+      }
+      // Inclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        if (passInclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+          sm_passInclusiveBareJet = true;
+        }
+      }
+    }
+    // Born-level
+    if (hist_prefix == "_born_emul_exclusive_") {
+      sm_zee_born_ZPt = ZPt;
+      // Exclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        if (passExclusiveTruthJet(truthJet, sm_exclusiveJetPtCut, ZPhi)) {
+          sm_passExclusiveBornJet = true;
+        }
+      }
+      // Inclusive
+      if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+        if (passInclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+          sm_passInclusiveBornJet = true;
+        }
+      }
+    }
+  } // Zee
+  if (channel == "zmumu") {
+    // Dress-level
+    if (hist_prefix == "_dress_wz_exclusive_") sm_zmumu_dress_ZPt = ZPt;
+    // Bare-level
+    if (hist_prefix == "_bare_emul_exclusive_") sm_zmumu_bare_ZPt = ZPt;
+    // Born-level
+    if (hist_prefix == "_born_emul_exclusive_") sm_zmumu_born_ZPt = ZPt;
+  } // Zmumu
+
+
 
 
   //----------
@@ -13122,6 +13319,28 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
   float Zmass = Znunu.M();
   float ZPt = Znunu.Pt();
   float ZPhi = Znunu.Phi();
+
+
+  //---------------------------------------------------------
+  // Store Truth-level ZPt for Unfold Matrix (Reco vs Truth) 
+  //---------------------------------------------------------
+  if (hist_prefix == "_truth_exclusive_") {
+    sm_znunu_truth_ZPt = ZPt;
+    // Exclusive
+    if ( hist_prefix.find("exclusive")!=std::string::npos ) {
+      if (passExclusiveTruthJet(truthJet, sm_exclusiveJetPtCut, ZPhi)) {
+        sm_passExclusiveTruthJet = true;
+      }
+    }
+    // Inclusive
+    if ( hist_prefix.find("inclusive")!=std::string::npos ) {
+      if (passInclusiveTruthJet(truthJet, sm_inclusiveJetPtCut, ZPhi)) {
+        sm_passInclusiveTruthJet = true;
+      }
+    }
+  }
+
+
 
 
 

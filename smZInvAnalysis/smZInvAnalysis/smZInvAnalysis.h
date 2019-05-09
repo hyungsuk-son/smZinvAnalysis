@@ -234,6 +234,22 @@ public:
   bool sm_bJetVetoInclusive; //!
   bool sm_bJetVeto_W_CR; //!
   int n_bJet; //!
+  // Unfold Matrix (Reco vs Truth ZPt)
+  float sm_zee_dress_ZPt; //!
+  float sm_zee_bare_ZPt; //!
+  float sm_zee_born_ZPt; //!
+  float sm_zmumu_dress_ZPt; //!
+  float sm_zmumu_bare_ZPt; //!
+  float sm_zmumu_born_ZPt; //!
+  float sm_znunu_truth_ZPt; //!
+  bool sm_passExclusiveDressJet; //!
+  bool sm_passExclusiveBareJet; //!
+  bool sm_passExclusiveBornJet; //!
+  bool sm_passInclusiveDressJet; //!
+  bool sm_passInclusiveBareJet; //!
+  bool sm_passInclusiveBornJet; //!
+  bool sm_passExclusiveTruthJet; //!
+  bool sm_passInclusiveTruthJet; //!
 
   // Cut values
   float m_LeadLepPtCut; //!
