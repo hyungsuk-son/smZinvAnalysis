@@ -473,9 +473,9 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   sm_doORMuon = false;
   // b-Jet veto
   sm_bJetVetoInclusive = false; // Enable b-Jet veto for inclusive
-  sm_bJetVeto_W_CR = true; // Enable b-Jet veto for W Control Region
+  sm_bJetVeto_W_CR = false; // Enable b-Jet veto for W Control Region
   // MET
-  sm_metCut = 110000.;
+  sm_metCut = 130000.;
   sm_doPhoton_MET = false; // Add photon objects into real MET definition
   sm_doTau_MET = false; // Add tau objects into real MET definition
   sm_ORJETdeltaR = 0.4;
@@ -934,12 +934,12 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // For SM ratio analysis
   // Custom Binning
   // Exclusive
-  //Float_t ex_binsMET[] = {130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,550.,650.,1500.};
-  Float_t ex_binsMET[] = {110.,130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,550.,650.,1500.};
+  Float_t ex_binsMET[] = {130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,550.,650.,1500.};
+  //Float_t ex_binsMET[] = {110.,130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,550.,650.,1500.};
   Int_t ex_nbinMET = sizeof(ex_binsMET)/sizeof(Float_t) - 1;
   // Inclusive
-  //Float_t in_binsMET[] = {130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,525.,600.,675.,750.,900.,1050.,1500.};
-  Float_t in_binsMET[] = {110.,130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,525.,600.,675.,750.,900.,1050.,1500.};
+  Float_t in_binsMET[] = {130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,525.,600.,675.,750.,900.,1050.,1500.};
+  //Float_t in_binsMET[] = {110.,130.,150.,175.,200.,225.,250.,300.,350.,400.,450.,525.,600.,675.,750.,900.,1050.,1500.};
   Int_t in_nbinMET = sizeof(in_binsMET)/sizeof(Float_t) - 1;
 
 
