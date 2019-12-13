@@ -14024,52 +14024,165 @@ float smZInvAnalysis::GetMetTrigSF(const float& met, std::string jetCut, std::st
 
   std::string metTrigger = "";
 
-  // Apply MET trigger SF in MET (130GeV ~ 200GeV)
-  if (met > 130000. && met < 200000.) {
-    // Inclusive
+  // Choose the scale method
+  // 1. Scale factor from Turn-on curve fitting (fit)
+  // 2. Scale factor from real values from Data/MC (real)
+  std::string sf_method = "method2";
+
+  // Apply MET trigger SF in MET (100GeV ~ 200GeV)
+  if (met > 100000. && met < 200000.) {
+
+    // Inclusive (Applu scale factor to only Inclusive jet cut)
     if (jetCut == "inclusive") {
 
-      if (m_dataYear == "2015") { // HLT_xe70_mht
-        metTrigger = "HLT_xe70_mht";
-        // For Wmunu and Znunu
-        if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,3.87840e+01);
-          m_SF->FixParameter(1,5.44155e+01);
-        }
-        // For Zmumu
-        if (channel == "zmumu") {
-          m_SF->FixParameter(0,-7.77707e+00);
-          m_SF->FixParameter(1,8.46828e+01);
-        }
-      } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
-        metTrigger = "HLT_xe90_mht_L1XE50";
-        // For Wmunu and Znunu
-        if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,4.64496e+01);
-          m_SF->FixParameter(1,4.76320e+01);
-        }
-        // For Zmumu
-        if (channel == "zmumu") {
-          m_SF->FixParameter(0,7.29544e+01);
-          m_SF->FixParameter(1,2.63631e+01);
-        }
-      } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
-        metTrigger = "HLT_xe110_mht_L1XE50";
-        // For Wmunu and Znunu
-        if (channel == "wmunu" || channel == "znunu") {
-          m_SF->FixParameter(0,7.11684e+01);
-          m_SF->FixParameter(1,3.86691e+01);
-        }
-        // For Zmumu
-        if (channel == "zmumu") {
-          m_SF->FixParameter(0,8.01843e+01);
-          m_SF->FixParameter(1,3.27954e+01);
-        }
-      }
+      // Method 1
+      if (sf_method == "method1") {
 
-      sf = m_SF->Eval(met*0.001);
+        if (m_dataYear == "2015") { // HLT_xe70_mht
+          metTrigger = "HLT_xe70_mht";
+          // For Wmunu and Znunu
+          if (channel == "wmunu" || channel == "znunu") {
+            m_SF->FixParameter(0,3.87840e+01);
+            m_SF->FixParameter(1,5.44155e+01);
+          }
+          // For Zmumu
+          if (channel == "zmumu") {
+            m_SF->FixParameter(0,-7.77707e+00);
+            m_SF->FixParameter(1,8.46828e+01);
+          }
+        } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
+          metTrigger = "HLT_xe90_mht_L1XE50";
+          // For Wmunu and Znunu
+          if (channel == "wmunu" || channel == "znunu") {
+            m_SF->FixParameter(0,4.64496e+01);
+            m_SF->FixParameter(1,4.76320e+01);
+          }
+          // For Zmumu
+          if (channel == "zmumu") {
+            m_SF->FixParameter(0,7.29544e+01);
+            m_SF->FixParameter(1,2.63631e+01);
+          }
+        } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
+          metTrigger = "HLT_xe110_mht_L1XE50";
+          // For Wmunu and Znunu
+          if (channel == "wmunu" || channel == "znunu") {
+            m_SF->FixParameter(0,7.11684e+01);
+            m_SF->FixParameter(1,3.86691e+01);
+          }
+          // For Zmumu
+          if (channel == "zmumu") {
+            m_SF->FixParameter(0,8.01843e+01);
+            m_SF->FixParameter(1,3.27954e+01);
+          }
+        }
 
-      //std::cout << " GetMetTrigSF : Used Trigger = " << metTrigger << " in " << channel << " , MET = " << met*0.001 << "GeV , SF = " << sf << std::endl;
+        sf = m_SF->Eval(met*0.001);
+
+        //std::cout << " GetMetTrigSF : Used Trigger = " << metTrigger << " in " << channel << " , MET = " << met*0.001 << "GeV , SF = " << sf << std::endl;
+
+      } // End of Method 1
+
+      // Method 2
+      if (sf_method == "method2") {
+
+        // Scale Factor for MET triggers in different channels
+        float sf_xe70_wmunu[10] = {0.963992, 0.977219, 0.985577, 0.99537, 0.999455, 1.00021, 0.997168, 0.999553, 1.00012, 0.999666};
+        float sf_xe90_wmunu[10] = {0.972915, 0.968114, 0.976296, 1.00643, 1.0022, 0.999673, 0.999225, 0.998798, 0.999207, 0.999982};
+        float sf_xe110_wmunu[10] = {0.909952, 0.943182, 0.962777, 0.993762, 1.00082, 1.00608, 1.00884, 1.01043, 1.00735, 1.00142};
+        float sf_xe70_zmumu[10] = {0.985903, 0.962016, 0.997199, 0.995332, 1.00205, 0.991167, 0.998822, 0.996527, 0.999673, 1.0006};
+        float sf_xe90_zmumu[10] = {0.958216, 0.985853, 0.999593, 1.00497, 0.996768, 0.998405, 0.999789, 1.00066, 1.00062, 1.00261};
+        float sf_xe110_zmumu[10] = {0.870464, 0.920357, 0.969854, 0.987815, 1.01128, 1.00924, 1.01417, 1.00775, 1.00532, 1.00417};
+
+        if (m_dataYear == "2015") { // HLT_xe70_mht
+          metTrigger = "HLT_xe70_mht";
+          // For Wmunu and Znunu
+          if (channel == "wmunu" || channel == "znunu") {
+            if (met > 100000. && met < 110000.) sf = sf_xe70_wmunu[0];
+            if (met > 110000. && met < 120000.) sf = sf_xe70_wmunu[1];
+            if (met > 120000. && met < 130000.) sf = sf_xe70_wmunu[2];
+            if (met > 130000. && met < 140000.) sf = sf_xe70_wmunu[3];
+            if (met > 140000. && met < 150000.) sf = sf_xe70_wmunu[4];
+            if (met > 150000. && met < 160000.) sf = sf_xe70_wmunu[5];
+            if (met > 160000. && met < 170000.) sf = sf_xe70_wmunu[6];
+            if (met > 170000. && met < 180000.) sf = sf_xe70_wmunu[7];
+            if (met > 180000. && met < 190000.) sf = sf_xe70_wmunu[8];
+            if (met > 190000. && met < 200000.) sf = sf_xe70_wmunu[9];
+          }
+          // For Zmumu
+          if (channel == "zmumu") {
+            if (met > 100000. && met < 110000.) sf = sf_xe70_zmumu[0];
+            if (met > 110000. && met < 120000.) sf = sf_xe70_zmumu[1];
+            if (met > 120000. && met < 130000.) sf = sf_xe70_zmumu[2];
+            if (met > 130000. && met < 140000.) sf = sf_xe70_zmumu[3];
+            if (met > 140000. && met < 150000.) sf = sf_xe70_zmumu[4];
+            if (met > 150000. && met < 160000.) sf = sf_xe70_zmumu[5];
+            if (met > 160000. && met < 170000.) sf = sf_xe70_zmumu[6];
+            if (met > 170000. && met < 180000.) sf = sf_xe70_zmumu[7];
+            if (met > 180000. && met < 190000.) sf = sf_xe70_zmumu[8];
+            if (met > 190000. && met < 200000.) sf = sf_xe70_zmumu[9];
+          }
+        } else if (m_dataYear == "2016" && m_run2016Period == "AtoD3") { // HLT_xe90_mht_L1XE50
+          metTrigger = "HLT_xe90_mht_L1XE50";
+          // For Wmunu and Znunu
+          if (channel == "wmunu" || channel == "znunu") {
+            if (met > 100000. && met < 110000.) sf = sf_xe90_wmunu[0];
+            if (met > 110000. && met < 120000.) sf = sf_xe90_wmunu[1];
+            if (met > 120000. && met < 130000.) sf = sf_xe90_wmunu[2];
+            if (met > 130000. && met < 140000.) sf = sf_xe90_wmunu[3];
+            if (met > 140000. && met < 150000.) sf = sf_xe90_wmunu[4];
+            if (met > 150000. && met < 160000.) sf = sf_xe90_wmunu[5];
+            if (met > 160000. && met < 170000.) sf = sf_xe90_wmunu[6];
+            if (met > 170000. && met < 180000.) sf = sf_xe90_wmunu[7];
+            if (met > 180000. && met < 190000.) sf = sf_xe90_wmunu[8];
+            if (met > 190000. && met < 200000.) sf = sf_xe90_wmunu[9];
+          }
+          // For Zmumu
+          if (channel == "zmumu") {
+            if (met > 100000. && met < 110000.) sf = sf_xe90_zmumu[0];
+            if (met > 110000. && met < 120000.) sf = sf_xe90_zmumu[1];
+            if (met > 120000. && met < 130000.) sf = sf_xe90_zmumu[2];
+            if (met > 130000. && met < 140000.) sf = sf_xe90_zmumu[3];
+            if (met > 140000. && met < 150000.) sf = sf_xe90_zmumu[4];
+            if (met > 150000. && met < 160000.) sf = sf_xe90_zmumu[5];
+            if (met > 160000. && met < 170000.) sf = sf_xe90_zmumu[6];
+            if (met > 170000. && met < 180000.) sf = sf_xe90_zmumu[7];
+            if (met > 180000. && met < 190000.) sf = sf_xe90_zmumu[8];
+            if (met > 190000. && met < 200000.) sf = sf_xe90_zmumu[9];
+          }
+        } else if (m_dataYear == "2016" && m_run2016Period == "D4toL") { // HLT_xe110_mht_L1XE50
+          metTrigger = "HLT_xe110_mht_L1XE50";
+          // For Wmunu and Znunu
+          if (channel == "wmunu" || channel == "znunu") {
+            if (met > 100000. && met < 110000.) sf = sf_xe110_wmunu[0];
+            if (met > 110000. && met < 120000.) sf = sf_xe110_wmunu[1];
+            if (met > 120000. && met < 130000.) sf = sf_xe110_wmunu[2];
+            if (met > 130000. && met < 140000.) sf = sf_xe110_wmunu[3];
+            if (met > 140000. && met < 150000.) sf = sf_xe110_wmunu[4];
+            if (met > 150000. && met < 160000.) sf = sf_xe110_wmunu[5];
+            if (met > 160000. && met < 170000.) sf = sf_xe110_wmunu[6];
+            if (met > 170000. && met < 180000.) sf = sf_xe110_wmunu[7];
+            if (met > 180000. && met < 190000.) sf = sf_xe110_wmunu[8];
+            if (met > 190000. && met < 200000.) sf = sf_xe110_wmunu[9];
+          }
+          // For Zmumu
+          if (channel == "zmumu") {
+            if (met > 100000. && met < 110000.) sf = sf_xe110_zmumu[0];
+            if (met > 110000. && met < 120000.) sf = sf_xe110_zmumu[1];
+            if (met > 120000. && met < 130000.) sf = sf_xe110_zmumu[2];
+            if (met > 130000. && met < 140000.) sf = sf_xe110_zmumu[3];
+            if (met > 140000. && met < 150000.) sf = sf_xe110_zmumu[4];
+            if (met > 150000. && met < 160000.) sf = sf_xe110_zmumu[5];
+            if (met > 160000. && met < 170000.) sf = sf_xe110_zmumu[6];
+            if (met > 170000. && met < 180000.) sf = sf_xe110_zmumu[7];
+            if (met > 180000. && met < 190000.) sf = sf_xe110_zmumu[8];
+            if (met > 190000. && met < 200000.) sf = sf_xe110_zmumu[9];
+          }
+        }
+
+        std::cout << " GetMetTrigSF : Used Trigger = " << metTrigger << " in " << channel << " , MET = " << met*0.001 << "GeV , SF = " << sf << std::endl;
+
+
+      } // End of Method 2
 
     }
     // Exclusive
