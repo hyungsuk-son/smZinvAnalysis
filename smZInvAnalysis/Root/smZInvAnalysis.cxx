@@ -7202,9 +7202,9 @@ EL::StatusCode smZInvAnalysis :: execute ()
       }
       if (m_isZee) {
         // Exclusive
-        doZeeSMReco(m_metCore, m_metMap, m_elecSC, m_mcEventWeight, "_reco_exclusive_", m_sysName);
+        doZeeSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_mcEventWeight, "_reco_exclusive_", m_sysName);
         // Inclusive
-        doZeeSMReco(m_metCore, m_metMap, m_elecSC, m_mcEventWeight, "_reco_inclusive_", m_sysName);
+        doZeeSMReco(m_metCore, m_metMap, MET, MET_phi, m_elecSC, m_mcEventWeight, "_reco_inclusive_", m_sysName);
       }
       if (m_isWmunu) {
         // Exclusive
@@ -11138,14 +11138,6 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
-  //-------------------------------------------
-  // Define Emulated MET
-  // Replace MET and MET_phi with Emulated MET
-  //-------------------------------------------
-  MET = Zll.Pt();
-  MET_phi = Zll.Phi();
-
-
 
   ////////////////////////////////////////////
   // Unfold Matrix plot (Reco vs Truth ZPt) //
@@ -11569,7 +11561,7 @@ void smZInvAnalysis::doZmumuSMReco(const xAOD::MissingETContainer* metCore, cons
 
 
 
-void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName){
+void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const xAOD::MissingETAssociationMap* metMap, const float& met, const float& metPhi, const xAOD::ElectronContainer* elecSC, const float& mcEventWeight, std::string hist_prefix, std::string sysName){
 
   std::string channel = "zee";
 
@@ -11725,9 +11717,17 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   // Define Emulated MET
   // Replace MET and MET_phi with Emulated MET
   //-------------------------------------------
-  MET = Zll.Pt();
-  MET_phi = Zll.Phi();
+  float real_mpx = met * TMath::Sin(metPhi);
+  float real_mpy = met * TMath::Cos(metPhi);
+  float lepton1_phi = m_goodElectron->at(0)->phi();
+  float lepton2_phi = m_goodElectron->at(1)->phi();
+  float lepton1_px = lepton1_pt * TMath::Sin(lepton1_phi);
+  float lepton1_py = lepton1_pt * TMath::Cos(lepton1_phi);
+  float lepton2_px = lepton2_pt * TMath::Sin(lepton2_phi);
+  float lepton2_py = lepton2_pt * TMath::Cos(lepton2_phi);
 
+  float emul_MET = TMath::Sqrt((real_mpx+lepton1_px+lepton2_px)*(real_mpx+lepton1_px+lepton2_px)+(real_mpy+lepton1_py+lepton2_py)*(real_mpy+lepton1_py+lepton2_py));
+  MET = emul_MET;
 
 
 
