@@ -11727,7 +11727,7 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   float lepton2_py = lepton2_pt * TMath::Cos(lepton2_phi);
 
   float emul_MET = TMath::Sqrt((real_mpx+lepton1_px+lepton2_px)*(real_mpx+lepton1_px+lepton2_px)+(real_mpy+lepton1_py+lepton2_py)*(real_mpy+lepton1_py+lepton2_py));
-  MET = emul_MET;
+  //MET = emul_MET;
 
 
 
