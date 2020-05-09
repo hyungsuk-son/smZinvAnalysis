@@ -13602,7 +13602,7 @@ bool smZInvAnalysis::passExclusiveTruthJet(const xAOD::JetContainer* truthJet, c
   if ( monojet_pt < leadJetPt || fabs(monojet_eta) > sm_exclusiveJetEtaCut ) return false;
 
 
-  ///*
+  /*
   // Define dPhi(jet,MET) for leading jet1, jet2, jet3 and jet4
   bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
   for (const auto& jet : *truthJet) {
@@ -13619,7 +13619,7 @@ bool smZInvAnalysis::passExclusiveTruthJet(const xAOD::JetContainer* truthJet, c
 
   if ( !pass_dPhijetmet ) return false;
 
-  //*/
+  */
 
   // Pass Monojet phasespace
   return true;
@@ -13643,7 +13643,7 @@ bool smZInvAnalysis::passInclusiveTruthJet(const xAOD::JetContainer* truthJet, c
   if ( monojet_pt < leadJetPt || fabs(monojet_eta) > sm_inclusiveJetEtaCut ) return false;
 
 
-  ///*
+  /*
   // Define dPhi(jet,MET) for leading jet1, jet2, jet3 and jet4
   bool pass_dPhijetmet = true; // deltaPhi(Jet_i,MET)
   for (const auto& jet : *truthJet) {
@@ -13660,7 +13660,7 @@ bool smZInvAnalysis::passInclusiveTruthJet(const xAOD::JetContainer* truthJet, c
 
   if ( !pass_dPhijetmet ) return false;
 
-  //*/
+  */
 
   // Pass Monojet phasespace
   return true;
