@@ -233,6 +233,9 @@ int main( int argc, char* argv[] ) {
   //SH::ScanDir().filePattern("user.hson.14408572._000047.mini-xAOD.root").scan(sh,inputFilePath); // Wenu
   //SH::ScanDir().filePattern("user.hson.14408499._000048.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu
   //SH::ScanDir().filePattern("user.hson.14408680._000444.mini-xAOD.root").scan(sh,inputFilePath); // ttbar
+  //SH::ScanDir().filePattern("user.hson.14408682._000006.mini-xAOD.root").scan(sh,inputFilePath); // Single Top
+  //SH::ScanDir().filePattern("user.hson.14408666._000006.mini-xAOD.root").scan(sh,inputFilePath); // Diboson (DSID: 363355, ScaledMCWeight Error)
+  //SH::ScanDir().filePattern("user.hson.14408667._000006.mini-xAOD.root").scan(sh,inputFilePath); // Diboson
   // For MET trigger SF test
   //SH::ScanDir().filePattern("user.hson.14408271._000018.mini-xAOD.root").scan(sh,inputFilePath); // Zmumu (364106.Sherpa_221_NNPDF30NNLO_Zmumu_MAXHTPTV140_280_CVetoBVeto)
   //SH::ScanDir().filePattern("user.hson.14408486._000054.mini-xAOD.root").scan(sh,inputFilePath); // Wmunu (364162.Sherpa_221_NNPDF30NNLO_Wmunu_MAXHTPTV140_280_CVetoBVeto)

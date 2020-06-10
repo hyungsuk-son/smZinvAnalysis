@@ -71,6 +71,8 @@ atlas_depends_on_subdirs(
    Reconstruction/MET/METInterface
    Reconstruction/MET/METUtilities
    PhysicsAnalysis/TrackingID/InDetTrackSystematicsTools
+   PhysicsAnalysis/Interfaces/PMGAnalysisInterfaces
+   PhysicsAnalysis/AnalysisCommon/PMGTools
 )
 
 # External dependencies:
@@ -101,6 +103,7 @@ atlas_add_library( smZInvAnalysisLib
    MuonEfficiencyCorrectionsLib ElectronPhotonFourMomentumCorrectionLib ElectronPhotonShowerShapeFudgeToolLib
    AssociationUtilsLib METInterface METUtilitiesLib egammaLayerRecalibTool egammaMVACalibLib TrigConfxAODLib
    JetJvtEfficiencyLib InDetTrackSystematicsToolsLib xAODBTaggingEfficiencyLib
+   PMGAnalysisInterfacesLib
 )
 
 

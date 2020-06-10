@@ -12,4 +12,5 @@
 #ifdef __CINT__
 #pragma link C++ class smZInvAnalysis+;
 #pragma link C++ class BitsetCutflow+;
+#pragma link C++ class meta_dsid+;
 #endif

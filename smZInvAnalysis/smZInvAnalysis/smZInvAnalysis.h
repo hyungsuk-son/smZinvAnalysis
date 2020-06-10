@@ -129,6 +129,9 @@
 // Cutflow
 #include <smZInvAnalysis/BitsetCutflow.h>
 
+// PMGTruthWeightTool
+#include "PMGTools/PMGTruthWeightTool.h"
+
 class smZInvAnalysis : public EL::Algorithm
 {
   // put your configuration variables here as public variables.
@@ -142,6 +145,7 @@ public:
   int m_eventCounter; //!
   int m_numCleanEvents; //!
   float m_mcEventWeight; //!
+  float m_mcEventWeightVec[50]; //!
   bool m_isData; //!
   bool is_customDerivation; //!
   std::string m_dataType; //!
@@ -378,6 +382,9 @@ public:
   // list of systematics
   std::vector<CP::SystematicSet> m_sysList; //!
 
+  // Retrieve MC Weight for a different choice of scale, PDF
+  std::map<int, std::map<std::string, int> > m_variations; //!
+  std::map<std::string, float> m_mcScaledMCWeight; //!
 
   //------------------------------------
   // Global variable for Cz calulation
