@@ -13435,9 +13435,11 @@ EL::StatusCode smZInvAnalysis :: initialize ()
         const int channel_n = 2;
         const int level_n = 7;
         const int monojet_n = 6;
+        const int scaledWeight_n = 7;
         std::string channel[channel_n] = {"zee_","zmumu_"};
         std::string level[level_n] = {"dress_wz_","dress_OR_","dress_OS_","bare_emul_","bare_OR_","bare_OS_","born_emul_"};
         std::string monojet[monojet_n] = {"exclusive_","exclusive_fid_","inclusive_","inclusive_fid_","noJetSelection_","noJetSelection_fid_"};
+        std::string scaledWeight[scaledWeight_n] = {"_NOMINAL","_MUR1_MUF2","_MUR1_MUF05","_MUR2_MUF1","_MUR05_MUF1","_MUR05_MUF05","_MUR2_MUF2"};
         for(int i=0; i < channel_n; i++) {
           for(int j=0; j < level_n; j++) {
             // Overlap removal and Overlap Subtraction study is not implemented in Z->mumu
@@ -13454,13 +13456,28 @@ EL::StatusCode smZInvAnalysis :: initialize ()
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only40mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 40 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono", ex_nbinMET, ex_binsMET); // No mll cut
-
+                if (level[j] == "dress_wz_" || level[j] == "bare_emul_" || level[j] == "born_emul_") {
+                  for(int l=0; l < scaledWeight_n; l++) {
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono"+scaledWeight[l], ex_nbinMET, ex_binsMET); // mll cut (66 < mll < 116 GeV)
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only40mll_MET_mono"+scaledWeight[l], ex_nbinMET, ex_binsMET); // mll cut ( mll > 40 GeV)
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono"+scaledWeight[l], ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono"+scaledWeight[l], ex_nbinMET, ex_binsMET); // No mll cut
+                  }
+                }
               }
               if (monojet[k] == "inclusive_" || monojet[k] == "inclusive_fid_") {
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono", in_nbinMET, in_binsMET); // mll cut (66 < mll < 116 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only40mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 40 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
                 addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
+                if (level[j] == "dress_wz_" || level[j] == "bare_emul_" || level[j] == "born_emul_") {
+                  for(int l=0; l < scaledWeight_n; l++) {
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"MET_mono"+scaledWeight[l], in_nbinMET, in_binsMET); // mll cut (66 < mll < 116 GeV)
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only40mll_MET_mono"+scaledWeight[l], in_nbinMET, in_binsMET); // mll cut ( mll > 40 GeV)
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"only66mll_MET_mono"+scaledWeight[l], in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
+                    addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"fullmll_MET_mono"+scaledWeight[l], in_nbinMET, in_binsMET); // No mll cut
+                  }
+                }
               }
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"mll", 150, 0., 300.);
               addHist(hMap1D, "SM_study_"+channel[i]+level[j]+monojet[k]+"jet_n", 40, 0., 40.);
@@ -13485,8 +13502,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
         std::string channel = "znunu_";
         const int level_n = 1;
         const int monojet_n = 3;
+        const int scaledWeight_n = 7;
         std::string level[level_n] = {"truth_"};
         std::string monojet[monojet_n] = {"exclusive_","inclusive_","noJetSelection_"};
+        std::string scaledWeight[scaledWeight_n] = {"_NOMINAL","_MUR1_MUF2","_MUR1_MUF05","_MUR2_MUF1","_MUR05_MUF1","_MUR05_MUF05","_MUR2_MUF2"};
         for(int i=0; i < level_n; i++) {
           for(int j=0; j < monojet_n; j++) {
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"mll", 150, 0., 300.);
@@ -13502,12 +13521,25 @@ EL::StatusCode smZInvAnalysis :: initialize ()
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only40mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 40 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono", ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono", ex_nbinMET, ex_binsMET); // No mll cut
+              for(int k=0; k < scaledWeight_n; k++) {
+                //std::cout << "[execute] histogram name : " << "SM_study_" << channel << level[i] << monojet[j] << "MET_mono" << scaledWeight[k] << std::endl;
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono"+scaledWeight[k], ex_nbinMET, ex_binsMET);
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only40mll_MET_mono"+scaledWeight[k], ex_nbinMET, ex_binsMET); // mll cut ( mll > 40 GeV)
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono"+scaledWeight[k], ex_nbinMET, ex_binsMET); // mll cut ( mll > 66 GeV)
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono"+scaledWeight[k], ex_nbinMET, ex_binsMET); // No mll cut
+              }
             }
             if (monojet[j] == "inclusive_") {
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono", in_nbinMET, in_binsMET);
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only40mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 40 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono", in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
               addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono", in_nbinMET, in_binsMET); // No mll cut
+              for(int k=0; k < scaledWeight_n; k++) {
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"MET_mono"+scaledWeight[k], in_nbinMET, in_binsMET);
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only40mll_MET_mono"+scaledWeight[k], in_nbinMET, in_binsMET); // mll cut ( mll > 40 GeV)
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"only66mll_MET_mono"+scaledWeight[k], in_nbinMET, in_binsMET); // mll cut ( mll > 66 GeV)
+                addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"fullmll_MET_mono"+scaledWeight[k], in_nbinMET, in_binsMET); // No mll cut
+              }
             }
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_n", 40, 0., 40.);
             addHist(hMap1D, "SM_study_"+channel+level[i]+monojet[j]+"jet_pt", 100, 0., 1000.);
@@ -13560,9 +13592,11 @@ EL::StatusCode smZInvAnalysis :: initialize ()
       const int sm_channel_n = 5;
       const int sm_level_n = 1;
       const int sm_monojet_n = 2;
+      const int sm_scaledWeight_n = 7;
       std::string sm_channel[sm_channel_n] = {"znunu_","zee_","zmumu_","wenu_","wmunu_"};
       std::string sm_level[sm_level_n] = {"reco_"};
       std::string sm_monojet[sm_monojet_n] = {"exclusive_","inclusive_"};
+      std::string sm_scaledWeight[sm_scaledWeight_n] = {"_NOMINAL","_MUR1_MUF2","_MUR1_MUF05","_MUR2_MUF1","_MUR05_MUF1","_MUR05_MUF05","_MUR2_MUF2"};
       for(int i=0; i < sm_channel_n; i++) {
         for(int j=0; j < sm_level_n; j++) {
           for(int k=0; k < sm_monojet_n; k++) {
@@ -13573,14 +13607,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             if (sm_monojet[k] == "exclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
-              if (!m_isData && m_sysName=="" && m_dataType.find("EXOT")!=std::string::npos && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If EXOT
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_NOMINAL"+m_sysName, ex_nbinMET, ex_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR1_MUF2"+m_sysName, ex_nbinMET, ex_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR1_MUF05"+m_sysName, ex_nbinMET, ex_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR2_MUF1"+m_sysName, ex_nbinMET, ex_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR05_MUF1"+m_sysName, ex_nbinMET, ex_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR05_MUF05"+m_sysName, ex_nbinMET, ex_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR2_MUF2"+m_sysName, ex_nbinMET, ex_binsMET);
+              if (!m_isData && m_sysName=="" && m_generatorType == "sherpa" && m_dataType.find("EXOT")!=std::string::npos && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If EXOT
+                for(int l=0; l < sm_scaledWeight_n; l++) {
+                  addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+sm_scaledWeight[l]+m_sysName, ex_nbinMET, ex_binsMET);
+                }
               }
               if (sm_channel[i] == "zee_" || sm_channel[i] == "wenu_") {
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_OS"+m_sysName, ex_nbinMET, ex_binsMET);
@@ -13592,14 +13622,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             if (sm_monojet[k] == "inclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, in_nbinMET, in_binsMET);
-              if (!m_isData && m_sysName=="" && m_dataType.find("EXOT")!=std::string::npos && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If EXOT
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_NOMINAL"+m_sysName, in_nbinMET, in_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR1_MUF2"+m_sysName, in_nbinMET, in_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR1_MUF05"+m_sysName, in_nbinMET, in_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR2_MUF1"+m_sysName, in_nbinMET, in_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR05_MUF1"+m_sysName, in_nbinMET, in_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR05_MUF05"+m_sysName, in_nbinMET, in_binsMET);
-                addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_MUR2_MUF2"+m_sysName, in_nbinMET, in_binsMET);
+              if (!m_isData && m_sysName=="" && m_generatorType == "sherpa" && m_dataType.find("EXOT")!=std::string::npos && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If EXOT
+                for(int l=0; l < sm_scaledWeight_n; l++) {
+                  addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+sm_scaledWeight[l]+m_sysName, in_nbinMET, in_binsMET);
+                }
               }
               if (sm_channel[i] == "zee_" || sm_channel[i] == "wenu_") {
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono_OS"+m_sysName, in_nbinMET, in_binsMET);
@@ -13988,7 +14014,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
   // List of Scale Names for MC Weight
   // For Theoretical Uncertainty Study
   // ----------------------------------
-  if (!m_isData && m_dataType.find("EXOT")!=std::string::npos) { // For MC and EXOT5
+  if (!m_isData && m_generatorType == "sherpa") { // For MC and Sherpa
     // Retrieve MC Weight for a different choice of scale, PDF
     const xAOD::TruthEventContainer* truthEvent = 0;
     if( ! m_event->retrieve( truthEvent, "TruthEvents").isSuccess() ){
@@ -23217,8 +23243,9 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
         for (const auto &NWeight : mcScaledWeight_Znunu ) {
           std::string weight_name = NWeight.first;
           float weight = NWeight.second; // MC scaled weight
-          //std::cout << "[execute] The name of scale : " << weight_name << " and the total weight for Znunu is " << weight << std::endl;
+          //std::cout << "[execute] hist_prefix : " << hist_prefix << ", generator Type : " << m_generatorType << " and channel : " << channel << std::endl;
           hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name+sysName]->Fill(MET * 0.001, weight); // For publication binning
+          //std::cout << "[execute] The name of scale : " << weight_name << " and the total weight for Znunu is " << weight << std::endl;
         }
       }
       // Leading jet # distribution
@@ -25556,6 +25583,34 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
   */
 
 
+  //////////////////////////////////////////////////////////////////////
+  // Re-evaluate MC Weight for each scale for Theoretical Uncertainty //
+  //////////////////////////////////////////////////////////////////////
+  float mcEventWeight_Scaled = mcEventWeight;
+  std::map<std::string, float> mcScaledWeight_Scaled;
+
+  if (m_generatorType == "sherpa") {
+    for (const auto &NWeight : m_mcScaledMCWeight ) {
+      std::string weight_name = NWeight.first;
+      float weight = NWeight.second; // MC scaled weight
+      float pu_weight = mcEventWeight / m_mcScaledMCWeight["NOMINAL"]; // Retrieve PU weight
+      float mcScaledWeight = weight * pu_weight;
+      //std::cout << "[execute] The name of scale : " << weight_name << ", the scaled weight is " << weight << " and the total weight is " << mcScaledWeight << std::endl;
+      mcScaledWeight_Scaled.insert(std::make_pair(weight_name, mcScaledWeight));
+    }
+  } // Sherpa
+
+  // Apply for below histograms
+  bool scaled_weight_case_hist = false;
+  if (hist_prefix == "_dress_wz_exclusive_" || hist_prefix == "_dress_wz_exclusive_fid_" || hist_prefix == "_dress_wz_inclusive_" || hist_prefix == "_dress_wz_inclusive_fid_" || hist_prefix == "_bare_emul_exclusive_" || hist_prefix == "_bare_emul_exclusive_fid_" || hist_prefix == "_bare_emul_inclusive_" || hist_prefix == "_bare_emul_inclusive_fid_" || hist_prefix == "_born_emul_exclusive_" || hist_prefix == "_born_emul_exclusive_fid_" || hist_prefix == "_born_emul_inclusive_" || hist_prefix == "_born_emul_inclusive_fid_") {
+    scaled_weight_case_hist = true;
+  }
+
+
+
+
+
+
   //////////////////////////////
   // Mll Test                 //
   // Full Mll and Mll > 66GeV //
@@ -25567,6 +25622,16 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+        // Apply Scaled Weight
+        if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+          for (const auto &NWeight : mcScaledWeight_Scaled ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            //std::cout << "[execute] hist_prefix : " << hist_prefix << ", generator Type : " << m_generatorType << " and channel : " << channel << std::endl;
+            hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+            //std::cout << "[execute] The name of scale : " << weight_name << ", the scaled weight is " << weight << std::endl;
+          }
+        } // Apply Scaled Weight
       }
     }
     // Inclusive
@@ -25575,6 +25640,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+        // Apply Scaled Weight
+        if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+          for (const auto &NWeight : mcScaledWeight_Scaled ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+          }
+        } // Apply Scaled Weight
       }
     }
     // Mll cut ( mll > 66GeV )
@@ -25585,6 +25658,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
           // ZPt distribution
           hMap1D["SM_study_"+channel+hist_prefix+"only66mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
           hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+          // Apply Scaled Weight
+          if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+            for (const auto &NWeight : mcScaledWeight_Scaled ) {
+              std::string weight_name = NWeight.first;
+              float weight = NWeight.second; // MC scaled weight
+              hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+            }
+          } // Apply Scaled Weight
         }
       }
       // Inclusive
@@ -25593,6 +25674,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
           // ZPt distribution
           hMap1D["SM_study_"+channel+hist_prefix+"only66mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
           hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+          // Apply Scaled Weight
+          if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+            for (const auto &NWeight : mcScaledWeight_Scaled ) {
+              std::string weight_name = NWeight.first;
+              float weight = NWeight.second; // MC scaled weight
+              hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+            }
+          } // Apply Scaled Weight
         }
       }
     } // Mll cut
@@ -25604,6 +25693,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
           // ZPt distribution
           hMap1D["SM_study_"+channel+hist_prefix+"only40mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
           hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+          // Apply Scaled Weight
+          if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+            for (const auto &NWeight : mcScaledWeight_Scaled ) {
+              std::string weight_name = NWeight.first;
+              float weight = NWeight.second; // MC scaled weight
+              hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+            }
+          } // Apply Scaled Weight
         }
       }
       // Inclusive
@@ -25612,6 +25709,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
           // ZPt distribution
           hMap1D["SM_study_"+channel+hist_prefix+"only40mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
           hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+          // Apply Scaled Weight
+          if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+            for (const auto &NWeight : mcScaledWeight_Scaled ) {
+              std::string weight_name = NWeight.first;
+              float weight = NWeight.second; // MC scaled weight
+              hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+            }
+          } // Apply Scaled Weight
         }
       }
     } // Mll cut
@@ -25716,6 +25821,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+      // Apply Scaled Weight
+      if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+        for (const auto &NWeight : mcScaledWeight_Scaled ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+        }
+      } // Apply Scaled Weight
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"]->Fill(truthJet->size(), mcEventWeight);
       // Leading jet pT distribution
@@ -25746,6 +25859,14 @@ void smZInvAnalysis::doZllEmulTruth(const xAOD::TruthParticleContainer* truthLep
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+      // Apply Scaled Weight
+      if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+        for (const auto &NWeight : mcScaledWeight_Scaled ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+        }
+      } // Apply Scaled Weight
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"]->Fill(truthJet->size(), mcEventWeight);
       // Leading jet pT distribution
@@ -25848,6 +25969,35 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
 
 
 
+  //////////////////////////////////////////////////////////////////////
+  // Re-evaluate MC Weight for each scale for Theoretical Uncertainty //
+  //////////////////////////////////////////////////////////////////////
+  float mcEventWeight_Scaled = mcEventWeight;
+  std::map<std::string, float> mcScaledWeight_Scaled;
+
+  if (m_generatorType == "sherpa") {
+    for (const auto &NWeight : m_mcScaledMCWeight ) {
+      std::string weight_name = NWeight.first;
+      float weight = NWeight.second; // MC scaled weight
+      float pu_weight = mcEventWeight / m_mcScaledMCWeight["NOMINAL"]; // Retrieve PU weight
+      float mcScaledWeight = weight * pu_weight;
+      //std::cout << "[execute] The name of scale : " << weight_name << ", the scaled weight is " << weight << " and the total weight is " << mcScaledWeight << std::endl;
+      mcScaledWeight_Scaled.insert(std::make_pair(weight_name, mcScaledWeight));
+    }
+  } // Sherpa
+
+
+  // Apply for below histograms
+  bool scaled_weight_case_hist = false;
+  if (hist_prefix == "_truth_exclusive_" || hist_prefix == "_truth_inclusive_" ) {
+    scaled_weight_case_hist = true;
+  }
+
+
+
+
+
+
   //////////////////////////////
   // Mll Test                 //
   // Full Mll and Mll > 66GeV //
@@ -25858,6 +26008,16 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+      // Apply Scaled Weight
+      if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+        for (const auto &NWeight : mcScaledWeight_Scaled ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          //std::cout << "[execute] hist_prefix : " << hist_prefix << ", generator Type : " << m_generatorType << " and channel : " << channel << std::endl;
+          hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+          //std::cout << "[execute] The name of scale : " << weight_name << ", the scaled weight is " << weight << std::endl;
+        }
+      } // Apply Scaled Weight
     }
   }
   // Inclusive
@@ -25866,6 +26026,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+      // Apply Scaled Weight
+      if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+        for (const auto &NWeight : mcScaledWeight_Scaled ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"fullmll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+        }
+      } // Apply Scaled Weight
     }
   }
   // Mll cut ( mll > 66GeV )
@@ -25876,6 +26044,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"only66mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+        // Apply Scaled Weight
+        if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+          for (const auto &NWeight : mcScaledWeight_Scaled ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+          }
+        } // Apply Scaled Weight
       }
     }
     // Inclusive
@@ -25884,6 +26060,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"only66mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+        // Apply Scaled Weight
+        if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+          for (const auto &NWeight : mcScaledWeight_Scaled ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            hMap1D["SM_study_"+channel+hist_prefix+"only66mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+          }
+        } // Apply Scaled Weight
       }
     }
   } // Mll cut
@@ -25895,6 +26079,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"only40mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+        // Apply Scaled Weight
+        if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+          for (const auto &NWeight : mcScaledWeight_Scaled ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+          }
+        } // Apply Scaled Weight
       }
     }
     // Inclusive
@@ -25903,6 +26095,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
         // ZPt distribution
         hMap1D["SM_study_"+channel+hist_prefix+"only40mll_met"]->Fill(ZPt * 0.001, mcEventWeight);
         hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+        // Apply Scaled Weight
+        if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+          for (const auto &NWeight : mcScaledWeight_Scaled ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            hMap1D["SM_study_"+channel+hist_prefix+"only40mll_MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+          }
+        } // Apply Scaled Weight
       }
     }
   } // Mll cut
@@ -25982,6 +26182,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+      // Apply Scaled Weight
+      if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+        for (const auto &NWeight : mcScaledWeight_Scaled ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+        }
+      } // Apply Scaled Weight
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"]->Fill(truthJet->size(), mcEventWeight);
       // Leading jet pT distribution
@@ -26011,6 +26219,14 @@ void smZInvAnalysis::doZnunuEmulTruth(const xAOD::TruthParticleContainer* truthN
       // ZPt distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"]->Fill(ZPt * 0.001, mcEventWeight);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"]->Fill(ZPt * 0.001, mcEventWeight);
+      // Apply Scaled Weight
+      if (m_generatorType == "sherpa" && scaled_weight_case_hist) {
+        for (const auto &NWeight : mcScaledWeight_Scaled ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name]->Fill(ZPt * 0.001, weight);
+        }
+      } // Apply Scaled Weight
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"]->Fill(truthJet->size(), mcEventWeight);
       // Leading jet pT distribution
