@@ -160,6 +160,7 @@ public:
 
   TH1 *h_sumOfWeights; //!
   TH1 *h_dataType; //!
+  TH1 *h_scaledSumOfWeight; //!
 
   // MC Campaigns
   std::string m_MC_campaign; //!
@@ -385,6 +386,7 @@ public:
   // Retrieve MC Weight for a different choice of scale, PDF
   std::map<int, std::map<std::string, int> > m_variations; //!
   std::map<std::string, float> m_mcScaledMCWeight; //!
+  std::map<std::string, float> m_scaledSumOfWeight; //!
 
   //------------------------------------
   // Global variable for Cz calulation

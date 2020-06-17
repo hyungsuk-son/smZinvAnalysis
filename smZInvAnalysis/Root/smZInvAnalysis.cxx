@@ -94,6 +94,18 @@ EL::StatusCode smZInvAnalysis :: histInitialize ()
   h_dataType->SetCanExtend(TH1::kAllAxes);
   wk()->addOutput (h_dataType);
 
+  // Scaled Sum of Weight
+  h_scaledSumOfWeight = new TH1D("h_scaledSumOfWeight", "Scaled Sum of Weight", 7, 0.5, 7.5);
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(1, "sumOfWeights NOMINAL");
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(2, "sumOfWeights MUR1_MUF2");
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(3, "sumOfWeights MUR1_MUF05");
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(4, "sumOfWeights MUR2_MUF1");
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(5, "sumOfWeights MUR05_MUF1");
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(6, "sumOfWeights MUR05_MUF05");
+  h_scaledSumOfWeight -> GetXaxis() -> SetBinLabel(7, "sumOfWeights MUR2_MUF2");
+  wk()->addOutput (h_scaledSumOfWeight);
+
+
 
   return EL::StatusCode::SUCCESS;
 }
@@ -340,9 +352,10 @@ EL::StatusCode smZInvAnalysis :: fileExecute ()
       h_sumOfWeights -> Fill(2, sumOfWeightsSquared);
       h_sumOfWeights -> Fill(3, nEventsProcessed);
 
+      Info("execute()", " Event # = %llu, sumOfWeights = %f", eventInfo->eventNumber(), sumOfWeights);
     }
 
-  } // Fro Derivation or Skim dataset
+  } // For Derivation or Skim dataset
 
 
 
@@ -12618,6 +12631,10 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   // count clean events
   m_numCleanEvents = 0;
 
+  // Initialize Scaled Sum of Weight
+  m_scaledSumOfWeight = { { "NOMINAL", 0.0 }, { "MUR1_MUF2", 0.0 }, { "MUR1_MUF05", 0.0 }, { "MUR2_MUF1", 0.0 }, { "MUR05_MUF1", 0.0 }, { "MUR05_MUF05", 0.0 }, { "MUR2_MUF2", 0.0 } };
+
+
   // Enable Local Cutflow test
   // !Caution! When enabling this test, real analysis code will "NOT" be implemented.
   // !Note that I should choose only one channel otherwise the array values will be overwritten by following channel!
@@ -14093,7 +14110,7 @@ EL::StatusCode smZInvAnalysis :: execute ()
 
 
     /*
-    std::cout << "[execute] For Nomial, the weight is " <<  m_mcScaledMCWeight["NOMINAL"] << std::endl;
+    std::cout << "[execute] For Nominal, the weight is " <<  m_mcScaledMCWeight["NOMINAL"] << std::endl;
     std::cout << "[execute] For muR = 1.0, muF = 2.0, the index is " << index_MUR1_MUF2 << " and the weight is " <<  m_mcScaledMCWeight["MUR1_MUF2"] << std::endl;
     std::cout << "[execute] For muR = 1.0, muF = 0.5, the index is " << index_MUR1_MUF05 << " and the weight is " <<  m_mcScaledMCWeight["MUR1_MUF05"] << std::endl;
     std::cout << "[execute] For muR = 2.0, muF = 1.0, the index is " << index_MUR2_MUF1 << " and the weight is " <<  m_mcScaledMCWeight["MUR2_MUF1"] << std::endl;
@@ -14101,6 +14118,33 @@ EL::StatusCode smZInvAnalysis :: execute ()
     std::cout << "[execute] For muR = 0.5, muF = 0.5, the index is " << index_MUR05_MUF05 << " and the weight is " <<  m_mcScaledMCWeight["MUR05_MUF05"] << std::endl;
     std::cout << "[execute] For muR = 2.0, muF = 2.0, the index is " << index_MUR2_MUF2 << " and the weight is " <<  m_mcScaledMCWeight["MUR2_MUF2"] << std::endl;
     */
+
+
+    // Evaluate Sum of Weight for each Scale
+    m_scaledSumOfWeight["NOMINAL"] = m_scaledSumOfWeight["NOMINAL"] + ((*itr)->weights())[0];
+    m_scaledSumOfWeight["MUR1_MUF2"] = m_scaledSumOfWeight["MUR1_MUF2"] + ((*itr)->weights())[index_MUR1_MUF2];
+    m_scaledSumOfWeight["MUR1_MUF05"] = m_scaledSumOfWeight["MUR1_MUF05"] + ((*itr)->weights())[index_MUR1_MUF05];
+    m_scaledSumOfWeight["MUR2_MUF1"] = m_scaledSumOfWeight["MUR2_MUF1"] + ((*itr)->weights())[index_MUR2_MUF1];
+    m_scaledSumOfWeight["MUR05_MUF1"] = m_scaledSumOfWeight["MUR05_MUF1"] + ((*itr)->weights())[index_MUR05_MUF1];
+    m_scaledSumOfWeight["MUR05_MUF05"] = m_scaledSumOfWeight["MUR05_MUF05"] + ((*itr)->weights())[index_MUR05_MUF05];
+    m_scaledSumOfWeight["MUR2_MUF2"] = m_scaledSumOfWeight["MUR2_MUF2"] + ((*itr)->weights())[index_MUR2_MUF2];
+    /*
+    std::cout << "[execute] For Nominal, the sum of weight is " <<  m_scaledSumOfWeight["NOMINAL"] << std::endl;
+    std::cout << "[execute] For MUR1_MUF2, the sum of weight is " <<  m_scaledSumOfWeight["MUR1_MUF2"] << std::endl;
+    std::cout << "[execute] For MUR1_MUF05, the sum of weight is " <<  m_scaledSumOfWeight["MUR1_MUF05"] << std::endl;
+    std::cout << "[execute] For MUR2_MUF1, the sum of weight is " <<  m_scaledSumOfWeight["MUR2_MUF1"] << std::endl;
+    std::cout << "[execute] For MUR05_MUF1, the sum of weight is " <<  m_scaledSumOfWeight["MUR05_MUF1"] << std::endl;
+    std::cout << "[execute] For MUR05_MUF05, the sum of weight is " <<  m_scaledSumOfWeight["MUR05_MUF05"] << std::endl;
+    std::cout << "[execute] For MUR2_MUF2, the sum of weight is " <<  m_scaledSumOfWeight["MUR2_MUF2"] << std::endl;
+    */
+
+    h_scaledSumOfWeight -> Fill(1, ((*itr)->weights())[0]);
+    h_scaledSumOfWeight -> Fill(2, ((*itr)->weights())[index_MUR1_MUF2]);
+    h_scaledSumOfWeight -> Fill(3, ((*itr)->weights())[index_MUR1_MUF05]);
+    h_scaledSumOfWeight -> Fill(4, ((*itr)->weights())[index_MUR2_MUF1]);
+    h_scaledSumOfWeight -> Fill(5, ((*itr)->weights())[index_MUR05_MUF1]);
+    h_scaledSumOfWeight -> Fill(6, ((*itr)->weights())[index_MUR05_MUF05]);
+    h_scaledSumOfWeight -> Fill(7, ((*itr)->weights())[index_MUR2_MUF2]);
 
   }
 
