@@ -24070,7 +24070,7 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
 
 
   // Not adding Electron, Photon, Tau objects as we veto on additional leptons and photons might be an issue for electron FSR
-
+///*
   // Electron
   //-----------------
   /// Creat New Hard Object Containers
@@ -24090,7 +24090,7 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   }
   // Mark electrons invisible (No electrons)
   m_metMaker->markInvisible(m_invisibleElectrons.asDataVector(), metMap, m_met);
-
+//*/
 
   // JET
   //-----------------
@@ -24202,8 +24202,8 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   // Define Emulated MET
   // Replace MET and MET_phi with Emulated MET
   //-------------------------------------------
-  float real_mpx = met * TMath::Sin(metPhi);
-  float real_mpy = met * TMath::Cos(metPhi);
+  float real_mpx = (*m_met)["Final"]->mpx();
+  float real_mpy = (*m_met)["Final"]->mpy();
   float lepton1_phi = m_goodElectron->at(0)->phi();
   float lepton2_phi = m_goodElectron->at(1)->phi();
   float lepton1_px = lepton1_pt * TMath::Sin(lepton1_phi);
@@ -24211,8 +24211,18 @@ void smZInvAnalysis::doZeeSMReco(const xAOD::MissingETContainer* metCore, const 
   float lepton2_px = lepton2_pt * TMath::Sin(lepton2_phi);
   float lepton2_py = lepton2_pt * TMath::Cos(lepton2_phi);
 
-  float emul_MET = TMath::Sqrt((real_mpx+lepton1_px+lepton2_px)*(real_mpx+lepton1_px+lepton2_px)+(real_mpy+lepton1_py+lepton2_py)*(real_mpy+lepton1_py+lepton2_py));
+  // Emul MET px
+  float emul_MET_px = real_mpx+lepton1_px+lepton2_px;
+  // Emul MET py
+  float emul_MET_py = real_mpy+lepton1_py+lepton2_py;
+  // Emul MET
+  float emul_MET = TMath::Sqrt( (emul_MET_px*emul_MET_px) + (emul_MET_py*emul_MET_py) );
+  // Emul MET phi
+  float emul_MET_phi = TMath::ATan(emul_MET_py/emul_MET_px);
+
+  // Repalce MET with Emul MET
   //MET = emul_MET;
+  //MET_phi = emul_MET_phi;
 
 
 
