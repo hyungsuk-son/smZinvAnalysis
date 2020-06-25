@@ -14109,6 +14109,18 @@ EL::StatusCode smZInvAnalysis :: execute ()
     m_mcScaledMCWeight.insert(std::make_pair("MUR2_MUF2", ((*itr)->weights())[index_MUR2_MUF2]));
 
 
+    // Skip events where MC weight is abnormal
+    if ( m_mcScaledMCWeight["NOMINAL"] > 1000. || m_mcScaledMCWeight["NOMINAL"] < -1000. || // Nominal
+        m_mcScaledMCWeight["MUR1_MUF2"] > 1000. || m_mcScaledMCWeight["MUR1_MUF2"] < -1000. || // MUR1_MUF2
+        m_mcScaledMCWeight["MUR1_MUF05"] > 1000. || m_mcScaledMCWeight["MUR1_MUF05"] < -1000. || // MUR1_MUF05
+        m_mcScaledMCWeight["MUR2_MUF1"] > 1000. || m_mcScaledMCWeight["MUR2_MUF1"] < -1000. || // MUR2_MUF1
+        m_mcScaledMCWeight["MUR05_MUF1"] > 1000. || m_mcScaledMCWeight["MUR05_MUF1"] < -1000. || // MUR05_MUF1
+        m_mcScaledMCWeight["MUR2_MUF2"] > 1000. || m_mcScaledMCWeight["MUR2_MUF2"] < -1000. ) { // MUR2_MUF2
+      return EL::StatusCode::SUCCESS; // go to the next event
+    }
+
+
+
     /*
     std::cout << "[execute] For Nominal, the weight is " <<  m_mcScaledMCWeight["NOMINAL"] << std::endl;
     std::cout << "[execute] For muR = 1.0, muF = 2.0, the index is " << index_MUR1_MUF2 << " and the weight is " <<  m_mcScaledMCWeight["MUR1_MUF2"] << std::endl;
