@@ -13192,6 +13192,18 @@ EL::StatusCode smZInvAnalysis :: initialize ()
   TH1::SetDefaultSumw2(kTRUE);
 
 
+  //////////////////////////////
+  // MC Weight for each Scale //
+  //////////////////////////////
+  if (!m_isData && m_generatorType == "sherpa") { // MC && Sherpa
+    addHist(hMap1D, "h_scaledMCWeight_Nominal", 200, -100, 100);
+    addHist(hMap1D, "h_scaledMCWeight_MUR1_MUF2", 200, -100, 100);
+    addHist(hMap1D, "h_scaledMCWeight_MUR1_MUF05", 200, -100, 100);
+    addHist(hMap1D, "h_scaledMCWeight_MUR2_MUF1", 200, -100, 100);
+    addHist(hMap1D, "h_scaledMCWeight_MUR05_MUF1", 200, -100, 100);
+    addHist(hMap1D, "h_scaledMCWeight_MUR05_MUF05", 200, -100, 100);
+    addHist(hMap1D, "h_scaledMCWeight_MUR2_MUF2", 200, -100, 100);
+  }
 
   ////////////////////
   // MC Truth level //
@@ -14109,13 +14121,25 @@ EL::StatusCode smZInvAnalysis :: execute ()
     m_mcScaledMCWeight.insert(std::make_pair("MUR2_MUF2", ((*itr)->weights())[index_MUR2_MUF2]));
 
 
+    // Fill MC weight for each scale
+    hMap1D["h_scaledMCWeight_Nominal"]->Fill(m_mcScaledMCWeight["NOMINAL"], 1.);
+    hMap1D["h_scaledMCWeight_MUR1_MUF2"]->Fill(m_mcScaledMCWeight["MUR1_MUF2"], 1.);
+    hMap1D["h_scaledMCWeight_MUR1_MUF05"]->Fill(m_mcScaledMCWeight["MUR1_MUF05"], 1.);
+    hMap1D["h_scaledMCWeight_MUR2_MUF1"]->Fill(m_mcScaledMCWeight["MUR2_MUF1"], 1.);
+    hMap1D["h_scaledMCWeight_MUR05_MUF1"]->Fill(m_mcScaledMCWeight["MUR05_MUF1"], 1.);
+    hMap1D["h_scaledMCWeight_MUR05_MUF05"]->Fill(m_mcScaledMCWeight["MUR05_MUF05"], 1.);
+    hMap1D["h_scaledMCWeight_MUR2_MUF2"]->Fill(m_mcScaledMCWeight["MUR2_MUF2"], 1.);
+
     // Skip events where MC weight is abnormal
-    if ( m_mcScaledMCWeight["NOMINAL"] > 1000. || m_mcScaledMCWeight["NOMINAL"] < -1000. || // Nominal
-        m_mcScaledMCWeight["MUR1_MUF2"] > 1000. || m_mcScaledMCWeight["MUR1_MUF2"] < -1000. || // MUR1_MUF2
-        m_mcScaledMCWeight["MUR1_MUF05"] > 1000. || m_mcScaledMCWeight["MUR1_MUF05"] < -1000. || // MUR1_MUF05
-        m_mcScaledMCWeight["MUR2_MUF1"] > 1000. || m_mcScaledMCWeight["MUR2_MUF1"] < -1000. || // MUR2_MUF1
-        m_mcScaledMCWeight["MUR05_MUF1"] > 1000. || m_mcScaledMCWeight["MUR05_MUF1"] < -1000. || // MUR05_MUF1
-        m_mcScaledMCWeight["MUR2_MUF2"] > 1000. || m_mcScaledMCWeight["MUR2_MUF2"] < -1000. ) { // MUR2_MUF2
+    float m_MCweightCut_min = -10.;
+    float m_MCweightCut_max = 10.;
+    if ( m_mcScaledMCWeight["NOMINAL"] > m_MCweightCut_max || m_mcScaledMCWeight["NOMINAL"] < m_MCweightCut_min || // Nominal
+        m_mcScaledMCWeight["MUR1_MUF2"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR1_MUF2"] < m_MCweightCut_min || // MUR1_MUF2
+        m_mcScaledMCWeight["MUR1_MUF05"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR1_MUF05"] < m_MCweightCut_min || // MUR1_MUF05
+        m_mcScaledMCWeight["MUR2_MUF1"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR2_MUF1"] < m_MCweightCut_min || // MUR2_MUF1
+        m_mcScaledMCWeight["MUR05_MUF1"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR05_MUF1"] < m_MCweightCut_min || // MUR05_MUF1
+        m_mcScaledMCWeight["MUR05_MUF05"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR05_MUF05"] < m_MCweightCut_min || // MUR05_MUF05
+        m_mcScaledMCWeight["MUR2_MUF2"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR2_MUF2"] < m_MCweightCut_min ) { // MUR2_MUF2
       return EL::StatusCode::SUCCESS; // go to the next event
     }
 
