@@ -13636,7 +13636,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             if (sm_monojet[k] == "exclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, ex_nbinMET, ex_binsMET);
-              if (!m_isData && m_sysName=="" && m_generatorType == "sherpa" && m_dataType.find("EXOT")!=std::string::npos && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If EXOT
+              if (!m_isData && m_sysName=="" && m_dataType.find("EXOT")!=std::string::npos) { // If EXOT
                 for(int l=0; l < sm_scaledWeight_n; l++) {
                   addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+sm_scaledWeight[l]+m_sysName, ex_nbinMET, ex_binsMET);
                 }
@@ -13651,7 +13651,7 @@ EL::StatusCode smZInvAnalysis :: initialize ()
             }
             if (sm_monojet[k] == "inclusive_") {
               addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+m_sysName, in_nbinMET, in_binsMET);
-              if (!m_isData && m_sysName=="" && m_generatorType == "sherpa" && m_dataType.find("EXOT")!=std::string::npos && (sm_channel[i] == "znunu_" || sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_")) { // If EXOT
+              if (!m_isData && m_sysName=="" && m_dataType.find("EXOT")!=std::string::npos) { // If EXOT
                 for(int l=0; l < sm_scaledWeight_n; l++) {
                   addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"MET_mono"+sm_scaledWeight[l]+m_sysName, in_nbinMET, in_binsMET);
                 }
@@ -13749,14 +13749,34 @@ EL::StatusCode smZInvAnalysis :: initialize ()
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin4"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin5"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin6"+m_sysName, 300, 0., 1500.);
+                if (!m_isData && m_sysName=="" && m_dataType.find("EXOT")!=std::string::npos && sm_channel[i] == "znunu_") { // If EXOT
+                  for(int l=0; l < sm_scaledWeight_n; l++) {
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin1"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin2"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin3"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin4"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin5"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin6"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                  }
+                }
               }
-              if (sm_channel[i] == "znunu_" && sm_monojet[k] == "inclusive_") { // Exclusive
+              if (sm_channel[i] == "znunu_" && sm_monojet[k] == "inclusive_") { // Inclusive
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin1"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin2"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin3"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin4"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin5"+m_sysName, 300, 0., 1500.);
                 addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin6"+m_sysName, 300, 0., 1500.);
+                if (!m_isData && m_sysName=="" && m_dataType.find("EXOT")!=std::string::npos && sm_channel[i] == "znunu_") { // If EXOT
+                  for(int l=0; l < sm_scaledWeight_n; l++) {
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin1"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin2"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin3"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin4"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin5"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                    addHist(hMap1D, "SM_study_"+sm_channel[i]+sm_level[j]+sm_monojet[k]+"multijetCR_badJetPt_bin6"+sm_scaledWeight[l]+m_sysName, 300, 0., 1500.);
+                  }
+                }
               }
             }
             if (sm_channel[i] == "zmumu_" || sm_channel[i] == "zee_") {
@@ -14131,8 +14151,8 @@ EL::StatusCode smZInvAnalysis :: execute ()
     hMap1D["h_scaledMCWeight_MUR2_MUF2"]->Fill(m_mcScaledMCWeight["MUR2_MUF2"], 1.);
 
     // Skip events where MC weight is abnormal
-    float m_MCweightCut_min = -10.;
-    float m_MCweightCut_max = 10.;
+    float m_MCweightCut_min = -100.;
+    float m_MCweightCut_max = 100.;
     if ( m_mcScaledMCWeight["NOMINAL"] > m_MCweightCut_max || m_mcScaledMCWeight["NOMINAL"] < m_MCweightCut_min || // Nominal
         m_mcScaledMCWeight["MUR1_MUF2"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR1_MUF2"] < m_MCweightCut_min || // MUR1_MUF2
         m_mcScaledMCWeight["MUR1_MUF05"] > m_MCweightCut_max || m_mcScaledMCWeight["MUR1_MUF05"] < m_MCweightCut_min || // MUR1_MUF05
@@ -23434,6 +23454,19 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
          if ( MET > 200000. && MET < 225000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin4"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
          if ( MET > 225000. && MET < 250000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin5"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
          if ( MET > 250000. && MET < 300000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin6"+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, mcEventWeight_Znunu);
+         // Apply Scaled Weight
+         if (!m_isData && sysName=="" && m_dataType.find("EXOT")!=std::string::npos) {
+           for (const auto &NWeight : mcScaledWeight_Znunu ) {
+             std::string weight_name = NWeight.first;
+             float weight = NWeight.second; // MC scaled weight
+             if ( MET > 130000. && MET < 150000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin1"+"_"+weight_name+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, weight);
+             if ( MET > 150000. && MET < 175000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin2"+"_"+weight_name+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, weight);
+             if ( MET > 175000. && MET < 200000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin3"+"_"+weight_name+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, weight);
+             if ( MET > 200000. && MET < 225000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin4"+"_"+weight_name+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, weight);
+             if ( MET > 225000. && MET < 250000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin5"+"_"+weight_name+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, weight);
+             if ( MET > 250000. && MET < 300000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin6"+"_"+weight_name+sysName]->Fill(m_goodJet->at(1)->pt() * 0.001, weight);
+           }
+         }  // End of Scaled Weight
       }
     }
     // Inclusive
@@ -23462,6 +23495,19 @@ void smZInvAnalysis::doZnunuSMReco(const xAOD::MissingETContainer* metCore, cons
         if ( MET > 200000. && MET < 225000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin4"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
         if ( MET > 225000. && MET < 250000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin5"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
         if ( MET > 250000. && MET < 300000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin6"+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, mcEventWeight_Znunu);
+        // Apply Scaled Weight
+        if (!m_isData && sysName=="" && m_dataType.find("EXOT")!=std::string::npos) {
+          for (const auto &NWeight : mcScaledWeight_Znunu ) {
+            std::string weight_name = NWeight.first;
+            float weight = NWeight.second; // MC scaled weight
+            if ( MET > 130000. && MET < 150000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin1"+"_"+weight_name+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, weight);
+            if ( MET > 150000. && MET < 175000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin2"+"_"+weight_name+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, weight);
+            if ( MET > 175000. && MET < 200000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin3"+"_"+weight_name+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, weight);
+            if ( MET > 200000. && MET < 225000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin4"+"_"+weight_name+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, weight);
+            if ( MET > 225000. && MET < 250000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin5"+"_"+weight_name+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, weight);
+            if ( MET > 250000. && MET < 300000. ) hMap1D["SM_study_"+channel+hist_prefix+"multijetCR_badJetPt_bin6"+"_"+weight_name+sysName]->Fill(m_goodJet->at(badjet_num)->pt() * 0.001, weight);
+          }
+        }  // End of Scaled Weight
       }
     }
   }
@@ -24944,12 +24990,23 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
   /////////////////////////////////
   // Calculate muon SF for Wmunu //
   /////////////////////////////////
-  float mcEventWeight_Wmunu = mcEventWeight;
+  float mcEventWeight_Wmunu = mcEventWeight; // MC weight * PU weight
+  std::map<std::string, float> mcScaledWeight_Wmunu;
+
   if (!m_isData) {
-    //Info("execute()", " Wmunu original mcEventWeight = %.3f ", mcEventWeight);
-      mcEventWeight_Wmunu = mcEventWeight_Wmunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
-    //Info("execute()", " Wmunu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wmunu);
-  }
+    mcEventWeight_Wmunu = mcEventWeight_Wmunu * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
+    if (m_dataType.find("EXOT")!=std::string::npos && sysName=="") { // EXOT5 and No sys
+      for (const auto &NWeight : m_mcScaledMCWeight ) {
+        std::string weight_name = NWeight.first;
+        float weight = NWeight.second; // MC scaled weight
+        float pu_weight = mcEventWeight / m_mcScaledMCWeight["NOMINAL"]; // Retrieve PU weight
+        float mcScaledWeight = weight * pu_weight * GetTotalMuonSF(*m_goodMuon, m_recoSF, m_isoMuonSF, m_ttvaSF, m_muonTrigSFforSM);
+        mcScaledWeight_Wmunu.insert(std::make_pair(weight_name, mcScaledWeight));
+      }
+    } // EXOT5
+  } // MC
+
+
 
 
   //---------------------
@@ -24993,6 +25050,14 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
+      // Apply Scaled Weight
+      if (!m_isData && sysName=="" && m_dataType.find("EXOT")!=std::string::npos) {
+        for (const auto &NWeight : mcScaledWeight_Wmunu ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name+sysName]->Fill(MET * 0.001, weight); // For publication binning
+        }
+      }
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
       // Leading jet distribution
@@ -25018,6 +25083,14 @@ void smZInvAnalysis::doWmunuSMReco(const xAOD::MissingETContainer* metCore, cons
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wmunu); // For publication binning
+      // Apply Scaled Weight
+      if (!m_isData && sysName=="" && m_dataType.find("EXOT")!=std::string::npos) {
+        for (const auto &NWeight : mcScaledWeight_Wmunu ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name+sysName]->Fill(MET * 0.001, weight); // For publication binning
+        }
+      }
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wmunu);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
@@ -25392,11 +25465,21 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
   // Calculate electron SF for Wenu //
   ////////////////////////////////////
   float mcEventWeight_Wenu = mcEventWeight;
+  std::map<std::string, float> mcScaledWeight_Wenu;
+
   if (!m_isData) {
-    //Info("execute()", " Wenu original mcEventWeight = %.3f ", mcEventWeight);
-    mcEventWeight_Wenu = mcEventWeight_Wenu * GetTotalElectronSF(*goodElectron, m_recoSF, m_idSF, m_isoElectronSF, m_elecTrigSF);
-    //Info("execute()", " Wenu mcEventWeight * TotalMuonSF = %.3f ", mcEventWeight_Wenu);
-  }
+    mcEventWeight_Wenu = mcEventWeight_Wenu * GetTotalElectronSF(*m_goodElectron, m_recoSF, m_idSF, m_isoElectronSF, m_elecTrigSF);
+    if (m_dataType.find("EXOT")!=std::string::npos && sysName=="") { // EXOT5 and No sys
+      for (const auto &NWeight : m_mcScaledMCWeight ) {
+        std::string weight_name = NWeight.first;
+        float weight = NWeight.second; // MC scaled weight
+        float pu_weight = mcEventWeight / m_mcScaledMCWeight["NOMINAL"]; // Retrieve PU weight
+        float mcScaledWeight = weight * pu_weight * GetTotalElectronSF(*m_goodElectron, m_recoSF, m_idSF, m_isoElectronSF, m_elecTrigSF);
+        mcScaledWeight_Wenu.insert(std::make_pair(weight_name, mcScaledWeight));
+      }
+    } // EXOT5
+  } // MC
+
 
 
   ///////////////////
@@ -25410,6 +25493,14 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
+      // Apply Scaled Weight
+      if (!m_isData && sysName=="" && m_dataType.find("EXOT")!=std::string::npos) {
+        for (const auto &NWeight : mcScaledWeight_Wenu ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name+sysName]->Fill(MET * 0.001, weight); // For publication binning
+        }
+      }
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
       // Leading jet pT distribution
@@ -25435,6 +25526,14 @@ void smZInvAnalysis::doWenuSMReco(const xAOD::MissingETContainer* metCore, const
       // MET distribution
       hMap1D["SM_study_"+channel+hist_prefix+"met"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu);
       hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+sysName]->Fill(MET * 0.001, mcEventWeight_Wenu); // For publication binning
+      // Apply Scaled Weight
+      if (!m_isData && sysName=="" && m_dataType.find("EXOT")!=std::string::npos) {
+        for (const auto &NWeight : mcScaledWeight_Wenu ) {
+          std::string weight_name = NWeight.first;
+          float weight = NWeight.second; // MC scaled weight
+          hMap1D["SM_study_"+channel+hist_prefix+"MET_mono"+"_"+weight_name+sysName]->Fill(MET * 0.001, weight); // For publication binning
+        }
+      }
       // Leading jet # distribution
       hMap1D["SM_study_"+channel+hist_prefix+"jet_n"+sysName]->Fill(m_goodJet->size(), mcEventWeight_Wenu);
       float dPhiMinjetmet = 10.; // initialize with 10. to obtain minimum value of deltaPhi(Jet_i,MET)
